@@ -5,86 +5,74 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tessan — Simulateur Commercial</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+
 :root{
-  --bg:#fff; --sf:#F7F7F7; --sf2:#EFEFEF;
-  --bd:#E5E5E5; --bd2:#CFCFCF;
-  --ink:#111; --ink2:#555; --ink3:#999;
-  --blue:#2563EB; --blue-lt:#EEF4FF; --blue-bd:#BFDBFE;
-  --green:#16A34A; --green-lt:#F0FDF4; --green-bd:#86EFAC;
-  --amber:#D97706; --amber-lt:#FFFBEB; --amber-bd:#FCD34D;
-  --red:#DC2626; --red-lt:#FEF2F2; --red-bd:#FCA5A5;
+  --bg:#fff;--sf:#F8F8F8;--sf2:#F0F0F0;
+  --bd:#E4E4E4;--bd2:#C8C8C8;
+  --ink:#111;--ink2:#444;--ink3:#999;
+  --blue:#2563EB;--blue-lt:#EEF4FF;--blue-bd:#BFDBFE;
+  --green:#15803D;--green-lt:#F0FDF4;--green-bd:#86EFAC;
+  --amber:#B45309;--amber-lt:#FFFBEB;--amber-bd:#FCD34D;
+  --red:#B91C1C;--red-lt:#FEF2F2;--red-bd:#FCA5A5;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased}
-
-/* NAV */
-.nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--bd);display:flex;align-items:stretch;padding:0 2rem;height:54px}
-.brand{display:flex;align-items:center;padding-right:1.5rem;margin-right:.5rem;border-right:1px solid var(--bd)}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+.nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--bd);display:flex;align-items:stretch;padding:0 2rem;height:54px}
+.brand{display:flex;align-items:center;padding-right:1.5rem;margin-right:.5rem;border-right:1px solid var(--bd);flex-shrink:0}
 .brand img{height:26px;width:auto}
-.brand-txt{font-size:17px;font-weight:800;color:var(--blue);letter-spacing:-.03em;display:none}
+.brand-fb{font-size:17px;font-weight:800;color:var(--blue);letter-spacing:-.03em;display:none}
 .tabs{display:flex;align-items:stretch;overflow-x:auto;scrollbar-width:none;flex:1}
 .tabs::-webkit-scrollbar{display:none}
-.tab{display:flex;align-items:center;gap:7px;padding:0 1.1rem;font-size:13px;font-weight:500;color:var(--ink3);cursor:pointer;white-space:nowrap;border-bottom:2.5px solid transparent;margin-bottom:-1px;transition:color .15s;user-select:none}
+.tab{display:flex;align-items:center;gap:7px;padding:0 1.1rem;font-size:13px;font-weight:500;color:var(--ink3);cursor:pointer;white-space:nowrap;border-bottom:2.5px solid transparent;margin-bottom:-1px;transition:color .15s;user-select:none;flex-shrink:0}
 .tab:hover{color:var(--ink2)}
 .tab.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:700}
-.tab-dot{width:6px;height:6px;border-radius:50%;background:var(--bd2);flex-shrink:0;transition:background .15s}
-.tab.active .tab-dot{background:var(--blue)}
-.tab-admin{margin-left:auto;font-size:12px}
-
-/* PIN */
+.tdot{width:6px;height:6px;border-radius:50%;background:var(--bd2);flex-shrink:0;transition:background .15s}
+.tab.active .tdot{background:var(--blue)}
+.tab-admin{margin-left:auto}
 .overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center}
-.pin-box{background:#fff;border-radius:20px;padding:2rem;width:300px;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.2),0 0 0 1px var(--bd)}
-.pin-box h3{font-size:18px;font-weight:800;margin-bottom:4px}
-.pin-box p{font-size:12px;color:var(--ink3);margin-bottom:1.5rem}
+.pinbox{background:#fff;border-radius:20px;padding:2rem;width:300px;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.2),0 0 0 1px var(--bd)}
+.pinbox h3{font-size:18px;font-weight:800;margin-bottom:4px}
+.pinbox p{font-size:12px;color:var(--ink3);margin-bottom:1.5rem}
 .pin-dots{display:flex;justify-content:center;gap:10px;margin-bottom:1.5rem}
 .pdot{width:12px;height:12px;border-radius:50%;border:2px solid var(--bd2);transition:all .15s}
 .pdot.on{background:var(--blue);border-color:var(--blue)}
 .pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
 .pb{padding:14px;border:1px solid var(--bd);border-radius:10px;background:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:600;cursor:pointer;color:var(--ink);transition:background .1s}
 .pb:hover{background:var(--sf)}
-.pb:active{background:var(--sf2)}
 .pb.sm{font-size:13px;color:var(--ink3);font-weight:500}
 .pin-err{font-size:12px;color:var(--red);margin-top:10px;min-height:16px}
-
-/* LAYOUT */
 .page{display:none;padding:2rem 2.5rem 4rem;max-width:1120px;margin:0 auto}
 .page.active{display:block;animation:fi .18s ease}
 @keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
-
-/* ADMIN */
 .admin-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem}
 .admin-bar h2{font-size:22px;font-weight:800}
-.btn-sm{padding:7px 14px;border:1px solid var(--bd2);border-radius:99px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:500;color:var(--ink3);cursor:pointer;background:#fff;transition:color .15s}
+.btn-sm{padding:7px 14px;border:1px solid var(--bd2);border-radius:99px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:500;color:var(--ink3);cursor:pointer;background:#fff}
 .btn-sm:hover{color:var(--ink)}
 .asec{margin-bottom:2rem}
 .asec-ttl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);margin-bottom:.75rem;padding-bottom:6px;border-bottom:1px solid var(--bd)}
 .atable{width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden;border:1px solid var(--bd)}
 .atable th{background:var(--sf);padding:9px 14px;font-size:11px;font-weight:600;color:var(--ink3);text-align:center;border-bottom:1px solid var(--bd);border-right:1px solid var(--bd)}
-.atable th:first-child{text-align:left;min-width:180px}
+.atable th:first-child{text-align:left;min-width:200px}
 .atable th:last-child{border-right:none}
 .atable td{background:#fff;border-bottom:1px solid var(--bd);border-right:1px solid var(--bd);padding:0}
 .atable td:last-child{border-right:none}
 .atable tr:last-child td{border-bottom:none}
 .atable td.lbl{padding:10px 14px;font-size:12px;color:var(--ink2);background:var(--sf)}
-.ai-w{display:flex;align-items:center;gap:4px;padding:7px 10px}
-.ai-w input{flex:1;min-width:0;text-align:right;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;background:transparent;border:none;border-bottom:1.5px solid var(--bd);color:var(--ink);outline:none;padding:2px 0}
-.ai-w input:focus{border-bottom-color:var(--blue)}
-.ai-w .u{font-size:10px;color:var(--ink3);white-space:nowrap}
-.btn-save{padding:10px 24px;background:var(--blue);color:#fff;border:none;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s}
+.aiw{display:flex;align-items:center;gap:4px;padding:7px 10px}
+.aiw input{flex:1;min-width:0;text-align:right;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;background:transparent;border:none;border-bottom:1.5px solid var(--bd);color:var(--ink);outline:none;padding:2px 0}
+.aiw input:focus{border-bottom-color:var(--blue)}
+.aiw .u{font-size:10px;color:var(--ink3);white-space:nowrap}
+.btn-save{padding:10px 24px;background:var(--blue);color:#fff;border:none;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer}
 .btn-save:hover{background:#1d4ed8}
 .save-msg{font-size:12px;color:var(--green);margin-left:12px;opacity:0;transition:opacity .3s}
-
-/* DEVICE */
 .dv-head{display:flex;align-items:center;gap:16px;margin-bottom:1.5rem}
 .dv-head h2{font-size:24px;font-weight:800;letter-spacing:-.02em}
 .dv-head p{font-size:13px;color:var(--ink3)}
 .dur-sw{display:inline-flex;background:var(--sf2);border-radius:99px;padding:3px;gap:2px;margin-bottom:1.5rem}
 .dur-sw button{padding:5px 20px;border-radius:99px;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;color:var(--ink3);background:transparent;cursor:pointer;transition:all .15s}
 .dur-sw button.on{background:#fff;color:var(--blue);box-shadow:0 1px 4px rgba(0,0,0,.08)}
-
-/* PARAMS */
 .pcard{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:1.5rem;margin-bottom:2rem}
 .pcard-ttl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);margin-bottom:1.25rem}
 .pg{display:grid;gap:10px;margin-bottom:12px}
@@ -97,36 +85,29 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .pf-row input:focus{border-bottom-color:var(--blue)}
 .pf-row .u{font-size:12px;color:var(--ink3);flex-shrink:0}
 .pf .hint{font-size:10px;color:var(--ink3)}
-.toggles{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-top:2px}
+.toggles{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-top:4px}
 .tog{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:99px;border:1.5px solid var(--bd2);background:#fff;font-size:12px;font-weight:600;color:var(--ink3);cursor:pointer;user-select:none;transition:all .15s}
 .tog .dot{width:7px;height:7px;border-radius:50%;background:var(--bd2);flex-shrink:0;transition:all .15s}
 .tog.on{background:var(--blue-lt);border-color:var(--blue-bd);color:var(--blue)}
 .tog.on .dot{background:var(--blue)}
 .conv-in{width:64px;font-size:12px;font-weight:700;border:none;border-bottom:1.5px solid currentColor;background:transparent;outline:none;color:inherit;padding:0 0 1px;font-family:'Plus Jakarta Sans',sans-serif}
-
-/* ACCORD */
-.accord{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;border:1.5px solid;margin-top:1.25rem}
+.accord-block{margin-top:1.25rem;display:flex;flex-direction:column;gap:8px}
+.accord{display:flex;align-items:center;gap:12px;padding:11px 16px;border-radius:10px;border:1.5px solid}
 .accord.ok{background:var(--green-lt);border-color:var(--green-bd)}
 .accord.warn{background:var(--amber-lt);border-color:var(--amber-bd)}
 .accord.ko{background:var(--red-lt);border-color:var(--red-bd)}
-.accord-ico{font-size:18px;flex-shrink:0}
-.accord-body{flex:1}
-.accord-ttl{font-size:13px;font-weight:700}
-.accord.ok .accord-ttl{color:var(--green)}
-.accord.warn .accord-ttl{color:var(--amber)}
-.accord.ko .accord-ttl{color:var(--red)}
-.accord-tags{display:flex;gap:5px;margin-top:5px;flex-wrap:wrap}
-.atag{font-size:11px;font-weight:600;padding:2px 10px;border-radius:99px;border:1px solid}
-.accord.ok .atag{color:var(--green);background:var(--green-lt);border-color:var(--green-bd)}
-.accord.warn .atag{color:var(--amber);background:var(--amber-lt);border-color:var(--amber-bd)}
-.accord.ko .atag{color:var(--red);background:var(--red-lt);border-color:var(--red-bd)}
-
-/* SECTIONS */
+.accord-ico{font-size:16px;flex-shrink:0}
+.accord-lbl{font-size:11px;font-weight:500;flex:1}
+.accord.ok .accord-lbl{color:var(--green)}
+.accord.warn .accord-lbl{color:var(--amber)}
+.accord.ko .accord-lbl{color:var(--red)}
+.accord-val{font-size:11px;font-weight:700;white-space:nowrap}
+.accord.ok .accord-val{color:var(--green)}
+.accord.warn .accord-val{color:var(--amber)}
+.accord.ko .accord-val{color:var(--red)}
 .sec{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);margin:2rem 0 1rem;padding-bottom:8px;border-bottom:1px solid var(--bd)}
 .g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-
-/* CARDS */
 .card{background:#fff;border:1.5px solid var(--bd);border-radius:16px;padding:20px}
 .card.star{border-color:var(--blue);border-width:2px}
 .badge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.05em;padding:3px 10px;background:var(--blue);color:#fff;border-radius:99px;margin-bottom:10px}
@@ -140,12 +121,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .cr.sep{margin-top:8px;padding-top:8px;border-top:1px solid var(--bd)}
 .cr.tot{color:var(--ink);font-weight:700}
 .cr.tot b{font-size:13px;font-weight:800;color:var(--ink)}
-
-/* LEASING */
 .leas-inputs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .leas-note{font-size:11.5px;color:var(--ink3);background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:10px 14px;margin-bottom:14px;line-height:1.6}
-
-/* RENTAB */
 .rtog{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--ink3);margin-top:2rem;user-select:none;padding:4px 0;font-weight:500}
 .rtog svg{transition:transform .2s}
 .rtog.open svg{transform:rotate(90deg)}
@@ -158,29 +135,30 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .rbadge{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;border:1.5px solid}
 .rbadge.ok{color:var(--green);background:var(--green-lt);border-color:var(--green-bd)}
 .rbadge.ko{color:var(--red);background:var(--red-lt);border-color:var(--red-bd)}
+
 </style>
 </head>
 <body>
 
 <nav class="nav">
   <div class="brand">
-    <img src="https://www.tessan.io/wp-content/uploads/2022/09/Logo-Tessan.png"
-         alt="Tessan" onerror="this.style.display='none';document.querySelector('.brand-txt').style.display='block'">
-    <span class="brand-txt">tessan</span>
+    <img src="https://www.tessan.io/wp-content/uploads/2022/09/Logo-Tessan.png" alt="Tessan"
+         onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+    <span class="brand-fb">tessan</span>
   </div>
   <div class="tabs">
-    <div class="tab active" data-tab="checkup"><div class="tab-dot"></div>Borne Check-up</div>
-    <div class="tab" data-tab="tc"><div class="tab-dot"></div>Borne TC</div>
-    <div class="tab" data-tab="slim"><div class="tab-dot"></div>Cabine Slim / Uno</div>
-    <div class="tab" data-tab="premium"><div class="tab-dot"></div>Cabine Premium</div>
+    <div class="tab active" data-tab="checkup"><div class="tdot"></div>Borne Check-up</div>
+    <div class="tab" data-tab="tc"><div class="tdot"></div>Borne TC</div>
+    <div class="tab" data-tab="slim"><div class="tdot"></div>Cabine Slim / Uno</div>
+    <div class="tab" data-tab="premium"><div class="tdot"></div>Cabine Premium</div>
     <div class="tab tab-admin" data-tab="admin">🔒 Admin</div>
   </div>
 </nav>
 
 <div class="overlay" id="pin-ov" style="display:none">
-  <div class="pin-box">
+  <div class="pinbox">
     <h3>Espace Admin</h3>
-    <p>Entrez votre code PIN pour continuer</p>
+    <p>Entrez votre code PIN</p>
     <div class="pin-dots">
       <div class="pdot" id="pd0"></div><div class="pdot" id="pd1"></div>
       <div class="pdot" id="pd2"></div><div class="pdot" id="pd3"></div>
@@ -212,368 +190,486 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 </div>
 
 <script>
-// ── CONFIG ──────────────────────────────────────────────────
-const PIN = '1234'; // ← modifier ici avant de déployer
+
+const PIN = '1234';
 let adminOpen = false, pinBuf = '';
+const DEVS   = ['checkup','tc','slim','premium'];
+const DNAMES = ['Borne Check-up','Borne TC','Cabine Slim/Uno','Cabine Premium'];
 
-const DEVS    = ['checkup','tc','slim','premium'];
-const DNAMES  = ['Borne Check-up','Borne TC','Cabine Slim/Uno','Cabine Premium'];
-
+// ── CONFIG ────────────────────────────────────────────────────────────────
+// Seuils de validation dossier (mat+maint total sur duree >= seuil)
+// PDF p.6: Borne TC >= 3839, Slim/Uno >= 8998, Premium >= 22798, Check-up >= 2250
 const CFG = {
-  checkup:{ hasTC:false,hasTED:false,hasPrio:false, abo:59.99, achat60:1870,achat48:1870,cac60:2500,cac48:1866,leasRate:0.2,cashRate:0.6, mat60_1:34.99,mat60_13:34.99,mnt60_1:14.99,mnt60_13:14.99, mat48_1:59.99,mat48_13:59.99,mnt48_1:14.99,mnt48_13:14.99, tcDef:0,tedDef:0,prioDef:0, sR60:3.15,sR48:3.15,sC60:0.20,sC48:0.20 },
-  tc:     { hasTC:true,hasTED:true,hasPrio:true, abo:79.99, achat60:3910,achat48:3910,cac60:2300,cac48:2300,leasRate:0.2,cashRate:0.6, mat60_1:0,mat60_13:49.99,mnt60_1:0,mnt60_13:29.99, mat48_1:0,mat48_13:99.99,mnt48_1:0,mnt48_13:29.99, tcDef:30,tedDef:49.99,prioDef:49.99, sR60:3.15,sR48:3.15,sC60:0.20,sC48:0.20 },
-  slim:   { hasTC:true,hasTED:true,hasPrio:true, abo:79.99, achat60:8200,achat48:7800,cac60:2300,cac48:2300,leasRate:0.2,cashRate:0.6, mat60_1:0,mat60_13:119.99,mnt60_1:59.99,mnt60_13:59.99, mat48_1:59.99,mat48_13:179.99,mnt48_1:39.99,mnt48_13:59.99, tcDef:30,tedDef:49.99,prioDef:49.99, sR60:3.15,sR48:3.15,sC60:0.20,sC48:0.20 },
-  premium:{ hasTC:true,hasTED:true,hasPrio:true, abo:79.99, achat60:19470,achat48:19470,cac60:2300,cac48:2300,leasRate:0.2,cashRate:0.6, mat60_1:199.99,mat60_13:299.99,mnt60_1:99.99,mnt60_13:99.99, mat48_1:299.99,mat48_13:449.99,mnt48_1:99.99,mnt48_13:99.99, tcDef:50,tedDef:49.99,prioDef:49.99, sR60:3.15,sR48:3.15,sC60:0.20,sC48:0.20 }
+  checkup:{
+    name:'Borne Check-up', hasTC:false, hasTED:false, hasPrio:false,
+    abo:59.99, achat60:1870, cac60:2500, achat48:1870, cac48:1866,
+    leasRate:0.2, cashRate:0.6,
+    mat60_1:34.99, mat60_13:34.99, mnt60_1:14.99, mnt60_13:14.99,
+    mat48_1:59.99, mat48_13:59.99, mnt48_1:14.99, mnt48_13:14.99,
+    tcDef:0, tedDef:0, prioDef:0,
+    seuilDossier:2250, seuilCash:0.20, seuilRentab:3.15
+  },
+  tc:{
+    name:'Borne TC', hasTC:true, hasTED:true, hasPrio:true,
+    abo:79.99, achat60:3910, cac60:2300, achat48:3910, cac48:2300,
+    leasRate:0.2, cashRate:0.6,
+    mat60_1:0, mat60_13:49.99, mnt60_1:0, mnt60_13:29.99,
+    mat48_1:0, mat48_13:99.99, mnt48_1:0, mnt48_13:29.99,
+    tcDef:30, tedDef:49.99, prioDef:49.99,
+    seuilDossier:3839, seuilCash:0.20, seuilRentab:3.15
+  },
+  slim:{
+    name:'Cabine Slim / Uno', hasTC:true, hasTED:true, hasPrio:true,
+    abo:79.99, achat60:8200, cac60:2300, achat48:7800, cac48:2300,
+    leasRate:0.2, cashRate:0.6,
+    mat60_1:0,     mat60_13:119.99, mnt60_1:59.99, mnt60_13:59.99,
+    mat48_1:59.99, mat48_13:179.99, mnt48_1:39.99, mnt48_13:59.99,
+    tcDef:30, tedDef:49.99, prioDef:49.99,
+    seuilDossier:8998, seuilCash:0.20, seuilRentab:3.15
+  },
+  premium:{
+    name:'Cabine Premium', hasTC:true, hasTED:true, hasPrio:true,
+    abo:79.99, achat60:19470, cac60:2300, achat48:19470, cac48:2300,
+    leasRate:0.2, cashRate:0.6,
+    mat60_1:199.99, mat60_13:299.99, mnt60_1:99.99, mnt60_13:99.99,
+    mat48_1:299.99, mat48_13:449.99, mnt48_1:99.99, mnt48_13:99.99,
+    tcDef:50, tedDef:49.99, prioDef:49.99,
+    seuilDossier:22798, seuilCash:0.20, seuilRentab:3.15
+  }
 };
 
 const ST = {};
 DEVS.forEach(id => { ST[id] = { dur:60, ted:false, prio:false, conv:false }; });
 
-// ── UTILS ────────────────────────────────────────────────────
+// ── UTILS ─────────────────────────────────────────────────────────────────
 const $ = id => document.getElementById(id);
-function n(v){ return isNaN(v)||!isFinite(v) ? 0 : +v; }
-function gv(id){ const e=$(id); return e ? n(parseFloat(e.value)) : 0; }
-function f(v){ return n(v).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'; }
-function fm(v){ return f(v)+'/mois'; }
+function n(v){ return isNaN(v)||!isFinite(v)?0:+v; }
+function gv(id){ const e=$(id); return e?n(parseFloat(e.value)):0; }
+function ff(v){ return n(v).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+'\u00a0\u20ac'; }
+function fm(v){ return ff(v)+'/mois'; }
 function fp(v){ return (n(v)*100).toFixed(1)+'%'; }
 
-// ── NAVIGATION ───────────────────────────────────────────────
-function goTab(name) {
-  if (name === 'admin' && !adminOpen) { openAdmin(); return; }
-  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  $('page-' + name).classList.add('active');
-  if (name === 'admin') renderAdmin(); else renderDevice(name);
+// ── NAV ───────────────────────────────────────────────────────────────────
+function goTab(name){
+  if(name==='admin'&&!adminOpen){ openAdmin(); return; }
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  $('page-'+name).classList.add('active');
+  if(name==='admin') renderAdmin(); else renderDevice(name);
 }
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>goTab(t.dataset.tab)));
 
-document.querySelectorAll('.tab').forEach(t => {
-  t.addEventListener('click', () => goTab(t.dataset.tab));
-});
+// ── PIN ───────────────────────────────────────────────────────────────────
+function openAdmin(){
+  if(adminOpen){ goTab('admin'); return; }
+  pinBuf=''; $('pin-ov').style.display='flex'; updDots(); $('pin-err').textContent='';
+}
+function updDots(){ for(let i=0;i<4;i++) $('pd'+i).classList.toggle('on',i<pinBuf.length); }
+function pk(d){
+  if(pinBuf.length>=4) return;
+  pinBuf+=String(d); updDots();
+  if(pinBuf.length===4) setTimeout(()=>{
+    if(pinBuf===PIN){ adminOpen=true; $('pin-ov').style.display='none'; goTab('admin'); }
+    else{ $('pin-err').textContent='Code incorrect'; pinBuf=''; updDots(); }
+  },120);
+}
+document.querySelectorAll('.pb[data-pk]').forEach(b=>b.addEventListener('click',()=>pk(b.dataset.pk)));
+$('pb-clr').addEventListener('click',()=>{ pinBuf=pinBuf.slice(0,-1); updDots(); $('pin-err').textContent=''; });
+$('pb-can').addEventListener('click',()=>{ pinBuf=''; $('pin-ov').style.display='none'; });
+$('btn-logout').addEventListener('click',()=>{ adminOpen=false; goTab('checkup'); });
+$('btn-save').addEventListener('click',saveAdmin);
 
-// ── PIN ──────────────────────────────────────────────────────
-function openAdmin() {
-  if (adminOpen) { goTab('admin'); return; }
-  pinBuf = ''; $('pin-ov').style.display = 'flex'; updDots(); $('pin-err').textContent = '';
+// ── ADMIN ─────────────────────────────────────────────────────────────────
+function ai(d,k,u,s){ return '<div class="aiw"><input id="a_'+d+'_'+k+'" type="number" value="'+CFG[d][k]+'" step="'+s+'"><span class="u">'+u+'</span></div>'; }
+function arow(lbl,k,u,s){ return '<tr><td class="lbl">'+lbl+'</td>'+DEVS.map(d=>'<td>'+ai(d,k,u,s)+'</td>').join('')+'</tr>'; }
+function atable(rows){
+  return '<table class="atable"><thead><tr><th></th>'+DNAMES.map(n=>'<th>'+n+'</th>').join('')+'</tr></thead><tbody>'+
+    rows.map(r=>arow(r[0],r[1],r[2],r[3]||'1')).join('')+'</tbody></table>';
 }
-function updDots() { for(let i=0;i<4;i++) $('pd'+i).classList.toggle('on', i < pinBuf.length); }
-function pk(d) {
-  if (pinBuf.length >= 4) return;
-  pinBuf += String(d); updDots();
-  if (pinBuf.length === 4) setTimeout(() => {
-    if (pinBuf === PIN) {
-      adminOpen = true; $('pin-ov').style.display = 'none'; goTab('admin');
-    } else {
-      $('pin-err').textContent = 'Code incorrect, réessayez'; pinBuf = ''; updDots();
-    }
-  }, 120);
+function renderAdmin(){
+  $('admin-body').innerHTML=
+    '<div class="asec"><div class="asec-ttl">Prix achat &amp; CAC</div>'+
+    atable([['Achat 60 mois','achat60','\u20ac'],['Achat 48 mois','achat48','\u20ac'],
+            ['CAC 60 mois','cac60','\u20ac'],['CAC 48 mois','cac48','\u20ac'],
+            ['Frais leasing','leasRate','%','0.01'],['Cash imm. (%)','cashRate','%','0.01']])+'</div>'+
+    '<div class="asec"><div class="asec-ttl">Mensualit\u00e9s leasing par d\u00e9faut</div>'+
+    atable([['Mat. 60m M1-12','mat60_1','\u20ac/mois','0.01'],['Mat. 60m M13+','mat60_13','\u20ac/mois','0.01'],
+            ['Maint. 60m M1-12','mnt60_1','\u20ac/mois','0.01'],['Maint. 60m M13+','mnt60_13','\u20ac/mois','0.01'],
+            ['Mat. 48m M1-12','mat48_1','\u20ac/mois','0.01'],['Mat. 48m M13+','mat48_13','\u20ac/mois','0.01'],
+            ['Maint. 48m M1-12','mnt48_1','\u20ac/mois','0.01'],['Maint. 48m M13+','mnt48_13','\u20ac/mois','0.01']])+'</div>'+
+    '<div class="asec"><div class="asec-ttl">TC / mois par d\u00e9faut</div>'+
+    atable([['TC par d\u00e9faut','tcDef','cons.']])+'</div>'+
+    '<div class="asec"><div class="asec-ttl">Seuils d\'accord (modifiables)</div>'+
+    atable([['Seuil dossier (mat+maint min \u20ac)','seuilDossier','\u20ac'],
+            ['Seuil marge cash (leasing)','seuilCash','%','0.01'],
+            ['Seuil rentabilit\u00e9 (comptant)','seuilRentab','\u00d7','0.01']])+'</div>';
 }
-
-document.querySelectorAll('.pb[data-pk]').forEach(b => b.addEventListener('click', () => pk(b.dataset.pk)));
-$('pb-clr').addEventListener('click', () => { pinBuf = pinBuf.slice(0,-1); updDots(); $('pin-err').textContent=''; });
-$('pb-can').addEventListener('click', () => { pinBuf=''; $('pin-ov').style.display='none'; });
-$('btn-logout').addEventListener('click', () => { adminOpen=false; goTab('checkup'); });
-$('btn-save').addEventListener('click', saveAdmin);
-
-// ── ADMIN ────────────────────────────────────────────────────
-function ai(devId, key, unit, step) {
-  return '<div class="ai-w"><input id="a_'+devId+'_'+key+'" type="number" value="'+CFG[devId][key]+'" step="'+step+'"><span class="u">'+unit+'</span></div>';
-}
-function arow(lbl, key, unit, step) {
-  return '<tr><td class="lbl">'+lbl+'</td>'+DEVS.map(d => '<td>'+ai(d,key,unit,step)+'</td>').join('')+'</tr>';
-}
-function atable(rows) {
-  const head = '<thead><tr><th></th>'+DNAMES.map(n=>'<th>'+n+'</th>').join('')+'</tr></thead>';
-  const body = '<tbody>'+rows.map(r=>arow(r[0],r[1],r[2],r[3]||'1')).join('')+'</tbody>';
-  return '<table class="atable">'+head+body+'</table>';
-}
-function renderAdmin() {
-  $('admin-body').innerHTML =
-    '<div class="asec"><div class="asec-ttl">Prix d\'achat & CAC</div>'+
-    atable([['Achat 60 mois','achat60','€'],['Achat 48 mois','achat48','€'],['CAC 60 mois','cac60','€'],['CAC 48 mois','cac48','€'],['Frais leasing','leasRate','%','0.01'],['Cash immédiat (%)','cashRate','%','0.01']])+
-    '</div><div class="asec"><div class="asec-ttl">Mensualités leasing par défaut</div>'+
-    atable([['Mat. 60m — M1-12','mat60_1','€/mois','0.01'],['Mat. 60m — M13+','mat60_13','€/mois','0.01'],['Maint. 60m — M1-12','mnt60_1','€/mois','0.01'],['Maint. 60m — M13+','mnt60_13','€/mois','0.01'],['Mat. 48m — M1-12','mat48_1','€/mois','0.01'],['Mat. 48m — M13+','mat48_13','€/mois','0.01'],['Maint. 48m — M1-12','mnt48_1','€/mois','0.01'],['Maint. 48m — M13+','mnt48_13','€/mois','0.01']])+
-    '</div><div class="asec"><div class="asec-ttl">TC / mois — valeurs par défaut</div>'+
-    atable([['TC par défaut','tcDef','cons.']])+
-    '</div><div class="asec"><div class="asec-ttl">Seuils d\'accord par dispositif</div>'+
-    atable([['Rentabilité min 60m (×)','sR60','×','0.01'],['Rentabilité min 48m (×)','sR48','×','0.01'],['Marge cash min 60m','sC60','%','0.01'],['Marge cash min 48m','sC48','%','0.01']])+
-    '</div>';
-}
-function saveAdmin() {
-  ['achat60','achat48','cac60','cac48','leasRate','cashRate','mat60_1','mat60_13','mnt60_1','mnt60_13','mat48_1','mat48_13','mnt48_1','mnt48_13','tcDef','sR60','sR48','sC60','sC48'].forEach(k => {
-    DEVS.forEach(d => { const e=$('a_'+d+'_'+k); if(e) CFG[d][k]=n(parseFloat(e.value)); });
-  });
+function saveAdmin(){
+  const keys=['achat60','achat48','cac60','cac48','leasRate','cashRate',
+    'mat60_1','mat60_13','mnt60_1','mnt60_13','mat48_1','mat48_13','mnt48_1','mnt48_13',
+    'tcDef','seuilDossier','seuilCash','seuilRentab'];
+  DEVS.forEach(d=>keys.forEach(k=>{ const e=$('a_'+d+'_'+k); if(e) CFG[d][k]=n(parseFloat(e.value)); }));
   const m=$('save-msg'); m.style.opacity='1'; setTimeout(()=>m.style.opacity='0',2500);
 }
 
-// ── BUILD DEVICE PAGE ────────────────────────────────────────
-function buildPage(id) {
-  const c = CFG[id], s = ST[id], d = s.dur;
-  const mat1 = d===60?c.mat60_1:c.mat48_1, mnt1 = d===60?c.mnt60_1:c.mnt48_1;
-  const mntD = d===60?c.mnt60_13:c.mnt48_13, matDef = d===60?c.achat60:c.achat48;
+// ── BUILD PAGE ────────────────────────────────────────────────────────────
+function buildPage(id){
+  const c=CFG[id], s=ST[id], d=s.dur;
+  const mat1  = d===60?c.mat60_1 :c.mat48_1;
+  const mnt1  = d===60?c.mnt60_1 :c.mnt48_1;
+  const mnt13 = d===60?c.mnt60_13:c.mnt48_13;
+  const matDef= d===60?c.achat60 :c.achat48;
+  const pg=$('page-'+id); pg.innerHTML='';
 
-  const pg = $('page-'+id);
-  pg.innerHTML = '';
+  // header
+  const hd=document.createElement('div'); hd.className='dv-head';
+  hd.innerHTML='<h2>'+c.name+'</h2><p>Configurez le dossier et partagez l\u2019\u00e9cran avec le prospect</p>';
+  pg.appendChild(hd);
 
-  // Header
-  const head = document.createElement('div');
-  head.className = 'dv-head';
-  head.innerHTML = '<h2>'+c.name+'</h2><p>Configurez le dossier et partagez l\'écran avec le prospect</p>';
-  pg.appendChild(head);
+  // dur switch
+  const ds=document.createElement('div'); ds.className='dur-sw';
+  const b60=document.createElement('button'); b60.textContent='60 mois'; if(d===60)b60.classList.add('on');
+  const b48=document.createElement('button'); b48.textContent='48 mois'; if(d===48)b48.classList.add('on');
+  b60.addEventListener('click',()=>setDur(id,60));
+  b48.addEventListener('click',()=>setDur(id,48));
+  ds.append(b60,b48); pg.appendChild(ds);
 
-  // Dur switch
-  const durSw = document.createElement('div');
-  durSw.className = 'dur-sw';
-  durSw.innerHTML = '<button class="'+(d===60?'on':'')+'" data-dur="60">60 mois</button><button class="'+(d===48?'on':'')+'" data-dur="48">48 mois</button>';
-  durSw.querySelectorAll('button').forEach(b => b.addEventListener('click', () => setDur(id, +b.dataset.dur)));
-  pg.appendChild(durSw);
+  // params card
+  const pc=document.createElement('div'); pc.className='pcard';
+  pc.innerHTML='<div class="pcard-ttl">Param\u00e8tres du dossier</div>'+
+    '<div class="pg pg2">'+
+      '<div class="pf"><label>Abonnement Tessan</label><div class="pf-row"><input type="number" id="'+id+'_abo" value="'+c.abo+'" step="0.01"><span class="u">\u20ac/mois</span></div></div>'+
+      (c.hasTC?'<div class="pf"><label>TC / mois</label><div class="pf-row"><input type="number" id="'+id+'_tc" value="'+c.tcDef+'" step="1"><span class="u">cons.</span></div></div>':'<div></div>')+
+    '</div>'+
+    '<div class="pg pg4">'+
+      '<div class="pf"><label>Mat\u00e9riel HT</label><div class="pf-row"><input type="number" id="'+id+'_mat" value="'+matDef+'" step="1"><span class="u">\u20ac</span></div><div class="hint">Tarif\u00a0: '+matDef.toLocaleString('fr-FR')+'\u00a0\u20ac</div></div>'+
+      '<div class="pf"><label>Maintenance</label><div class="pf-row"><input type="number" id="'+id+'_maint" value="'+mnt13+'" step="0.01"><span class="u">\u20ac/mois</span></div><div class="hint">Tarif\u00a0: '+mnt13+'\u00a0\u20ac</div></div>'+
+      (c.hasTED?'<div class="pf"><label>TED</label><div class="pf-row"><input type="number" id="'+id+'_ted" value="'+c.tedDef+'" step="0.01"><span class="u">\u20ac/mois</span></div><div class="hint">Tarif\u00a0: '+c.tedDef+'\u00a0\u20ac</div></div>':'<div></div>')+
+      (c.hasPrio?'<div class="pf"><label>Acc\u00e8s prioritaire</label><div class="pf-row"><input type="number" id="'+id+'_prio" value="'+c.prioDef+'" step="0.01"><span class="u">\u20ac/mois</span></div><div class="hint">Tarif\u00a0: '+c.prioDef+'\u00a0\u20ac</div></div>':'<div></div>')+
+    '</div>'+
+    '<div class="toggles">'+
+      (c.hasTED?'<div class="tog'+(s.ted?' on':'')+'" data-key="ted"><span class="dot"></span>TED</div>':'')+
+      (c.hasPrio?'<div class="tog'+(s.prio?' on':'')+'" data-key="prio"><span class="dot"></span>Acc\u00e8s prioritaire</div>':'')+
+      '<div class="tog'+(s.conv?' on':'')+'" data-key="conv"><span class="dot"></span>Conversion\u00a0\u2014\u00a0<input class="conv-in" type="number" id="'+id+'_conv" value="0" step="100">\u00a0\u20ac</div>'+
+    '</div>'+
+    '<div class="accord-block" id="'+id+'_accord"></div>';
 
-  // Params card
-  const pcard = document.createElement('div');
-  pcard.className = 'pcard';
-  let pcHtml = '<div class="pcard-ttl">Paramètres du dossier</div>';
-  pcHtml += '<div class="pg pg2">';
-  pcHtml += '<div class="pf"><label>Abonnement Tessan</label><div class="pf-row"><input type="number" id="'+id+'_abo" value="'+c.abo+'" step="0.01"><span class="u">€/mois</span></div></div>';
-  pcHtml += c.hasTC ? '<div class="pf"><label>TC / mois</label><div class="pf-row"><input type="number" id="'+id+'_tc" value="'+c.tcDef+'" step="1"><span class="u">cons.</span></div></div>' : '<div></div>';
-  pcHtml += '</div>';
-  pcHtml += '<div class="pg pg4">';
-  pcHtml += '<div class="pf"><label>Matériel HT</label><div class="pf-row"><input type="number" id="'+id+'_mat" value="'+matDef+'" step="1"><span class="u">€</span></div><div class="hint">Tarif : '+matDef.toLocaleString('fr-FR')+' €</div></div>';
-  pcHtml += '<div class="pf"><label>Maintenance</label><div class="pf-row"><input type="number" id="'+id+'_maint" value="'+mntD+'" step="0.01"><span class="u">€/mois</span></div><div class="hint">Tarif : '+mntD+' €</div></div>';
-  pcHtml += c.hasTED  ? '<div class="pf"><label>TED</label><div class="pf-row"><input type="number" id="'+id+'_ted" value="'+c.tedDef+'" step="0.01"><span class="u">€/mois</span></div><div class="hint">Tarif : '+c.tedDef+' €</div></div>' : '<div></div>';
-  pcHtml += c.hasPrio ? '<div class="pf"><label>Accès prioritaire</label><div class="pf-row"><input type="number" id="'+id+'_prio" value="'+c.prioDef+'" step="0.01"><span class="u">€/mois</span></div><div class="hint">Tarif : '+c.prioDef+' €</div></div>' : '<div></div>';
-  pcHtml += '</div>';
-  pcHtml += '<div class="toggles">';
-  if (c.hasTED)  pcHtml += '<div class="tog" data-dev="'+id+'" data-key="ted"><span class="dot"></span>TED</div>';
-  if (c.hasPrio) pcHtml += '<div class="tog" data-dev="'+id+'" data-key="prio"><span class="dot"></span>Accès prioritaire</div>';
-  pcHtml += '<div class="tog" data-dev="'+id+'" data-key="conv"><span class="dot"></span>Conversion&nbsp;—&nbsp;<input class="conv-in" type="number" id="'+id+'_conv" value="0" step="100">&nbsp;€</div>';
-  pcHtml += '</div>';
-  pcHtml += '<div id="'+id+'_accord"></div>';
-  pcard.innerHTML = pcHtml;
-
-  // wire toggle clicks
-  pcard.querySelectorAll('.tog').forEach(t => {
-    t.addEventListener('click', e => {
-      if (e.target.classList.contains('conv-in')) return;
-      togDev(t.dataset.dev, t.dataset.key);
-    });
+  pc.querySelectorAll('.tog').forEach(t=>{
+    t.addEventListener('click',e=>{ if(e.target.classList.contains('conv-in')) return; togDev(id,t.dataset.key); });
   });
-  // wire conv input
-  const convInput = pcard.querySelector('.conv-in');
-  if (convInput) convInput.addEventListener('input', () => renderDevice(id));
-  // wire param inputs
-  pcard.querySelectorAll('input[type=number]').forEach(inp => {
-    if (!inp.classList.contains('conv-in')) inp.addEventListener('input', () => renderDevice(id));
-  });
-  pg.appendChild(pcard);
+  pc.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',()=>renderDevice(id)));
+  pg.appendChild(pc);
 
-  // Mixte section
-  const s1 = document.createElement('div'); s1.className='sec'; s1.textContent='Mixte — abonnement mensuel + matériel fractionné'; pg.appendChild(s1);
-  const mix = document.createElement('div'); mix.className='g3'; mix.id=id+'_mix'; pg.appendChild(mix);
+  function addSec(txt){ const s=document.createElement('div'); s.className='sec'; s.textContent=txt; pg.appendChild(s); }
+  function addDiv(cls,gid){ const g=document.createElement('div'); g.className=cls; g.id=id+'_'+gid; pg.appendChild(g); }
 
-  // Comptant section
-  const s2 = document.createElement('div'); s2.className='sec'; s2.textContent='Paiement comptant'; pg.appendChild(s2);
-  const cpt = document.createElement('div'); cpt.className='g3'; cpt.id=id+'_cpt'; pg.appendChild(cpt);
+  addSec('Mixte \u2014 abonnement mensuel + mat\u00e9riel fractionn\u00e9');
+  addDiv('g3','mix');
+  addSec('Paiement comptant \u2014 tout inclus, z\u00e9ro mensualit\u00e9');
+  addDiv('g3','cpt');
+  addSec('Leasing \u2014 mensualit\u00e9s modulables');
 
-  // Leasing section
-  const s3 = document.createElement('div'); s3.className='sec'; s3.textContent='Leasing — mensualités modulables'; pg.appendChild(s3);
-  const li = document.createElement('div');
-  li.className = 'leas-inputs';
-  li.innerHTML = '<div class="pf"><label>Matériel M1–12 (promo)</label><div class="pf-row"><input type="number" id="'+id+'_lm1" value="'+mat1+'" step="0.01"><span class="u">€/mois</span></div></div><div class="pf"><label>Maintenance M1–12 (promo)</label><div class="pf-row"><input type="number" id="'+id+'_ln1" value="'+mnt1+'" step="0.01"><span class="u">€/mois</span></div></div>';
-  li.querySelectorAll('input').forEach(inp => inp.addEventListener('input', () => renderDevice(id)));
+  const li=document.createElement('div'); li.className='leas-inputs';
+  li.innerHTML=
+    '<div class="pf"><label>Mat\u00e9riel M1\u201312 (promo)</label><div class="pf-row"><input type="number" id="'+id+'_lm1" value="'+mat1+'" step="0.01"><span class="u">\u20ac/mois</span></div></div>'+
+    '<div class="pf"><label>Maintenance M1\u201312 (promo)</label><div class="pf-row"><input type="number" id="'+id+'_ln1" value="'+mnt1+'" step="0.01"><span class="u">\u20ac/mois</span></div></div>';
+  li.querySelectorAll('input').forEach(inp=>inp.addEventListener('input',()=>renderDevice(id)));
   pg.appendChild(li);
 
-  const lnote = document.createElement('div');
-  lnote.className = 'leas-note';
-  lnote.textContent = 'Les mensualités M13–'+d+' sont issues de la configuration admin. Modifiez M1–12 pour proposer une période de lancement réduite ou offerte.';
-  pg.appendChild(lnote);
+  const ln=document.createElement('div'); ln.className='leas-note';
+  ln.textContent='Les mensualit\u00e9s M13\u2013'+d+' viennent de la config admin. Modifiez M1\u201312 pour proposer une p\u00e9riode de lancement r\u00e9duite.';
+  pg.appendChild(ln);
+  addDiv('g2','leas');
 
-  const leas = document.createElement('div'); leas.className='g2'; leas.id=id+'_leas'; pg.appendChild(leas);
+  const rt=document.createElement('div'); rt.className='rtog'; rt.id=id+'_rtog';
+  rt.innerHTML='<svg width="10" height="10" viewBox="0 0 10 10"><path d="M3 1.5l4 3.5-4 3.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg> Rentabilit\u00e9 du dossier (usage interne)';
+  rt.addEventListener('click',()=>{ $( id+'_rentab').classList.toggle('show'); rt.classList.toggle('open'); });
+  pg.appendChild(rt);
+  addDiv('rgrid','rentab');
 
-  // Rentab toggle
-  const rtog = document.createElement('div'); rtog.className='rtog'; rtog.id=id+'_rtog';
-  rtog.innerHTML = '<svg width="10" height="10" viewBox="0 0 10 10"><path d="M3 1.5l4 3.5-4 3.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg> Rentabilité du dossier';
-  rtog.addEventListener('click', () => { $( id+'_rentab').classList.toggle('show'); rtog.classList.toggle('open'); });
-  pg.appendChild(rtog);
-
-  const rg = document.createElement('div'); rg.className='rgrid'; rg.id=id+'_rentab'; pg.appendChild(rg);
-  const sp = document.createElement('div'); sp.style.height='2rem'; pg.appendChild(sp);
+  const sp=document.createElement('div'); sp.style.height='2rem'; pg.appendChild(sp);
 }
 
-function setDur(id, d) { ST[id].dur = d; buildPage(id); renderDevice(id); }
-
-function togDev(id, key) {
-  ST[id][key] = !ST[id][key];
-  const tog = $('page-'+id).querySelector('.tog[data-key="'+key+'"]');
-  if (tog) tog.classList.toggle('on', ST[id][key]);
+function setDur(id,d){ ST[id].dur=d; buildPage(id); renderDevice(id); }
+function togDev(id,key){
+  ST[id][key]=!ST[id][key];
+  const tog=$('page-'+id).querySelector('.tog[data-key="'+key+'"]');
+  if(tog) tog.classList.toggle('on',ST[id][key]);
   renderDevice(id);
 }
 
-// ── COMPUTE ──────────────────────────────────────────────────
-function compute(id) {
-  const c = CFG[id], s = ST[id], d = s.dur, rest = d===60 ? 48 : 36;
+// ── COMPUTE (rules from PDF cahier des charges) ───────────────────────────
+function compute(id){
+  const c=CFG[id], s=ST[id], d=s.dur, rest=d===60?48:36;
+
   const abo   = gv(id+'_abo');
   const mat   = gv(id+'_mat');
-  const maint = gv(id+'_maint');
-  const tc    = c.hasTC  ? gv(id+'_tc')   : 0;
-  const tedP  = c.hasTED ? gv(id+'_ted')  : 0;
-  const prioP = c.hasPrio? gv(id+'_prio') : 0;
+  const maint = gv(id+'_maint');  // mensualite maintenance saisie
+  const tc    = c.hasTC ? gv(id+'_tc') : 0;
+  const tedP  = c.hasTED  ? gv(id+'_ted')  : 0;
+  const prioP = c.hasPrio ? gv(id+'_prio') : 0;
   const ted   = s.ted  ? tedP  : 0;
   const prio  = s.prio ? prioP : 0;
   const conv  = s.conv ? gv(id+'_conv') : 0;
-  const opts  = ted + prio;
-  const achat = d===60 ? c.achat60 : c.achat48;
-  const cac   = d===60 ? c.cac60   : c.cac48;
-  const LR = c.leasRate, CR = c.cashRate;
-  const lm1  = gv(id+'_lm1'), ln1  = gv(id+'_ln1');
-  const lm13 = d===60 ? c.mat60_13 : c.mat48_13;
-  const ln13 = d===60 ? c.mnt60_13 : c.mnt48_13;
-  const lmt  = lm1*12 + lm13*rest;
-  const lnt  = ln1*12 + ln13*rest;
-  const lfin = lmt + lnt;
-  const lfrais = lfin * LR, lcout = lfin + lfrais;
-  const abo_tot = abo*d, opts_tot = opts*d;
-  const l_tot = abo_tot + lcout + opts_tot + conv;
-  const lcash = lcout * CR;
-  const l_deb = abo + opts, l_ful = abo + lm13 + ln13 + opts;
-  // comptant
-  const cpt_mm = (mat + maint) * 0.9;
-  const cpt_base = abo_tot + cpt_mm + conv;
-  const cpt_tot  = cpt_base + opts_tot;
-  const x3 = cpt_base/3, x4 = cpt_base/4;
-  // mixte
-  const mix_b = mat + maint + conv;
-  const mix3 = mix_b/3, mix4 = mix_b/4;
-  // rentab
-  const ltv   = c.hasTC ? tc*7*d : 0;
-  const ca    = l_tot + ltv;
-  const costs = achat + cac + conv + lfin*LR;
-  const ebitda = (abo_tot + lmt + lnt + ltv) - costs;
-  const rentab = costs > 0 ? ca/costs : 0;
-  const mcash  = achat > 0 ? (lcash - achat)/achat : 0;
-  const sR = d===60 ? c.sR60 : c.sR48;
-  const sC = d===60 ? c.sC60 : c.sC48;
-  return {abo,mat,maint,tc,tedP,prioP,ted,prio,conv,opts,d,achat,cac,LR,CR,
-    lmt,lnt,lfin,lfrais,lcout,l_deb,l_ful,abo_tot,opts_tot,l_tot,lcash,lm1,ln1,lm13,ln13,
-    cpt_mm,cpt_base,cpt_tot,x3,x4,mix_b,mix3,mix4,
-    ltv,ca,costs,ebitda,rentab,mcash,sR,sC, okA:rentab>=sR, okL:mcash>=sC};
+
+  const achat = d===60?c.achat60:c.achat48;
+  const cac   = d===60?c.cac60  :c.cac48;
+  const LR=c.leasRate, CR=c.cashRate;
+
+  // ── COMPTANT (PDF p.2) ──────────────────────────────────────────────────
+  // "Service Tessan inclus dans le prix total + ZERO mensualite"
+  // Paiement = (service x duree) + ((mat + maintenance) x 0.9) + conversion
+  // Note: maintenance ici = total maintenance sur duree ? Non.
+  // En relisant xlsx: G7 = G24*0.9 (cout total a financer leasing)
+  // et F7 = service mensuel (pas service total)
+  // MAIS le PDF dit: "Service mensuel x duree" -> service total sur duree
+  // On choisit la formule PDF (plus logique pour le client):
+  // cpt_service = abo * d  (service total integre)
+  // cpt_matmaint = (mat + maint) * 0.9  (mat+maintenance avec remise 10%)
+  // Note sur maint: on utilise la valeur mensuelle * duree pour coerente
+  // Mais xlsx utilise G24 (cout financement leasing) pour la remise...
+  // On suit le PDF qui dit simplement (mat + maintenance) -10%
+  const maint_tot = maint * d;  // maintenance totale sur duree
+  const cpt_service = abo * d;
+  const cpt_matmaint = (mat + maint_tot) * 0.9;  // remise 10% sur mat+maint total
+  const cpt_opts_tot = (ted + prio) * d;
+  const cpt_total = cpt_service + cpt_matmaint + conv + cpt_opts_tot;
+  const cpt_x3 = cpt_total / 3;
+  const cpt_x4 = cpt_total / 4;
+
+  // ── MIXTE (PDF p.3) ─────────────────────────────────────────────────────
+  // "Service Tessan mensuel + paiement materiel (1x/3x/4x)"
+  // "materiel + maintenance + rachat eventuel"
+  const mix_base = mat + maint_tot + conv;  // ce qui est fractionne
+  const mix3 = mix_base / 3;
+  const mix4 = mix_base / 4;
+  // mensualite totale mixte = abo + ted + prio (prelevement mensuel)
+  const mix_mens = abo + ted + prio;
+
+  // ── LEASING (PDF p.3) ───────────────────────────────────────────────────
+  // "Montant finance = materiel + maintenance + rachat eventuel"
+  // "Montant total = montant finance x 1.20"
+  // "Mensualite = montant total / duree"
+  // Pour les mensualites M1-12 et M13+, on utilise les valeurs saisies
+  const lm1  = gv(id+'_lm1');
+  const ln1  = gv(id+'_ln1');
+  const lm13 = d===60?c.mat60_13:c.mat48_13;
+  const ln13 = d===60?c.mnt60_13:c.mnt48_13;
+
+  // Total materiel et maintenance en leasing sur duree
+  const lmat_tot = (lm1*12) + (lm13*rest);
+  const lmnt_tot = (ln1*12) + (ln13*rest);
+
+  // Montant finance = mat_tot + maint_tot + conversion
+  const l_fin   = lmat_tot + lmnt_tot + conv;
+  // Montant total = finance x 1.20
+  const l_total_fin = l_fin * (1 + LR);
+  const l_frais = l_fin * LR;
+  // Cash immediat = montant finance x 60% (PDF p.5: "montant finance x 60%")
+  const l_cash  = l_fin * CR;
+
+  // Mensualite affichee au client
+  const l_mens_deb = abo + lm1 + ln1 + ted + prio;
+  const l_mens_ful = abo + lm13 + ln13 + ted + prio;
+  // Cout total client sur duree (service + financement total)
+  const l_service_tot = abo * d;
+  const l_client_total = l_service_tot + l_total_fin + (ted+prio)*d;
+
+  // ── RENTABILITE (PDF p.4-5) ──────────────────────────────────────────────
+  // CA direct = tout ce que paie le client (on utilise leasing comme reference)
+  const ca_direct = l_client_total;
+  // LTV TC (si applicable)
+  const ltv = c.hasTC ? tc * 7 * d : 0;
+  // CA total = CA direct + LTV TC
+  const ca_total = ca_direct + ltv;
+  // Couts Tessan = achat + CAC + conversion + cout leasing (20% du finance)
+  const cout_tessan = achat + cac + conv + (l_fin * LR);
+  // EBITDA = revenus totaux - couts Tessan
+  const ebitda = ca_total - cout_tessan;
+  // Rentabilite = CA total / cout Tessan
+  const rentab = cout_tessan > 0 ? ca_total / cout_tessan : 0;
+  // Marge sur cash = (cash - cout materiel) / cout materiel
+  const mcash  = achat > 0 ? (l_cash - achat) / achat : 0;
+
+  // ── VALIDATIONS (PDF p.6) ────────────────────────────────────────────────
+  // 1. Validation dossier: mat + maint (total sur duree) >= seuil
+  const val_dossier = (mat + maint_tot) >= c.seuilDossier;
+  // 2. Validation leasing: marge cash > 20%
+  const val_leas = mcash > c.seuilCash;
+  // 3. Validation comptant: rentabilite >= 315%
+  const val_cpt  = rentab >= c.seuilRentab;
+
+  return {
+    abo, mat, maint, maint_tot, tc, tedP, prioP, ted, prio, conv, d, rest,
+    achat, cac, LR, CR,
+    cpt_service, cpt_matmaint, cpt_opts_tot, cpt_total, cpt_x3, cpt_x4,
+    mix_base, mix3, mix4, mix_mens,
+    lm1, ln1, lm13, ln13, lmat_tot, lmnt_tot,
+    l_fin, l_frais, l_total_fin, l_cash, l_mens_deb, l_mens_ful,
+    l_service_tot, l_client_total,
+    ltv, ca_direct, ca_total, cout_tessan, ebitda, rentab, mcash,
+    val_dossier, val_leas, val_cpt,
+    seuilDossier: c.seuilDossier, seuilCash: c.seuilCash, seuilRentab: c.seuilRentab
+  };
 }
 
-// ── RENDER ───────────────────────────────────────────────────
-function renderDevice(id) {
-  const c = CFG[id], v = compute(id);
+// ── RENDER ────────────────────────────────────────────────────────────────
+function renderDevice(id){
+  const c=CFG[id], v=compute(id);
 
-  // Accord
-  let acls, ico, atit, tags;
-  if      (v.okA && v.okL) { acls='ok';   ico='✅'; atit='Accord achat direct / Accord leasing';  tags=['✓ Achat direct','✓ Leasing']; }
-  else if (v.okA)           { acls='warn'; ico='⚠️';  atit='Accord achat direct / Refus leasing';   tags=['✓ Achat direct','✗ Leasing']; }
-  else                      { acls='ko';   ico='🚫'; atit='Refus achat direct / Refus leasing';    tags=['✗ Achat direct','✗ Leasing']; }
-  $(id+'_accord').innerHTML =
-    '<div class="accord '+acls+'"><span class="accord-ico">'+ico+'</span><div class="accord-body">'+
-    '<div class="accord-ttl">'+atit+'</div>'+
-    '<div class="accord-tags">'+tags.map(t=>'<span class="atag">'+t+'</span>').join('')+'</div></div></div>';
+  // ── ACCORD (3 validations separees) ──
+  function acordRow(ok, lbl, val){
+    const cls = ok?'ok':'ko';
+    const ico = ok?'\u2705':'\u274c';
+    return '<div class="accord '+cls+'">'+
+      '<span class="accord-ico">'+ico+'</span>'+
+      '<span class="accord-lbl">'+lbl+'</span>'+
+      '<span class="accord-val">'+val+'</span>'+
+    '</div>';
+  }
+  $( id+'_accord').innerHTML =
+    acordRow(v.val_dossier,
+      'Validation dossier (mat+maint \u2265 '+ff(v.seuilDossier)+')',
+      ff(v.mat + v.maint_tot))+
+    acordRow(v.val_cpt,
+      'Validation comptant (rentabilit\u00e9 \u2265 '+Math.round(v.seuilRentab*100)+'%)',
+      fp(v.rentab))+
+    acordRow(v.val_leas,
+      'Validation leasing (marge cash > '+fp(v.seuilCash)+')',
+      fp(v.mcash));
 
   // helpers
-  const convL  = v.conv>0  ? '<div class="cr"><span>Conversion</span><b>'+f(v.conv)+'</b></div>' : '';
-  const optsTL = v.opts>0  ? '<div class="cr"><span>Options ('+v.d+' mois)</span><b>'+f(v.opts*v.d)+'</b></div>' : '';
-  const optsML = v.opts>0  ? '<div class="cr"><span>Options / mois</span><b>'+fm(v.opts)+'</b></div>' : '';
-  const tedL   = v.ted>0   ? '<div class="cr"><span>TED</span><b>'+fm(v.tedP)+'</b></div>' : '';
-  const prioL  = v.prio>0  ? '<div class="cr"><span>Accès prioritaire</span><b>'+fm(v.prioP)+'</b></div>' : '';
+  const tedL  = v.ted>0  ? '<div class="cr"><span>TED</span><b>'+fm(v.tedP)+'</b></div>' : '';
+  const prioL = v.prio>0 ? '<div class="cr"><span>Acc\u00e8s prioritaire</span><b>'+fm(v.prioP)+'</b></div>' : '';
+  const convL = v.conv>0 ? '<div class="cr"><span>Conversion</span><b>'+ff(v.conv)+'</b></div>' : '';
+  const optsL = (v.ted+v.prio)>0 ? '<div class="cr"><span>Options mensuel</span><b>'+fm(v.ted+v.prio)+'</b></div>' : '';
 
-  // MIXTE
-  $(id+'_mix').innerHTML =
-    '<div class="card star"><div class="badge">RECOMMANDÉ</div><div class="ctitle">Mixte — Comptant</div>'+
-    '<div class="csub">Abonnement mensuel prélevé + règlement unique du matériel</div>'+
-    '<div class="cprice">'+fm(v.abo)+'<small> + '+f(v.mix_b)+'</small></div>'+
-    '<div class="crows"><div class="cr"><span>Abonnement Tessan</span><b>'+fm(v.abo)+'</b></div>'+
-    '<div class="cr"><span>Matériel HT</span><b>'+f(v.mat)+'</b></div>'+
-    '<div class="cr"><span>Maintenance</span><b>'+f(v.maint)+'</b></div>'+convL+optsML+'</div></div>'+
+  // ── MIXTE ──
+  // Service mensuel preleve + materiel fractionne
+  $( id+'_mix').innerHTML=
+    '<div class="card star"><div class="badge">RECOMMAND\u00c9</div>'+
+    '<div class="ctitle">Mixte \u2014 Comptant mat\u00e9riel</div>'+
+    '<div class="csub">Abonnement mensuel pr\u00e9lev\u00e9 + r\u00e8glement unique du mat\u00e9riel</div>'+
+    '<div class="cprice">'+fm(v.mix_mens)+'<small> + '+ff(v.mix_base)+'</small></div>'+
+    '<div class="crows">'+
+      '<div class="cr"><span>Abonnement Tessan</span><b>'+fm(v.abo)+'</b></div>'+
+      tedL+prioL+
+      '<div class="cr sep"><span>Mat\u00e9riel HT</span><b>'+ff(v.mat)+'</b></div>'+
+      '<div class="cr"><span>Maintenance ('+v.d+' mois)</span><b>'+ff(v.maint_tot)+'</b></div>'+
+      convL+
+      '<div class="cr sep tot"><span>Total mat\u00e9riel+maint'+(v.conv>0?'+conv':'')+'</span><b>'+ff(v.mix_base)+'</b></div>'+
+    '</div></div>'+
 
-    '<div class="card"><div class="ctitle">Mixte 3×</div>'+
-    '<div class="csub">Abonnement mensuel prélevé + matériel en 3 versements</div>'+
-    '<div class="cprice">'+fm(v.abo)+(v.opts>0?'<small> + opts</small>':'')+'<small> + '+f(v.mix3)+' × 3</small></div>'+
-    '<div class="crows"><div class="cr"><span>Abonnement mensuel</span><b>'+fm(v.abo)+'</b></div>'+
-    optsML+'<div class="cr sep"><span>Versement commande</span><b>'+f(v.mix3)+'</b></div>'+
-    '<div class="cr"><span>Versement livraison</span><b>'+f(v.mix3)+'</b></div>'+
-    '<div class="cr"><span>M+1</span><b>'+f(v.mix3)+'</b></div>'+
-    '<div class="cr sep tot"><span>Matériel+maint'+(v.conv>0?'+conv':'')+'</span><b>'+f(v.mix_b)+'</b></div></div></div>'+
+    '<div class="card"><div class="ctitle">Mixte 3\u00d7</div>'+
+    '<div class="csub">Abonnement mensuel + mat\u00e9riel en 3 versements sans frais</div>'+
+    '<div class="cprice">'+fm(v.mix_mens)+'<small> + '+ff(v.mix3)+' \u00d7 3</small></div>'+
+    '<div class="crows">'+
+      '<div class="cr"><span>Abonnement mensuel</span><b>'+fm(v.abo)+'</b></div>'+
+      tedL+prioL+
+      '<div class="cr sep"><span>Versement commande</span><b>'+ff(v.mix3)+'</b></div>'+
+      '<div class="cr"><span>Versement livraison</span><b>'+ff(v.mix3)+'</b></div>'+
+      '<div class="cr"><span>M+1</span><b>'+ff(v.mix3)+'</b></div>'+
+      '<div class="cr sep tot"><span>Mat+maint'+(v.conv>0?'+conv':'')+'</span><b>'+ff(v.mix_base)+'</b></div>'+
+    '</div></div>'+
 
-    '<div class="card"><div class="ctitle">Mixte 4×</div>'+
-    '<div class="csub">Abonnement mensuel prélevé + matériel en 4 versements</div>'+
-    '<div class="cprice">'+fm(v.abo)+(v.opts>0?'<small> + opts</small>':'')+'<small> + '+f(v.mix4)+' × 4</small></div>'+
-    '<div class="crows"><div class="cr"><span>Abonnement mensuel</span><b>'+fm(v.abo)+'</b></div>'+
-    optsML+'<div class="cr sep"><span>Versement commande</span><b>'+f(v.mix4)+'</b></div>'+
-    '<div class="cr"><span>Versement livraison</span><b>'+f(v.mix4)+'</b></div>'+
-    '<div class="cr"><span>M+1</span><b>'+f(v.mix4)+'</b></div>'+
-    '<div class="cr"><span>M+2</span><b>'+f(v.mix4)+'</b></div>'+
-    '<div class="cr sep tot"><span>Matériel+maint'+(v.conv>0?'+conv':'')+'</span><b>'+f(v.mix_b)+'</b></div></div></div>';
+    '<div class="card"><div class="ctitle">Mixte 4\u00d7</div>'+
+    '<div class="csub">Abonnement mensuel + mat\u00e9riel en 4 versements sans frais</div>'+
+    '<div class="cprice">'+fm(v.mix_mens)+'<small> + '+ff(v.mix4)+' \u00d7 4</small></div>'+
+    '<div class="crows">'+
+      '<div class="cr"><span>Abonnement mensuel</span><b>'+fm(v.abo)+'</b></div>'+
+      tedL+prioL+
+      '<div class="cr sep"><span>Versement commande</span><b>'+ff(v.mix4)+'</b></div>'+
+      '<div class="cr"><span>Versement livraison</span><b>'+ff(v.mix4)+'</b></div>'+
+      '<div class="cr"><span>M+1</span><b>'+ff(v.mix4)+'</b></div>'+
+      '<div class="cr"><span>M+2</span><b>'+ff(v.mix4)+'</b></div>'+
+      '<div class="cr sep tot"><span>Mat+maint'+(v.conv>0?'+conv':'')+'</span><b>'+ff(v.mix_base)+'</b></div>'+
+    '</div></div>';
 
-  // COMPTANT
-  $(id+'_cpt').innerHTML =
-    '<div class="card star"><div class="badge">RECOMMANDÉ</div><div class="ctitle">Comptant</div>'+
-    '<div class="csub">Règlement unique — remise −10% sur matériel + maintenance</div>'+
-    '<div class="cprice">'+f(v.cpt_tot)+'</div>'+
-    '<div class="crows"><div class="cr"><span>Abonnement ('+v.d+' mois)</span><b>'+f(v.abo_tot)+'</b></div>'+
-    '<div class="cr"><span>Matériel + maintenance −10%</span><b>'+f(v.cpt_mm)+'</b></div>'+convL+optsTL+'</div></div>'+
+  // ── COMPTANT ──
+  // "Tout paye upfront, service inclus, ZERO mensualite"
+  $( id+'_cpt').innerHTML=
+    '<div class="card star"><div class="badge">RECOMMAND\u00c9</div>'+
+    '<div class="ctitle">Comptant \u2014 r\u00e8glement unique</div>'+
+    '<div class="csub">Service inclus \u2022 Z\u00e9ro mensualit\u00e9 \u2022 Remise \u221210% mat\u00e9riel</div>'+
+    '<div class="cprice">'+ff(v.cpt_total)+'</div>'+
+    '<div class="crows">'+
+      '<div class="cr"><span>Service Tessan ('+v.d+' mois)</span><b>'+ff(v.cpt_service)+'</b></div>'+
+      '<div class="cr"><span>Mat\u00e9riel + maintenance \u221210%</span><b>'+ff(v.cpt_matmaint)+'</b></div>'+
+      convL+(v.cpt_opts_tot>0?'<div class="cr"><span>Options ('+v.d+' mois)</span><b>'+ff(v.cpt_opts_tot)+'</b></div>':'')+
+    '</div></div>'+
 
-    '<div class="card"><div class="ctitle">3× sans frais</div>'+
-    '<div class="csub">3 versements égaux — abonnement + matériel inclus</div>'+
-    '<div class="cprice">'+f(v.x3)+'<small> × 3</small></div>'+
-    '<div class="crows"><div class="cr"><span>Abonnement ('+v.d+' mois)</span><b>'+f(v.abo_tot)+'</b></div>'+
-    '<div class="cr"><span>Matériel + maintenance −10%</span><b>'+f(v.cpt_mm)+'</b></div>'+convL+optsTL+
-    '<div class="cr sep"><span>Versement commande</span><b>'+f(v.x3)+'</b></div>'+
-    '<div class="cr"><span>Versement livraison</span><b>'+f(v.x3)+'</b></div>'+
-    '<div class="cr"><span>M+1</span><b>'+f(v.x3)+'</b></div>'+
-    '<div class="cr sep tot"><span>Total</span><b>'+f(v.cpt_base)+'</b></div></div></div>'+
+    '<div class="card"><div class="ctitle">3\u00d7 sans frais</div>'+
+    '<div class="csub">3 versements \u00e9gaux \u2022 Service inclus \u2022 Z\u00e9ro mensualit\u00e9</div>'+
+    '<div class="cprice">'+ff(v.cpt_x3)+'<small> \u00d7 3</small></div>'+
+    '<div class="crows">'+
+      '<div class="cr"><span>Service ('+v.d+' mois)</span><b>'+ff(v.cpt_service)+'</b></div>'+
+      '<div class="cr"><span>Mat\u00e9riel + maintenance \u221210%</span><b>'+ff(v.cpt_matmaint)+'</b></div>'+
+      convL+(v.cpt_opts_tot>0?'<div class="cr"><span>Options</span><b>'+ff(v.cpt_opts_tot)+'</b></div>':'')+
+      '<div class="cr sep"><span>Commande</span><b>'+ff(v.cpt_x3)+'</b></div>'+
+      '<div class="cr"><span>Livraison</span><b>'+ff(v.cpt_x3)+'</b></div>'+
+      '<div class="cr"><span>M+1</span><b>'+ff(v.cpt_x3)+'</b></div>'+
+      '<div class="cr sep tot"><span>Total</span><b>'+ff(v.cpt_total)+'</b></div>'+
+    '</div></div>'+
 
-    '<div class="card"><div class="ctitle">4× sans frais</div>'+
-    '<div class="csub">4 versements égaux — abonnement + matériel inclus</div>'+
-    '<div class="cprice">'+f(v.x4)+'<small> × 4</small></div>'+
-    '<div class="crows"><div class="cr"><span>Abonnement ('+v.d+' mois)</span><b>'+f(v.abo_tot)+'</b></div>'+
-    '<div class="cr"><span>Matériel + maintenance −10%</span><b>'+f(v.cpt_mm)+'</b></div>'+convL+optsTL+
-    '<div class="cr sep"><span>Versement commande</span><b>'+f(v.x4)+'</b></div>'+
-    '<div class="cr"><span>Versement livraison</span><b>'+f(v.x4)+'</b></div>'+
-    '<div class="cr"><span>M+1</span><b>'+f(v.x4)+'</b></div>'+
-    '<div class="cr"><span>M+2</span><b>'+f(v.x4)+'</b></div>'+
-    '<div class="cr sep tot"><span>Total</span><b>'+f(v.cpt_base)+'</b></div></div></div>';
+    '<div class="card"><div class="ctitle">4\u00d7 sans frais</div>'+
+    '<div class="csub">4 versements \u00e9gaux \u2022 Service inclus \u2022 Z\u00e9ro mensualit\u00e9</div>'+
+    '<div class="cprice">'+ff(v.cpt_x4)+'<small> \u00d7 4</small></div>'+
+    '<div class="crows">'+
+      '<div class="cr"><span>Service ('+v.d+' mois)</span><b>'+ff(v.cpt_service)+'</b></div>'+
+      '<div class="cr"><span>Mat\u00e9riel + maintenance \u221210%</span><b>'+ff(v.cpt_matmaint)+'</b></div>'+
+      convL+(v.cpt_opts_tot>0?'<div class="cr"><span>Options</span><b>'+ff(v.cpt_opts_tot)+'</b></div>':'')+
+      '<div class="cr sep"><span>Commande</span><b>'+ff(v.cpt_x4)+'</b></div>'+
+      '<div class="cr"><span>Livraison</span><b>'+ff(v.cpt_x4)+'</b></div>'+
+      '<div class="cr"><span>M+1</span><b>'+ff(v.cpt_x4)+'</b></div>'+
+      '<div class="cr"><span>M+2</span><b>'+ff(v.cpt_x4)+'</b></div>'+
+      '<div class="cr sep tot"><span>Total</span><b>'+ff(v.cpt_total)+'</b></div>'+
+    '</div></div>';
 
-  // LEASING
-  $(id+'_leas').innerHTML =
-    '<div class="card"><div class="ctitle">Leasing '+v.d+' mois — mensualités</div>'+
-    '<div class="csub">Abonnement + matériel + maintenance inclus</div>'+
-    '<div class="cprice">'+fm(v.l_ful)+'<small> à partir de M13</small></div>'+
-    '<div class="crows"><div class="cr"><span>Mois 1–12</span><b>'+fm(v.l_deb)+'</b></div>'+
-    '<div class="cr sep"><span>Abonnement Tessan</span><b>'+fm(v.abo)+'</b></div>'+
-    '<div class="cr"><span>Matériel M1–12</span><b>'+fm(v.lm1)+'</b></div>'+
-    '<div class="cr"><span>Matériel M13–'+v.d+'</span><b>'+fm(v.lm13)+'</b></div>'+
-    '<div class="cr"><span>Maintenance M1–12</span><b>'+fm(v.ln1)+'</b></div>'+
-    '<div class="cr"><span>Maintenance M13–'+v.d+'</span><b>'+fm(v.ln13)+'</b></div>'+
-    tedL+prioL+
-    '<div class="cr sep tot"><span>Coût total '+v.d+' mois</span><b>'+f(v.l_tot)+'</b></div></div></div>'+
+  // ── LEASING ──
+  $( id+'_leas').innerHTML=
+    '<div class="card"><div class="ctitle">Leasing '+v.d+' mois \u2014 mensualit\u00e9s</div>'+
+    '<div class="csub">Service mensuel + mat\u00e9riel financ\u00e9</div>'+
+    '<div class="cprice">'+fm(v.l_mens_ful)+'<small> \u00e0 partir de M13</small></div>'+
+    '<div class="crows">'+
+      '<div class="cr"><span>Mensualit\u00e9 M1\u201312</span><b>'+fm(v.l_mens_deb)+'</b></div>'+
+      '<div class="cr sep"><span>Abonnement Tessan</span><b>'+fm(v.abo)+'</b></div>'+
+      '<div class="cr"><span>Mat\u00e9riel M1\u201312</span><b>'+fm(v.lm1)+'</b></div>'+
+      '<div class="cr"><span>Mat\u00e9riel M13\u2013'+v.d+'</span><b>'+fm(v.lm13)+'</b></div>'+
+      '<div class="cr"><span>Maintenance M1\u201312</span><b>'+fm(v.ln1)+'</b></div>'+
+      '<div class="cr"><span>Maintenance M13\u2013'+v.d+'</span><b>'+fm(v.ln13)+'</b></div>'+
+      tedL+prioL+
+      '<div class="cr sep tot"><span>Co\u00fbt total client '+v.d+' mois</span><b>'+ff(v.l_client_total)+'</b></div>'+
+    '</div></div>'+
 
-    '<div class="card"><div class="ctitle">Leasing '+v.d+' mois — financement</div>'+
-    '<div class="csub">Décomposition du financement matériel</div>'+
-    '<div class="cprice">'+f(v.lfin)+'<small> financé</small></div>'+
-    '<div class="crows"><div class="cr"><span>Matériel total en leasing</span><b>'+f(v.lmt)+'</b></div>'+
-    '<div class="cr"><span>Maintenance totale en leasing</span><b>'+f(v.lnt)+'</b></div>'+
-    '<div class="cr sep"><span>Frais de leasing ('+Math.round(v.LR*100)+'%)</span><b>'+f(v.lfrais)+'</b></div>'+
-    '<div class="cr"><span>Total à financer</span><b>'+f(v.lcout)+'</b></div>'+
-    '<div class="cr sep tot"><span>Cash immédiat Tessan ('+Math.round(v.CR*100)+'%)</span><b>'+f(v.lcash)+'</b></div></div></div>';
+    '<div class="card"><div class="ctitle">Leasing '+v.d+' mois \u2014 financement</div>'+
+    '<div class="csub">D\u00e9composition selon PDF cahier des charges</div>'+
+    '<div class="cprice">'+ff(v.l_fin)+'<small> financ\u00e9</small></div>'+
+    '<div class="crows">'+
+      '<div class="cr"><span>Mat\u00e9riel total en leasing</span><b>'+ff(v.lmat_tot)+'</b></div>'+
+      '<div class="cr"><span>Maintenance totale en leasing</span><b>'+ff(v.lmnt_tot)+'</b></div>'+
+      (v.conv>0?'<div class="cr"><span>Conversion</span><b>'+ff(v.conv)+'</b></div>':'')+
+      '<div class="cr sep"><span>Co\u00fbt leasing (+'+Math.round(v.LR*100)+'%)</span><b>'+ff(v.l_frais)+'</b></div>'+
+      '<div class="cr"><span>Montant total financ\u00e9</span><b>'+ff(v.l_total_fin)+'</b></div>'+
+      '<div class="cr sep tot"><span>Cash imm\u00e9diat Tessan ('+Math.round(v.CR*100)+'% du financ\u00e9)</span><b>'+ff(v.l_cash)+'</b></div>'+
+    '</div></div>';
 
-  // RENTABILITÉ
-  const rb = (ok,val) => '<span class="rbadge '+(ok?'ok':'ko')+'">'+(ok?'✓':'✗')+' '+val+'</span>';
-  $(id+'_rentab').innerHTML =
-    '<div class="rc"><div class="rl">CA total</div><div class="rv">'+f(v.ca)+'</div></div>'+
-    '<div class="rc"><div class="rl">Total coûts</div><div class="rv">'+f(v.costs)+'</div></div>'+
-    '<div class="rc"><div class="rl">EBITDA</div><div class="rv">'+f(v.ebitda)+'</div></div>'+
-    (c.hasTC?'<div class="rc"><div class="rl">LTV TC</div><div class="rv">'+f(v.ltv)+'<small>'+v.tc+' × 7€ × '+v.d+'m</small></div></div>':'')+
-    '<div class="rc"><div class="rl">Marge brute</div><div class="rv">'+f(v.ca-v.achat)+'</div></div>'+
-    '<div class="rc"><div class="rl">Rentabilité (seuil '+v.sR.toFixed(2)+'×)</div><div class="rv">'+rb(v.okA,v.rentab.toFixed(2)+'×')+'</div></div>'+
-    '<div class="rc"><div class="rl">Marge sur cash (seuil '+fp(v.sC)+')</div><div class="rv">'+rb(v.okL,fp(v.mcash))+'</div></div>'+
-    '<div class="rc"><div class="rl">Cash immédiat</div><div class="rv">'+f(v.lcash)+'</div></div>';
+  // ── RENTAB ──
+  const rb=(ok,val)=>'<span class="rbadge '+(ok?'ok':'ko')+'">'+(ok?'\u2713':'\u2717')+' '+val+'</span>';
+  $( id+'_rentab').innerHTML=
+    '<div class="rc"><div class="rl">CA direct</div><div class="rv">'+ff(v.ca_direct)+'</div></div>'+
+    (c.hasTC?'<div class="rc"><div class="rl">LTV TC</div><div class="rv">'+ff(v.ltv)+'<small>'+v.tc+'\u00d77\u20ac\u00d7'+v.d+'m</small></div></div>':'')+
+    '<div class="rc"><div class="rl">CA total</div><div class="rv">'+ff(v.ca_total)+'</div></div>'+
+    '<div class="rc"><div class="rl">Co\u00fbts Tessan</div><div class="rv">'+ff(v.cout_tessan)+'</div></div>'+
+    '<div class="rc"><div class="rl">EBITDA</div><div class="rv">'+ff(v.ebitda)+'</div></div>'+
+    '<div class="rc"><div class="rl">Rentabilit\u00e9 (seuil '+Math.round(v.seuilRentab*100)+'%)</div><div class="rv">'+rb(v.val_cpt,fp(v.rentab))+'</div></div>'+
+    '<div class="rc"><div class="rl">Marge cash (seuil '+fp(v.seuilCash)+')</div><div class="rv">'+rb(v.val_leas,fp(v.mcash))+'</div></div>'+
+    '<div class="rc"><div class="rl">Cash imm\u00e9diat</div><div class="rv">'+ff(v.l_cash)+'</div></div>';
 }
 
-// ── INIT ─────────────────────────────────────────────────────
-DEVS.forEach(id => buildPage(id));
+// ── INIT ──────────────────────────────────────────────────────────────────
+DEVS.forEach(id=>buildPage(id));
 renderDevice('checkup');
+
 </script>
 </body>
 </html>
