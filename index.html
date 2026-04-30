@@ -447,36 +447,36 @@ function compute(id){
   const mix_mens = abo + ted + prio;
 
   // ── LEASING (PDF p.3) ───────────────────────────────────────────────────
-  // "Montant finance = materiel + maintenance + rachat eventuel"
-  // "Montant total = montant finance x 1.20"
-  // "Mensualite = montant total / duree"
-  // Pour les mensualites M1-12 et M13+, on utilise les valeurs saisies
+  // Mensualites M1-12 saisies par le sales (champs modulables)
   const lm1  = gv(id+'_lm1');
   const ln1  = gv(id+'_ln1');
   const lm13 = d===60?c.mat60_13:c.mat48_13;
   const ln13 = d===60?c.mnt60_13:c.mnt48_13;
 
-  // Total materiel et maintenance en leasing sur duree
+  // Total materiel et maintenance en leasing sur duree (affichage mensualites)
   const lmat_tot = (lm1*12) + (lm13*rest);
   const lmnt_tot = (ln1*12) + (ln13*rest);
 
-  // Montant finance = mat_tot + maint_tot + conversion
-  const l_fin   = lmat_tot + lmnt_tot + conv;
+  // MONTANT FINANCE = mat saisi + maintenance totale (sur duree) + conversion
+  // C'est le prix du materiel saisi par le sales qui pilote tout
+  const l_fin   = mat + maint_tot + conv;
   // Montant total = finance x 1.20
   const l_total_fin = l_fin * (1 + LR);
   const l_frais = l_fin * LR;
-  // Cash immediat = montant finance x 60% (PDF p.5: "montant finance x 60%")
+  // Cash immediat = montant finance x 60% (PDF p.5)
   const l_cash  = l_fin * CR;
 
-  // Mensualite affichee au client
+  // Mensualite leasing calculee depuis le montant finance
+  const l_mens_calc = l_total_fin / d;  // mensualite theorique mat+maint
+  // Mensualites affichees (depuis champs modulables sales pour M1-12, M13+)
   const l_mens_deb = abo + lm1 + ln1 + ted + prio;
   const l_mens_ful = abo + lm13 + ln13 + ted + prio;
-  // Cout total client sur duree (service + financement total)
+  // Cout total client sur duree
   const l_service_tot = abo * d;
   const l_client_total = l_service_tot + l_total_fin + (ted+prio)*d;
 
   // ── RENTABILITE (PDF p.4-5) ──────────────────────────────────────────────
-  // CA direct = tout ce que paie le client (on utilise leasing comme reference)
+  // CA direct = tout ce que paie le client
   const ca_direct = l_client_total;
   // LTV TC (si applicable)
   const ltv = c.hasTC ? tc * 7 * d : 0;
@@ -505,7 +505,7 @@ function compute(id){
     cpt_service, cpt_matmaint, cpt_opts_tot, cpt_total, cpt_x3, cpt_x4,
     mix_base, mix3, mix4, mix_mens,
     lm1, ln1, lm13, ln13, lmat_tot, lmnt_tot,
-    l_fin, l_frais, l_total_fin, l_cash, l_mens_deb, l_mens_ful,
+    l_fin, l_frais, l_total_fin, l_cash, l_mens_calc, l_mens_deb, l_mens_ful,
     l_service_tot, l_client_total,
     ltv, ca_direct, ca_total, cout_tessan, ebitda, rentab, mcash,
     val_dossier, val_leas, val_cpt,
@@ -642,14 +642,15 @@ function renderDevice(id){
     '</div></div>'+
 
     '<div class="card"><div class="ctitle">Leasing '+v.d+' mois \u2014 financement</div>'+
-    '<div class="csub">D\u00e9composition selon PDF cahier des charges</div>'+
+    '<div class="csub">Montant financ\u00e9 = mat\u00e9riel + maintenance + conversion</div>'+
     '<div class="cprice">'+ff(v.l_fin)+'<small> financ\u00e9</small></div>'+
     '<div class="crows">'+
-      '<div class="cr"><span>Mat\u00e9riel total en leasing</span><b>'+ff(v.lmat_tot)+'</b></div>'+
-      '<div class="cr"><span>Maintenance totale en leasing</span><b>'+ff(v.lmnt_tot)+'</b></div>'+
+      '<div class="cr"><span>Mat\u00e9riel HT</span><b>'+ff(v.mat)+'</b></div>'+
+      '<div class="cr"><span>Maintenance ('+v.d+' mois)</span><b>'+ff(v.maint_tot)+'</b></div>'+
       (v.conv>0?'<div class="cr"><span>Conversion</span><b>'+ff(v.conv)+'</b></div>':'')+
       '<div class="cr sep"><span>Co\u00fbt leasing (+'+Math.round(v.LR*100)+'%)</span><b>'+ff(v.l_frais)+'</b></div>'+
-      '<div class="cr"><span>Montant total financ\u00e9</span><b>'+ff(v.l_total_fin)+'</b></div>'+
+      '<div class="cr"><span>Montant total \u00e0 financer</span><b>'+ff(v.l_total_fin)+'</b></div>'+
+      '<div class="cr"><span>Mensualit\u00e9 th\u00e9orique mat+maint</span><b>'+fm(v.l_mens_calc)+'</b></div>'+
       '<div class="cr sep tot"><span>Cash imm\u00e9diat Tessan ('+Math.round(v.CR*100)+'% du financ\u00e9)</span><b>'+ff(v.l_cash)+'</b></div>'+
     '</div></div>';
 
