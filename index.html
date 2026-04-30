@@ -463,8 +463,8 @@ function compute(id){
   // Montant total = finance x 1.20
   const l_total_fin = l_fin * (1 + LR);
   const l_frais = l_fin * LR;
-  // Cash immediat = montant finance x 60% (PDF p.5)
-  const l_cash  = l_fin * CR;
+  // Cash immediat = cout total a financer x 60% (xlsx G37 = G24*0.6 ou G24 = financable*1.2)
+  const l_cash  = l_total_fin * CR;
 
   // Mensualite leasing calculee depuis le montant finance
   const l_mens_calc = l_total_fin / d;  // mensualite theorique mat+maint
