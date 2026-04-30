@@ -5,347 +5,196 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tessan — Simulateur Commercial</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:         #FFFFFF;
-  --surface:    #F8F8F8;
-  --surface2:   #F2F2F2;
-  --border:     #E8E8E8;
-  --border2:    #D4D4D4;
-  --ink:        #111111;
-  --ink2:       #555555;
-  --ink3:       #999999;
-  --blue:       #2563EB;
-  --blue-lt:    #EEF4FF;
-  --blue-bd:    #BFDBFE;
-  --green:      #16A34A;
-  --green-lt:   #F0FDF4;
-  --green-bd:   #86EFAC;
-  --amber:      #D97706;
-  --amber-lt:   #FFFBEB;
-  --amber-bd:   #FCD34D;
-  --red:        #DC2626;
-  --red-lt:     #FEF2F2;
-  --red-bd:     #FCA5A5;
+:root{
+  --bg:#fff; --sf:#F7F7F7; --sf2:#EFEFEF;
+  --bd:#E5E5E5; --bd2:#CFCFCF;
+  --ink:#111; --ink2:#555; --ink3:#999;
+  --blue:#2563EB; --blue-lt:#EEF4FF; --blue-bd:#BFDBFE;
+  --green:#16A34A; --green-lt:#F0FDF4; --green-bd:#86EFAC;
+  --amber:#D97706; --amber-lt:#FFFBEB; --amber-bd:#FCD34D;
+  --red:#DC2626; --red-lt:#FEF2F2; --red-bd:#FCA5A5;
 }
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased}
 
-/* ─── NAV ─────────────────────────────── */
-.nav {
-  position: sticky; top: 0; z-index: 200;
-  background: rgba(255,255,255,.95); backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: stretch;
-  padding: 0 2rem; height: 54px; gap: 0;
-}
-.nav-brand {
-  display: flex; align-items: center; gap: 10px;
-  padding-right: 2rem; margin-right: .5rem;
-  border-right: 1px solid var(--border);
-  text-decoration: none;
-}
-.nav-logo { height: 28px; width: auto; }
-.nav-logo-fallback {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 17px; font-weight: 800;
-  color: var(--blue); letter-spacing: -.03em;
-}
-.tabs { display: flex; align-items: stretch; overflow-x: auto; scrollbar-width: none; flex: 1; }
-.tabs::-webkit-scrollbar { display: none; }
-.tab {
-  display: flex; align-items: center; gap: 7px;
-  padding: 0 1.1rem; font-size: 13px; font-weight: 500;
-  color: var(--ink3); cursor: pointer; white-space: nowrap;
-  border-bottom: 2.5px solid transparent; margin-bottom: -1px;
-  transition: color .15s; user-select: none;
-}
-.tab:hover { color: var(--ink2); }
-.tab.active { color: var(--blue); border-bottom-color: var(--blue); font-weight: 600; }
-.tab-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border2); flex-shrink: 0; transition: background .15s; }
-.tab.active .tab-dot { background: var(--blue); }
-.tab-admin { margin-left: auto; font-size: 12px; color: var(--ink3); }
+/* NAV */
+.nav{position:sticky;top:0;z-index:200;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--bd);display:flex;align-items:stretch;padding:0 2rem;height:54px}
+.brand{display:flex;align-items:center;padding-right:1.5rem;margin-right:.5rem;border-right:1px solid var(--bd)}
+.brand img{height:26px;width:auto}
+.brand-txt{font-size:17px;font-weight:800;color:var(--blue);letter-spacing:-.03em;display:none}
+.tabs{display:flex;align-items:stretch;overflow-x:auto;scrollbar-width:none;flex:1}
+.tabs::-webkit-scrollbar{display:none}
+.tab{display:flex;align-items:center;gap:7px;padding:0 1.1rem;font-size:13px;font-weight:500;color:var(--ink3);cursor:pointer;white-space:nowrap;border-bottom:2.5px solid transparent;margin-bottom:-1px;transition:color .15s;user-select:none}
+.tab:hover{color:var(--ink2)}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:700}
+.tab-dot{width:6px;height:6px;border-radius:50%;background:var(--bd2);flex-shrink:0;transition:background .15s}
+.tab.active .tab-dot{background:var(--blue)}
+.tab-admin{margin-left:auto;font-size:12px}
 
-/* ─── PIN ─────────────────────────────── */
-.overlay {
-  position: fixed; inset: 0; z-index: 500;
-  background: rgba(0,0,0,.4); backdrop-filter: blur(8px);
-  display: flex; align-items: center; justify-content: center;
-}
-.pin-box {
-  background: #fff; border-radius: 20px; padding: 2rem;
-  width: 310px; text-align: center;
-  box-shadow: 0 24px 80px rgba(0,0,0,.18), 0 0 0 1px var(--border);
-}
-.pin-box h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
-.pin-box p { font-size: 13px; color: var(--ink3); margin-bottom: 1.5rem; }
-.pin-dots { display: flex; justify-content: center; gap: 10px; margin-bottom: 1.5rem; }
-.pin-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--border2); transition: all .15s; }
-.pin-dot.filled { background: var(--blue); border-color: var(--blue); }
-.pin-pad { display: grid; grid-template-columns: repeat(3,1fr); gap: 7px; }
-.pbn {
-  padding: 14px; border: 1px solid var(--border); border-radius: 10px;
-  background: #fff; font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 18px; font-weight: 600; cursor: pointer;
-  color: var(--ink); transition: background .1s;
-}
-.pbn:hover { background: var(--surface); }
-.pbn:active { background: var(--surface2); }
-.pbn.sm { font-size: 13px; color: var(--ink3); font-weight: 500; }
-.pin-err { font-size: 12px; color: var(--red); margin-top: 10px; min-height: 16px; }
+/* PIN */
+.overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center}
+.pin-box{background:#fff;border-radius:20px;padding:2rem;width:300px;text-align:center;box-shadow:0 24px 80px rgba(0,0,0,.2),0 0 0 1px var(--bd)}
+.pin-box h3{font-size:18px;font-weight:800;margin-bottom:4px}
+.pin-box p{font-size:12px;color:var(--ink3);margin-bottom:1.5rem}
+.pin-dots{display:flex;justify-content:center;gap:10px;margin-bottom:1.5rem}
+.pdot{width:12px;height:12px;border-radius:50%;border:2px solid var(--bd2);transition:all .15s}
+.pdot.on{background:var(--blue);border-color:var(--blue)}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.pb{padding:14px;border:1px solid var(--bd);border-radius:10px;background:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:18px;font-weight:600;cursor:pointer;color:var(--ink);transition:background .1s}
+.pb:hover{background:var(--sf)}
+.pb:active{background:var(--sf2)}
+.pb.sm{font-size:13px;color:var(--ink3);font-weight:500}
+.pin-err{font-size:12px;color:var(--red);margin-top:10px;min-height:16px}
 
-/* ─── LAYOUT ──────────────────────────── */
-.page { display: none; padding: 2rem 2.5rem 4rem; max-width: 1100px; margin: 0 auto; }
-.page.active { display: block; animation: fadein .18s ease; }
-@keyframes fadein { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:none; } }
+/* LAYOUT */
+.page{display:none;padding:2rem 2.5rem 4rem;max-width:1120px;margin:0 auto}
+.page.active{display:block;animation:fi .18s ease}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 
-/* ─── ADMIN ───────────────────────────── */
-.admin-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
-.admin-bar h2 { font-size: 22px; font-weight: 800; }
-.btn-sm {
-  padding: 7px 14px; border: 1px solid var(--border2); border-radius: 99px;
-  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px;
-  font-weight: 500; color: var(--ink3); cursor: pointer; background: #fff;
-  transition: color .15s;
-}
-.btn-sm:hover { color: var(--ink); }
-.asec { margin-bottom: 2rem; }
-.asec-ttl {
-  font-size: 11px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: .08em; color: var(--ink3);
-  margin-bottom: .75rem; padding-bottom: 6px; border-bottom: 1px solid var(--border);
-}
-.atable { width: 100%; border-collapse: collapse; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
-.atable th {
-  background: var(--surface); padding: 9px 14px; font-size: 11px;
-  font-weight: 600; color: var(--ink3); text-align: center;
-  border-bottom: 1px solid var(--border); border-right: 1px solid var(--border);
-}
-.atable th:first-child { text-align: left; min-width: 180px; }
-.atable th:last-child { border-right: none; }
-.atable td { background: #fff; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); padding: 0; }
-.atable td:last-child { border-right: none; }
-.atable tr:last-child td { border-bottom: none; }
-.atable td.lbl { padding: 10px 14px; font-size: 12px; color: var(--ink2); background: var(--surface); }
-.ai-wrap { display: flex; align-items: center; gap: 4px; padding: 7px 10px; }
-.ai-wrap input {
-  flex: 1; min-width: 0; text-align: right; font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 13px; font-weight: 600; background: transparent;
-  border: none; border-bottom: 1.5px solid var(--border);
-  color: var(--ink); outline: none; padding: 2px 0;
-}
-.ai-wrap input:focus { border-bottom-color: var(--blue); }
-.ai-wrap .u { font-size: 10px; color: var(--ink3); white-space: nowrap; }
-.btn-save {
-  padding: 10px 24px; background: var(--blue); color: #fff;
-  border: none; border-radius: 10px; font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 13px; font-weight: 700; cursor: pointer; transition: background .15s;
-}
-.btn-save:hover { background: #1d4ed8; }
-.save-msg { font-size: 12px; color: var(--green); margin-left: 12px; opacity: 0; transition: opacity .3s; }
+/* ADMIN */
+.admin-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem}
+.admin-bar h2{font-size:22px;font-weight:800}
+.btn-sm{padding:7px 14px;border:1px solid var(--bd2);border-radius:99px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:500;color:var(--ink3);cursor:pointer;background:#fff;transition:color .15s}
+.btn-sm:hover{color:var(--ink)}
+.asec{margin-bottom:2rem}
+.asec-ttl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);margin-bottom:.75rem;padding-bottom:6px;border-bottom:1px solid var(--bd)}
+.atable{width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden;border:1px solid var(--bd)}
+.atable th{background:var(--sf);padding:9px 14px;font-size:11px;font-weight:600;color:var(--ink3);text-align:center;border-bottom:1px solid var(--bd);border-right:1px solid var(--bd)}
+.atable th:first-child{text-align:left;min-width:180px}
+.atable th:last-child{border-right:none}
+.atable td{background:#fff;border-bottom:1px solid var(--bd);border-right:1px solid var(--bd);padding:0}
+.atable td:last-child{border-right:none}
+.atable tr:last-child td{border-bottom:none}
+.atable td.lbl{padding:10px 14px;font-size:12px;color:var(--ink2);background:var(--sf)}
+.ai-w{display:flex;align-items:center;gap:4px;padding:7px 10px}
+.ai-w input{flex:1;min-width:0;text-align:right;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;background:transparent;border:none;border-bottom:1.5px solid var(--bd);color:var(--ink);outline:none;padding:2px 0}
+.ai-w input:focus{border-bottom-color:var(--blue)}
+.ai-w .u{font-size:10px;color:var(--ink3);white-space:nowrap}
+.btn-save{padding:10px 24px;background:var(--blue);color:#fff;border:none;border-radius:10px;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s}
+.btn-save:hover{background:#1d4ed8}
+.save-msg{font-size:12px;color:var(--green);margin-left:12px;opacity:0;transition:opacity .3s}
 
-/* ─── DEVICE HEADER ───────────────────── */
-.dv-head { display: flex; align-items: center; gap: 16px; margin-bottom: 1.5rem; }
-.dv-head h2 { font-size: 24px; font-weight: 800; letter-spacing: -.02em; }
-.dv-head p { font-size: 13px; color: var(--ink3); }
+/* DEVICE */
+.dv-head{display:flex;align-items:center;gap:16px;margin-bottom:1.5rem}
+.dv-head h2{font-size:24px;font-weight:800;letter-spacing:-.02em}
+.dv-head p{font-size:13px;color:var(--ink3)}
+.dur-sw{display:inline-flex;background:var(--sf2);border-radius:99px;padding:3px;gap:2px;margin-bottom:1.5rem}
+.dur-sw button{padding:5px 20px;border-radius:99px;border:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;color:var(--ink3);background:transparent;cursor:pointer;transition:all .15s}
+.dur-sw button.on{background:#fff;color:var(--blue);box-shadow:0 1px 4px rgba(0,0,0,.08)}
 
-/* ─── DUR SWITCH ──────────────────────── */
-.dur-sw {
-  display: inline-flex; background: var(--surface2);
-  border-radius: 99px; padding: 3px; gap: 2px; margin-bottom: 1.5rem;
-}
-.dur-sw button {
-  padding: 5px 20px; border-radius: 99px; border: none;
-  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px;
-  font-weight: 600; color: var(--ink3); background: transparent;
-  cursor: pointer; transition: all .15s;
-}
-.dur-sw button.on { background: #fff; color: var(--blue); box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+/* PARAMS */
+.pcard{background:var(--sf);border:1px solid var(--bd);border-radius:16px;padding:1.5rem;margin-bottom:2rem}
+.pcard-ttl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);margin-bottom:1.25rem}
+.pg{display:grid;gap:10px;margin-bottom:12px}
+.pg2{grid-template-columns:1fr 1fr}
+.pg4{grid-template-columns:repeat(4,1fr)}
+.pf{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.pf label{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.05em}
+.pf-row{display:flex;align-items:baseline;gap:5px}
+.pf-row input{flex:1;min-width:0;font-family:'Plus Jakarta Sans',sans-serif;font-size:17px;font-weight:700;background:transparent;border:none;border-bottom:1.5px solid var(--bd2);color:var(--ink);outline:none;padding:1px 0 3px;width:100%}
+.pf-row input:focus{border-bottom-color:var(--blue)}
+.pf-row .u{font-size:12px;color:var(--ink3);flex-shrink:0}
+.pf .hint{font-size:10px;color:var(--ink3)}
+.toggles{display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-top:2px}
+.tog{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:99px;border:1.5px solid var(--bd2);background:#fff;font-size:12px;font-weight:600;color:var(--ink3);cursor:pointer;user-select:none;transition:all .15s}
+.tog .dot{width:7px;height:7px;border-radius:50%;background:var(--bd2);flex-shrink:0;transition:all .15s}
+.tog.on{background:var(--blue-lt);border-color:var(--blue-bd);color:var(--blue)}
+.tog.on .dot{background:var(--blue)}
+.conv-in{width:64px;font-size:12px;font-weight:700;border:none;border-bottom:1.5px solid currentColor;background:transparent;outline:none;color:inherit;padding:0 0 1px;font-family:'Plus Jakarta Sans',sans-serif}
 
-/* ─── PARAMS CARD ─────────────────────── */
-.pcard {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem;
-}
-.pcard-ttl {
-  font-size: 11px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: .08em; color: var(--ink3); margin-bottom: 1.25rem;
-}
-.pgrid { display: grid; gap: 10px; margin-bottom: 12px; }
-.pg2 { grid-template-columns: 1fr 1fr; }
-.pg3 { grid-template-columns: repeat(3, 1fr); }
-.pg4 { grid-template-columns: repeat(4, 1fr); }
-.pf {
-  background: #fff; border: 1px solid var(--border);
-  border-radius: 10px; padding: 12px 14px;
-  display: flex; flex-direction: column; gap: 6px;
-}
-.pf label {
-  font-size: 10px; font-weight: 700; color: var(--ink3);
-  text-transform: uppercase; letter-spacing: .05em;
-}
-.pf-row { display: flex; align-items: baseline; gap: 5px; }
-.pf-row input {
-  flex: 1; min-width: 0; font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 17px; font-weight: 700; background: transparent;
-  border: none; border-bottom: 1.5px solid var(--border2);
-  color: var(--ink); outline: none; padding: 1px 0 3px; width: 100%;
-}
-.pf-row input:focus { border-bottom-color: var(--blue); }
-.pf-row .u { font-size: 12px; color: var(--ink3); flex-shrink: 0; }
-.pf .hint { font-size: 10px; color: var(--ink3); }
+/* ACCORD */
+.accord{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;border:1.5px solid;margin-top:1.25rem}
+.accord.ok{background:var(--green-lt);border-color:var(--green-bd)}
+.accord.warn{background:var(--amber-lt);border-color:var(--amber-bd)}
+.accord.ko{background:var(--red-lt);border-color:var(--red-bd)}
+.accord-ico{font-size:18px;flex-shrink:0}
+.accord-body{flex:1}
+.accord-ttl{font-size:13px;font-weight:700}
+.accord.ok .accord-ttl{color:var(--green)}
+.accord.warn .accord-ttl{color:var(--amber)}
+.accord.ko .accord-ttl{color:var(--red)}
+.accord-tags{display:flex;gap:5px;margin-top:5px;flex-wrap:wrap}
+.atag{font-size:11px;font-weight:600;padding:2px 10px;border-radius:99px;border:1px solid}
+.accord.ok .atag{color:var(--green);background:var(--green-lt);border-color:var(--green-bd)}
+.accord.warn .atag{color:var(--amber);background:var(--amber-lt);border-color:var(--amber-bd)}
+.accord.ko .atag{color:var(--red);background:var(--red-lt);border-color:var(--red-bd)}
 
-/* toggles */
-.toggles { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; margin-top: 2px; }
-.tog {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 6px 14px; border-radius: 99px;
-  border: 1.5px solid var(--border2); background: #fff;
-  font-size: 12px; font-weight: 600; color: var(--ink3);
-  cursor: pointer; user-select: none; transition: all .15s;
-}
-.tog .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border2); flex-shrink: 0; transition: all .15s; }
-.tog.on { background: var(--blue-lt); border-color: var(--blue-bd); color: var(--blue); }
-.tog.on .dot { background: var(--blue); }
-.conv-in {
-  width: 64px; font-size: 12px; font-weight: 700;
-  border: none; border-bottom: 1.5px solid currentColor;
-  background: transparent; outline: none; color: inherit;
-  padding: 0 0 1px; font-family: 'Plus Jakarta Sans', sans-serif;
-}
-.tsep { width: 1px; height: 20px; background: var(--border); margin: 0 3px; flex-shrink: 0; }
+/* SECTIONS */
+.sec{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);margin:2rem 0 1rem;padding-bottom:8px;border-bottom:1px solid var(--bd)}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 
-/* accord */
-.accord {
-  display: flex; align-items: center; gap: 12px;
-  padding: 12px 16px; border-radius: 10px;
-  border: 1.5px solid; margin-top: 1.25rem;
-}
-.accord.ok  { background: var(--green-lt); border-color: var(--green-bd); }
-.accord.warn{ background: var(--amber-lt); border-color: var(--amber-bd); }
-.accord.ko  { background: var(--red-lt);   border-color: var(--red-bd); }
-.accord-icon { font-size: 18px; flex-shrink: 0; }
-.accord-body { flex: 1; }
-.accord-ttl { font-size: 13px; font-weight: 700; }
-.accord.ok   .accord-ttl { color: var(--green); }
-.accord.warn .accord-ttl { color: var(--amber); }
-.accord.ko   .accord-ttl { color: var(--red); }
-.accord-tags { display: flex; gap: 5px; margin-top: 5px; flex-wrap: wrap; }
-.atag {
-  font-size: 11px; font-weight: 600;
-  padding: 2px 10px; border-radius: 99px; border: 1px solid;
-}
-.accord.ok   .atag { color: var(--green); background: var(--green-lt); border-color: var(--green-bd); }
-.accord.warn .atag { color: var(--amber); background: var(--amber-lt); border-color: var(--amber-bd); }
-.accord.ko   .atag { color: var(--red);   background: var(--red-lt);   border-color: var(--red-bd); }
+/* CARDS */
+.card{background:#fff;border:1.5px solid var(--bd);border-radius:16px;padding:20px}
+.card.star{border-color:var(--blue);border-width:2px}
+.badge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:.05em;padding:3px 10px;background:var(--blue);color:#fff;border-radius:99px;margin-bottom:10px}
+.ctitle{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.csub{font-size:11.5px;color:var(--ink3);margin-bottom:12px;line-height:1.5}
+.cprice{font-size:28px;font-weight:800;color:var(--ink);letter-spacing:-.02em;line-height:1}
+.cprice small{font-size:12px;font-weight:400;color:var(--ink3)}
+.crows{margin-top:14px;padding-top:12px;border-top:1px solid var(--bd)}
+.cr{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--ink3);padding:3px 0}
+.cr b{color:var(--ink2);font-weight:600}
+.cr.sep{margin-top:8px;padding-top:8px;border-top:1px solid var(--bd)}
+.cr.tot{color:var(--ink);font-weight:700}
+.cr.tot b{font-size:13px;font-weight:800;color:var(--ink)}
 
-/* ─── SECTION ─────────────────────────── */
-.sec {
-  font-size: 11px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: .07em; color: var(--ink3);
-  margin: 2rem 0 1rem; padding-bottom: 8px;
-  border-bottom: 1px solid var(--border);
-}
+/* LEASING */
+.leas-inputs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.leas-note{font-size:11.5px;color:var(--ink3);background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:10px 14px;margin-bottom:14px;line-height:1.6}
 
-/* ─── CARDS ───────────────────────────── */
-.g3 { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 14px; }
-.g2 { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
-.card {
-  background: #fff; border: 1.5px solid var(--border);
-  border-radius: 16px; padding: 20px;
-}
-.card.star { border-color: var(--blue); border-width: 2px; }
-.badge {
-  display: inline-block; font-size: 10px; font-weight: 800;
-  letter-spacing: .05em; padding: 3px 10px;
-  background: var(--blue); color: #fff;
-  border-radius: 99px; margin-bottom: 10px;
-}
-.ctitle { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
-.csub { font-size: 11.5px; color: var(--ink3); margin-bottom: 12px; line-height: 1.5; }
-.cprice { font-size: 28px; font-weight: 800; color: var(--ink); letter-spacing: -.02em; line-height: 1; }
-.cprice small { font-size: 12px; font-weight: 400; color: var(--ink3); }
-.crows { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
-.cr { display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; color: var(--ink3); padding: 3px 0; }
-.cr b { color: var(--ink2); font-weight: 600; }
-.cr.sep { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
-.cr.total { color: var(--ink); font-weight: 700; }
-.cr.total b { font-size: 13px; font-weight: 800; color: var(--ink); }
-
-/* ─── LEASING ─────────────────────────── */
-.leas-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-.leas-note {
-  font-size: 11.5px; color: var(--ink3); background: var(--surface);
-  border: 1px solid var(--border); border-radius: 10px;
-  padding: 10px 14px; margin-bottom: 14px; line-height: 1.6;
-}
-
-/* ─── RENTABILITÉ ─────────────────────── */
-.rtog {
-  display: inline-flex; align-items: center; gap: 6px;
-  cursor: pointer; font-size: 12px; color: var(--ink3);
-  margin-top: 2rem; user-select: none; padding: 4px 0;
-  font-weight: 500;
-}
-.rtog svg { transition: transform .2s; }
-.rtog.open svg { transform: rotate(90deg); }
-.rgrid { display: none; margin-top: 12px; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; }
-.rgrid.show { display: grid; }
-.rc {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: 12px; padding: 14px;
-}
-.rl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--ink3); margin-bottom: 6px; }
-.rv { font-size: 20px; font-weight: 800; color: var(--ink); letter-spacing: -.01em; }
-.rv small { font-size: 11px; font-weight: 400; color: var(--ink3); display: block; margin-top: 2px; }
-.rbadge {
-  display: inline-flex; align-items: center; gap: 4px;
-  font-size: 12px; font-weight: 700; padding: 4px 10px;
-  border-radius: 99px; border: 1.5px solid;
-}
-.rbadge.ok  { color: var(--green); background: var(--green-lt); border-color: var(--green-bd); }
-.rbadge.ko  { color: var(--red);   background: var(--red-lt);   border-color: var(--red-bd); }
+/* RENTAB */
+.rtog{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--ink3);margin-top:2rem;user-select:none;padding:4px 0;font-weight:500}
+.rtog svg{transition:transform .2s}
+.rtog.open svg{transform:rotate(90deg)}
+.rgrid{display:none;margin-top:12px;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.rgrid.show{display:grid}
+.rc{background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:14px}
+.rl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3);margin-bottom:6px}
+.rv{font-size:20px;font-weight:800;color:var(--ink);letter-spacing:-.01em}
+.rv small{font-size:11px;font-weight:400;color:var(--ink3);display:block;margin-top:2px}
+.rbadge{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;border:1.5px solid}
+.rbadge.ok{color:var(--green);background:var(--green-lt);border-color:var(--green-bd)}
+.rbadge.ko{color:var(--red);background:var(--red-lt);border-color:var(--red-bd)}
 </style>
 </head>
 <body>
 
 <nav class="nav">
-  <div class="nav-brand">
-    <img class="nav-logo" src="https://www.tessan.io/wp-content/uploads/2022/09/Logo-Tessan.png"
-      onerror="this.style.display='none';this.nextElementSibling.style.display='block'"
-      alt="Tessan">
-    <span class="nav-logo-fallback" style="display:none">tessan</span>
+  <div class="brand">
+    <img src="https://www.tessan.io/wp-content/uploads/2022/09/Logo-Tessan.png"
+         alt="Tessan" onerror="this.style.display='none';document.querySelector('.brand-txt').style.display='block'">
+    <span class="brand-txt">tessan</span>
   </div>
   <div class="tabs">
-    <div class="tab active" onclick="goTab('checkup',this)"><div class="tab-dot"></div>Borne Check-up</div>
-    <div class="tab" onclick="goTab('tc',this)"><div class="tab-dot"></div>Borne TC</div>
-    <div class="tab" onclick="goTab('slim',this)"><div class="tab-dot"></div>Cabine Slim / Uno</div>
-    <div class="tab" onclick="goTab('premium',this)"><div class="tab-dot"></div>Cabine Premium</div>
-    <div class="tab tab-admin" onclick="openAdmin()">🔒 Admin</div>
+    <div class="tab active" data-tab="checkup"><div class="tab-dot"></div>Borne Check-up</div>
+    <div class="tab" data-tab="tc"><div class="tab-dot"></div>Borne TC</div>
+    <div class="tab" data-tab="slim"><div class="tab-dot"></div>Cabine Slim / Uno</div>
+    <div class="tab" data-tab="premium"><div class="tab-dot"></div>Cabine Premium</div>
+    <div class="tab tab-admin" data-tab="admin">🔒 Admin</div>
   </div>
 </nav>
 
-<!-- PIN -->
 <div class="overlay" id="pin-ov" style="display:none">
   <div class="pin-box">
     <h3>Espace Admin</h3>
     <p>Entrez votre code PIN pour continuer</p>
     <div class="pin-dots">
-      <div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div>
-      <div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div>
+      <div class="pdot" id="pd0"></div><div class="pdot" id="pd1"></div>
+      <div class="pdot" id="pd2"></div><div class="pdot" id="pd3"></div>
     </div>
     <div class="pin-pad">
-      <button class="pbn" onclick="pk(1)">1</button><button class="pbn" onclick="pk(2)">2</button><button class="pbn" onclick="pk(3)">3</button>
-      <button class="pbn" onclick="pk(4)">4</button><button class="pbn" onclick="pk(5)">5</button><button class="pbn" onclick="pk(6)">6</button>
-      <button class="pbn" onclick="pk(7)">7</button><button class="pbn" onclick="pk(8)">8</button><button class="pbn" onclick="pk(9)">9</button>
-      <button class="pbn sm" onclick="pclr()">⌫</button><button class="pbn" onclick="pk(0)">0</button><button class="pbn sm" onclick="pcan()">✕</button>
+      <button class="pb" data-pk="1">1</button><button class="pb" data-pk="2">2</button><button class="pb" data-pk="3">3</button>
+      <button class="pb" data-pk="4">4</button><button class="pb" data-pk="5">5</button><button class="pb" data-pk="6">6</button>
+      <button class="pb" data-pk="7">7</button><button class="pb" data-pk="8">8</button><button class="pb" data-pk="9">9</button>
+      <button class="pb sm" id="pb-clr">⌫</button><button class="pb" data-pk="0">0</button><button class="pb sm" id="pb-can">✕</button>
     </div>
     <div class="pin-err" id="pin-err"></div>
   </div>
 </div>
 
-<!-- PAGES -->
 <div class="page active" id="page-checkup"></div>
 <div class="page" id="page-tc"></div>
 <div class="page" id="page-slim"></div>
@@ -353,322 +202,365 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); colo
 <div class="page" id="page-admin">
   <div class="admin-bar">
     <h2>Configuration financière</h2>
-    <button class="btn-sm" onclick="adminLogout()">🔒 Verrouiller</button>
+    <button class="btn-sm" id="btn-logout">🔒 Verrouiller</button>
   </div>
   <div id="admin-body"></div>
   <div style="margin-top:1.5rem;display:flex;align-items:center">
-    <button class="btn-save" onclick="saveAdmin()">Enregistrer les modifications</button>
+    <button class="btn-save" id="btn-save">Enregistrer les modifications</button>
     <span class="save-msg" id="save-msg">✓ Sauvegardé</span>
   </div>
 </div>
 
 <script>
-const PIN = '1234';
+// ── CONFIG ──────────────────────────────────────────────────
+const PIN = '1234'; // ← modifier ici avant de déployer
 let adminOpen = false, pinBuf = '';
 
-const DEVS = ['checkup','tc','slim','premium'];
-const DNAMES = ['Borne Check-up','Borne TC','Cabine Slim/Uno','Cabine Premium'];
+const DEVS    = ['checkup','tc','slim','premium'];
+const DNAMES  = ['Borne Check-up','Borne TC','Cabine Slim/Uno','Cabine Premium'];
 
-let CFG = {
+const CFG = {
   checkup:{ hasTC:false,hasTED:false,hasPrio:false, abo:59.99, achat60:1870,achat48:1870,cac60:2500,cac48:1866,leasRate:0.2,cashRate:0.6, mat60_1:34.99,mat60_13:34.99,mnt60_1:14.99,mnt60_13:14.99, mat48_1:59.99,mat48_13:59.99,mnt48_1:14.99,mnt48_13:14.99, tcDef:0,tedDef:0,prioDef:0, sR60:3.15,sR48:3.15,sC60:0.20,sC48:0.20 },
   tc:     { hasTC:true,hasTED:true,hasPrio:true, abo:79.99, achat60:3910,achat48:3910,cac60:2300,cac48:2300,leasRate:0.2,cashRate:0.6, mat60_1:0,mat60_13:49.99,mnt60_1:0,mnt60_13:29.99, mat48_1:0,mat48_13:99.99,mnt48_1:0,mnt48_13:29.99, tcDef:30,tedDef:49.99,prioDef:49.99, sR60:3.15,sR48:3.15,sC60:0.20,sC48:0.20 },
   slim:   { hasTC:true,hasTED:true,hasPrio:true, abo:79.99, achat60:8200,achat48:7800,cac60:2300,cac48:2300,leasRate:0.2,cashRate:0.6, mat60_1:0,mat60_13:119.99,mnt60_1:59.99,mnt60_13:59.99, mat48_1:59.99,mat48_13:179.99,mnt48_1:39.99,mnt48_13:59.99, tcDef:30,tedDef:49.99,prioDef:49.99, sR60:3.15,sR48:3.15,sC60:0.20,sC48:0.20 },
   premium:{ hasTC:true,hasTED:true,hasPrio:true, abo:79.99, achat60:19470,achat48:19470,cac60:2300,cac48:2300,leasRate:0.2,cashRate:0.6, mat60_1:199.99,mat60_13:299.99,mnt60_1:99.99,mnt60_13:99.99, mat48_1:299.99,mat48_13:449.99,mnt48_1:99.99,mnt48_13:99.99, tcDef:50,tedDef:49.99,prioDef:49.99, sR60:3.15,sR48:3.15,sC60:0.20,sC48:0.20 }
 };
 
-let ST = {};
+const ST = {};
 DEVS.forEach(id => { ST[id] = { dur:60, ted:false, prio:false, conv:false }; });
 
-// utils
-function n(v){ return isNaN(v)||!isFinite(v)?0:+v; }
-function gv(id){ const e=document.getElementById(id); return e?n(parseFloat(e.value)):0; }
+// ── UTILS ────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+function n(v){ return isNaN(v)||!isFinite(v) ? 0 : +v; }
+function gv(id){ const e=$(id); return e ? n(parseFloat(e.value)) : 0; }
 function f(v){ return n(v).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'; }
 function fm(v){ return f(v)+'/mois'; }
 function fp(v){ return (n(v)*100).toFixed(1)+'%'; }
-function el(id){ return document.getElementById(id); }
 
-// nav
-function goTab(name, tabEl) {
-  if(name==='admin'&&!adminOpen){ openAdmin(); return; }
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  if(tabEl) tabEl.classList.add('active');
-  el('page-'+name).classList.add('active');
-  if(name==='admin') renderAdmin(); else renderDevice(name);
+// ── NAVIGATION ───────────────────────────────────────────────
+function goTab(name) {
+  if (name === 'admin' && !adminOpen) { openAdmin(); return; }
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  $('page-' + name).classList.add('active');
+  if (name === 'admin') renderAdmin(); else renderDevice(name);
 }
 
-// pin
-function openAdmin(){
-  if(adminOpen){ goTab('admin',document.querySelector('.tab-admin')); return; }
-  pinBuf=''; el('pin-ov').style.display='flex'; updDots(); el('pin-err').textContent='';
-}
-function updDots(){ for(let i=0;i<4;i++) el('pd'+i).classList.toggle('filled',i<pinBuf.length); }
-function pk(d){
-  if(pinBuf.length>=4) return;
-  pinBuf+=String(d); updDots();
-  if(pinBuf.length===4) setTimeout(()=>{
-    if(pinBuf===PIN){ adminOpen=true; el('pin-ov').style.display='none'; goTab('admin',document.querySelector('.tab-admin')); }
-    else{ el('pin-err').textContent='Code incorrect, réessayez'; pinBuf=''; updDots(); }
-  },120);
-}
-function pclr(){ pinBuf=pinBuf.slice(0,-1); updDots(); el('pin-err').textContent=''; }
-function pcan(){ pinBuf=''; el('pin-ov').style.display='none'; }
-function adminLogout(){ adminOpen=false; goTab('checkup',document.querySelectorAll('.tab')[0]); }
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => goTab(t.dataset.tab));
+});
 
-// admin render
-function ai(devId,key,unit,step){ return '<div class="ai-wrap"><input id="a_'+devId+'_'+key+'" type="number" value="'+CFG[devId][key]+'" step="'+step+'"><span class="u">'+unit+'</span></div>'; }
-function arow(lbl,key,unit,step){ return '<tr><td class="lbl">'+lbl+'</td>'+DEVS.map(d=>('<td>'+ai(d,key,unit,step)+'</td>')).join('')+'</tr>'; }
-function atable(rows){ return '<table class="atable"><thead><tr><th></th>'+DNAMES.map(n=>'<th>'+n+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>arow(r[0],r[1],r[2],r[3]||'1')).join('')+'</tbody></table>'; }
-
-function renderAdmin(){
-  el('admin-body').innerHTML=
-    '<div class="asec"><div class="asec-ttl">Prix d'achat & CAC</div>'+atable([['Achat 60 mois','achat60','€'],['Achat 48 mois','achat48','€'],['CAC 60 mois','cac60','€'],['CAC 48 mois','cac48','€'],['Frais leasing','leasRate','%','0.01'],['Cash immédiat (%)','cashRate','%','0.01']])+'</div>'+
-    '<div class="asec"><div class="asec-ttl">Mensualités leasing par défaut</div>'+atable([['Mat. 60m — M1-12','mat60_1','€/mois','0.01'],['Mat. 60m — M13+','mat60_13','€/mois','0.01'],['Maint. 60m — M1-12','mnt60_1','€/mois','0.01'],['Maint. 60m — M13+','mnt60_13','€/mois','0.01'],['Mat. 48m — M1-12','mat48_1','€/mois','0.01'],['Mat. 48m — M13+','mat48_13','€/mois','0.01'],['Maint. 48m — M1-12','mnt48_1','€/mois','0.01'],['Maint. 48m — M13+','mnt48_13','€/mois','0.01']])+'</div>'+
-    '<div class="asec"><div class="asec-ttl">TC / mois — valeurs par défaut</div>'+atable([['TC par défaut','tcDef','cons.']])+'</div>'+
-    '<div class="asec"><div class="asec-ttl">Seuils d'accord par dispositif</div>'+atable([['Rentabilité min 60m (×)','sR60','×','0.01'],['Rentabilité min 48m (×)','sR48','×','0.01'],['Marge cash min 60m','sC60','%','0.01'],['Marge cash min 48m','sC48','%','0.01']])+'</div>';
+// ── PIN ──────────────────────────────────────────────────────
+function openAdmin() {
+  if (adminOpen) { goTab('admin'); return; }
+  pinBuf = ''; $('pin-ov').style.display = 'flex'; updDots(); $('pin-err').textContent = '';
 }
-function saveAdmin(){
-  const keys=['achat60','achat48','cac60','cac48','leasRate','cashRate','mat60_1','mat60_13','mnt60_1','mnt60_13','mat48_1','mat48_13','mnt48_1','mnt48_13','tcDef','sR60','sR48','sC60','sC48'];
-  DEVS.forEach(d=>keys.forEach(k=>{ const e=el('a_'+d+'_'+k); if(e) CFG[d][k]=n(parseFloat(e.value)); }));
-  const m=el('save-msg'); m.style.opacity='1'; setTimeout(()=>m.style.opacity='0',2500);
+function updDots() { for(let i=0;i<4;i++) $('pd'+i).classList.toggle('on', i < pinBuf.length); }
+function pk(d) {
+  if (pinBuf.length >= 4) return;
+  pinBuf += String(d); updDots();
+  if (pinBuf.length === 4) setTimeout(() => {
+    if (pinBuf === PIN) {
+      adminOpen = true; $('pin-ov').style.display = 'none'; goTab('admin');
+    } else {
+      $('pin-err').textContent = 'Code incorrect, réessayez'; pinBuf = ''; updDots();
+    }
+  }, 120);
 }
 
-// build device page html
-function buildPage(id){
-  const c=CFG[id], s=ST[id], d=s.dur;
-  const mat1=d===60?c.mat60_1:c.mat48_1, mnt1=d===60?c.mnt60_1:c.mnt48_1;
-  const mntD=d===60?c.mnt60_13:c.mnt48_13, matDef=d===60?c.achat60:c.achat48;
+document.querySelectorAll('.pb[data-pk]').forEach(b => b.addEventListener('click', () => pk(b.dataset.pk)));
+$('pb-clr').addEventListener('click', () => { pinBuf = pinBuf.slice(0,-1); updDots(); $('pin-err').textContent=''; });
+$('pb-can').addEventListener('click', () => { pinBuf=''; $('pin-ov').style.display='none'; });
+$('btn-logout').addEventListener('click', () => { adminOpen=false; goTab('checkup'); });
+$('btn-save').addEventListener('click', saveAdmin);
 
-  el('page-'+id).innerHTML=
-    '<div class="dv-head"><h2>'+c.name+'</h2><p>Configurez le dossier et partagez l'écran avec le prospect</p></div>'+
-    '<div class="dur-sw">'+
-      '<button class="'+(d===60?'on':'')+'" onclick="setDur(''+id+'',60)">60 mois</button>'+
-      '<button class="'+(d===48?'on':'')+'" onclick="setDur(''+id+'',48)">48 mois</button>'+
-    '</div>'+
-    '<div class="pcard">'+
-      '<div class="pcard-ttl">Paramètres du dossier</div>'+
-      '<div class="pgrid pg2">'+
-        '<div class="pf"><label>Abonnement Tessan</label><div class="pf-row"><input type="number" id="'+id+'_abo" value="'+c.abo+'" step="0.01" oninput="renderDevice(''+id+'')"><span class="u">€/mois</span></div></div>'+
-        (c.hasTC?'<div class="pf"><label>TC / mois</label><div class="pf-row"><input type="number" id="'+id+'_tc" value="'+c.tcDef+'" step="1" oninput="renderDevice(''+id+'')"><span class="u">cons.</span></div></div>':'<div></div>')+
-      '</div>'+
-      '<div class="pgrid pg4">'+
-        '<div class="pf"><label>Matériel HT</label><div class="pf-row"><input type="number" id="'+id+'_mat" value="'+matDef+'" step="1" oninput="renderDevice(''+id+'')"><span class="u">€</span></div><div class="hint">Tarif : '+matDef.toLocaleString('fr-FR')+' €</div></div>'+
-        '<div class="pf"><label>Maintenance</label><div class="pf-row"><input type="number" id="'+id+'_maint" value="'+mntD+'" step="0.01" oninput="renderDevice(''+id+'')"><span class="u">€/mois</span></div><div class="hint">Tarif : '+mntD+' €</div></div>'+
-        (c.hasTED?'<div class="pf"><label>TED</label><div class="pf-row"><input type="number" id="'+id+'_ted" value="'+c.tedDef+'" step="0.01" oninput="renderDevice(''+id+'')"><span class="u">€/mois</span></div><div class="hint">Tarif : '+c.tedDef+' €</div></div>':'<div></div>')+
-        (c.hasPrio?'<div class="pf"><label>Accès prioritaire</label><div class="pf-row"><input type="number" id="'+id+'_prio" value="'+c.prioDef+'" step="0.01" oninput="renderDevice(''+id+'')"><span class="u">€/mois</span></div><div class="hint">Tarif : '+c.prioDef+' €</div></div>':'<div></div>')+
-      '</div>'+
-      '<div class="toggles">'+
-        (c.hasTED?'<div class="tog '+(s.ted?'on':'')+'" id="'+id+'_ttd" onclick="togDev(''+id+'','ted')"><span class="dot"></span>TED</div>':'')+
-        (c.hasPrio?'<div class="tog '+(s.prio?'on':'')+'" id="'+id+'_tpr" onclick="togDev(''+id+'','prio')"><span class="dot"></span>Accès prioritaire</div>':'')+
-        '<div class="tog '+(s.conv?'on':'')+'" id="'+id+'_tcv" onclick="togDev(''+id+'','conv')"><span class="dot"></span>Conversion&nbsp;&mdash;&nbsp;<input class="conv-in" type="number" id="'+id+'_conv" value="0" step="100" onclick="event.stopPropagation()" oninput="renderDevice(''+id+'')">&nbsp;€</div>'+
-      '</div>'+
-      '<div id="'+id+'_accord"></div>'+
-    '</div>'+
-    '<div class="sec">Mixte — abonnement mensuel + matériel fractionné</div>'+
-    '<div class="g3" id="'+id+'_mix"></div>'+
-    '<div class="sec">Paiement comptant</div>'+
-    '<div class="g3" id="'+id+'_cpt"></div>'+
-    '<div class="sec">Leasing — mensualités modulables</div>'+
-    '<div class="leas-inputs">'+
-      '<div class="pf"><label>Matériel M1–12 (promo)</label><div class="pf-row"><input type="number" id="'+id+'_lm1" value="'+mat1+'" step="0.01" oninput="renderDevice(''+id+'')"><span class="u">€/mois</span></div></div>'+
-      '<div class="pf"><label>Maintenance M1–12 (promo)</label><div class="pf-row"><input type="number" id="'+id+'_ln1" value="'+mnt1+'" step="0.01" oninput="renderDevice(''+id+'')"><span class="u">€/mois</span></div></div>'+
-    '</div>'+
-    '<div class="leas-note">Les mensualités M13–'+d+' sont issues de la configuration admin. Modifiez M1–12 pour proposer une période de lancement offerte ou réduite.</div>'+
-    '<div class="g2" id="'+id+'_leas"></div>'+
-    '<div class="rtog" id="'+id+'_rtog" onclick="togRentab(''+id+'')">'+
-      '<svg width="10" height="10" viewBox="0 0 10 10"><path d="M3 1.5l4 3.5-4 3.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'+
-      ' Rentabilité du dossier'+
-    '</div>'+
-    '<div class="rgrid" id="'+id+'_rentab"></div>'+
-    '<div style="height:2rem"></div>';
+// ── ADMIN ────────────────────────────────────────────────────
+function ai(devId, key, unit, step) {
+  return '<div class="ai-w"><input id="a_'+devId+'_'+key+'" type="number" value="'+CFG[devId][key]+'" step="'+step+'"><span class="u">'+unit+'</span></div>';
+}
+function arow(lbl, key, unit, step) {
+  return '<tr><td class="lbl">'+lbl+'</td>'+DEVS.map(d => '<td>'+ai(d,key,unit,step)+'</td>').join('')+'</tr>';
+}
+function atable(rows) {
+  const head = '<thead><tr><th></th>'+DNAMES.map(n=>'<th>'+n+'</th>').join('')+'</tr></thead>';
+  const body = '<tbody>'+rows.map(r=>arow(r[0],r[1],r[2],r[3]||'1')).join('')+'</tbody>';
+  return '<table class="atable">'+head+body+'</table>';
+}
+function renderAdmin() {
+  $('admin-body').innerHTML =
+    '<div class="asec"><div class="asec-ttl">Prix d\'achat & CAC</div>'+
+    atable([['Achat 60 mois','achat60','€'],['Achat 48 mois','achat48','€'],['CAC 60 mois','cac60','€'],['CAC 48 mois','cac48','€'],['Frais leasing','leasRate','%','0.01'],['Cash immédiat (%)','cashRate','%','0.01']])+
+    '</div><div class="asec"><div class="asec-ttl">Mensualités leasing par défaut</div>'+
+    atable([['Mat. 60m — M1-12','mat60_1','€/mois','0.01'],['Mat. 60m — M13+','mat60_13','€/mois','0.01'],['Maint. 60m — M1-12','mnt60_1','€/mois','0.01'],['Maint. 60m — M13+','mnt60_13','€/mois','0.01'],['Mat. 48m — M1-12','mat48_1','€/mois','0.01'],['Mat. 48m — M13+','mat48_13','€/mois','0.01'],['Maint. 48m — M1-12','mnt48_1','€/mois','0.01'],['Maint. 48m — M13+','mnt48_13','€/mois','0.01']])+
+    '</div><div class="asec"><div class="asec-ttl">TC / mois — valeurs par défaut</div>'+
+    atable([['TC par défaut','tcDef','cons.']])+
+    '</div><div class="asec"><div class="asec-ttl">Seuils d\'accord par dispositif</div>'+
+    atable([['Rentabilité min 60m (×)','sR60','×','0.01'],['Rentabilité min 48m (×)','sR48','×','0.01'],['Marge cash min 60m','sC60','%','0.01'],['Marge cash min 48m','sC48','%','0.01']])+
+    '</div>';
+}
+function saveAdmin() {
+  ['achat60','achat48','cac60','cac48','leasRate','cashRate','mat60_1','mat60_13','mnt60_1','mnt60_13','mat48_1','mat48_13','mnt48_1','mnt48_13','tcDef','sR60','sR48','sC60','sC48'].forEach(k => {
+    DEVS.forEach(d => { const e=$('a_'+d+'_'+k); if(e) CFG[d][k]=n(parseFloat(e.value)); });
+  });
+  const m=$('save-msg'); m.style.opacity='1'; setTimeout(()=>m.style.opacity='0',2500);
 }
 
-function setDur(id,d){ ST[id].dur=d; buildPage(id); renderDevice(id); }
+// ── BUILD DEVICE PAGE ────────────────────────────────────────
+function buildPage(id) {
+  const c = CFG[id], s = ST[id], d = s.dur;
+  const mat1 = d===60?c.mat60_1:c.mat48_1, mnt1 = d===60?c.mnt60_1:c.mnt48_1;
+  const mntD = d===60?c.mnt60_13:c.mnt48_13, matDef = d===60?c.achat60:c.achat48;
 
-function togDev(id,key){
-  ST[id][key]=!ST[id][key];
-  const suffix = key==='ted'?'ttd': key==='prio'?'tpr': key==='conv'?'tcv': key;
-  const togEl = el(id+'_'+suffix);
-  if(togEl) togEl.classList.toggle('on', ST[id][key]);
+  const pg = $('page-'+id);
+  pg.innerHTML = '';
+
+  // Header
+  const head = document.createElement('div');
+  head.className = 'dv-head';
+  head.innerHTML = '<h2>'+c.name+'</h2><p>Configurez le dossier et partagez l\'écran avec le prospect</p>';
+  pg.appendChild(head);
+
+  // Dur switch
+  const durSw = document.createElement('div');
+  durSw.className = 'dur-sw';
+  durSw.innerHTML = '<button class="'+(d===60?'on':'')+'" data-dur="60">60 mois</button><button class="'+(d===48?'on':'')+'" data-dur="48">48 mois</button>';
+  durSw.querySelectorAll('button').forEach(b => b.addEventListener('click', () => setDur(id, +b.dataset.dur)));
+  pg.appendChild(durSw);
+
+  // Params card
+  const pcard = document.createElement('div');
+  pcard.className = 'pcard';
+  let pcHtml = '<div class="pcard-ttl">Paramètres du dossier</div>';
+  pcHtml += '<div class="pg pg2">';
+  pcHtml += '<div class="pf"><label>Abonnement Tessan</label><div class="pf-row"><input type="number" id="'+id+'_abo" value="'+c.abo+'" step="0.01"><span class="u">€/mois</span></div></div>';
+  pcHtml += c.hasTC ? '<div class="pf"><label>TC / mois</label><div class="pf-row"><input type="number" id="'+id+'_tc" value="'+c.tcDef+'" step="1"><span class="u">cons.</span></div></div>' : '<div></div>';
+  pcHtml += '</div>';
+  pcHtml += '<div class="pg pg4">';
+  pcHtml += '<div class="pf"><label>Matériel HT</label><div class="pf-row"><input type="number" id="'+id+'_mat" value="'+matDef+'" step="1"><span class="u">€</span></div><div class="hint">Tarif : '+matDef.toLocaleString('fr-FR')+' €</div></div>';
+  pcHtml += '<div class="pf"><label>Maintenance</label><div class="pf-row"><input type="number" id="'+id+'_maint" value="'+mntD+'" step="0.01"><span class="u">€/mois</span></div><div class="hint">Tarif : '+mntD+' €</div></div>';
+  pcHtml += c.hasTED  ? '<div class="pf"><label>TED</label><div class="pf-row"><input type="number" id="'+id+'_ted" value="'+c.tedDef+'" step="0.01"><span class="u">€/mois</span></div><div class="hint">Tarif : '+c.tedDef+' €</div></div>' : '<div></div>';
+  pcHtml += c.hasPrio ? '<div class="pf"><label>Accès prioritaire</label><div class="pf-row"><input type="number" id="'+id+'_prio" value="'+c.prioDef+'" step="0.01"><span class="u">€/mois</span></div><div class="hint">Tarif : '+c.prioDef+' €</div></div>' : '<div></div>';
+  pcHtml += '</div>';
+  pcHtml += '<div class="toggles">';
+  if (c.hasTED)  pcHtml += '<div class="tog" data-dev="'+id+'" data-key="ted"><span class="dot"></span>TED</div>';
+  if (c.hasPrio) pcHtml += '<div class="tog" data-dev="'+id+'" data-key="prio"><span class="dot"></span>Accès prioritaire</div>';
+  pcHtml += '<div class="tog" data-dev="'+id+'" data-key="conv"><span class="dot"></span>Conversion&nbsp;—&nbsp;<input class="conv-in" type="number" id="'+id+'_conv" value="0" step="100">&nbsp;€</div>';
+  pcHtml += '</div>';
+  pcHtml += '<div id="'+id+'_accord"></div>';
+  pcard.innerHTML = pcHtml;
+
+  // wire toggle clicks
+  pcard.querySelectorAll('.tog').forEach(t => {
+    t.addEventListener('click', e => {
+      if (e.target.classList.contains('conv-in')) return;
+      togDev(t.dataset.dev, t.dataset.key);
+    });
+  });
+  // wire conv input
+  const convInput = pcard.querySelector('.conv-in');
+  if (convInput) convInput.addEventListener('input', () => renderDevice(id));
+  // wire param inputs
+  pcard.querySelectorAll('input[type=number]').forEach(inp => {
+    if (!inp.classList.contains('conv-in')) inp.addEventListener('input', () => renderDevice(id));
+  });
+  pg.appendChild(pcard);
+
+  // Mixte section
+  const s1 = document.createElement('div'); s1.className='sec'; s1.textContent='Mixte — abonnement mensuel + matériel fractionné'; pg.appendChild(s1);
+  const mix = document.createElement('div'); mix.className='g3'; mix.id=id+'_mix'; pg.appendChild(mix);
+
+  // Comptant section
+  const s2 = document.createElement('div'); s2.className='sec'; s2.textContent='Paiement comptant'; pg.appendChild(s2);
+  const cpt = document.createElement('div'); cpt.className='g3'; cpt.id=id+'_cpt'; pg.appendChild(cpt);
+
+  // Leasing section
+  const s3 = document.createElement('div'); s3.className='sec'; s3.textContent='Leasing — mensualités modulables'; pg.appendChild(s3);
+  const li = document.createElement('div');
+  li.className = 'leas-inputs';
+  li.innerHTML = '<div class="pf"><label>Matériel M1–12 (promo)</label><div class="pf-row"><input type="number" id="'+id+'_lm1" value="'+mat1+'" step="0.01"><span class="u">€/mois</span></div></div><div class="pf"><label>Maintenance M1–12 (promo)</label><div class="pf-row"><input type="number" id="'+id+'_ln1" value="'+mnt1+'" step="0.01"><span class="u">€/mois</span></div></div>';
+  li.querySelectorAll('input').forEach(inp => inp.addEventListener('input', () => renderDevice(id)));
+  pg.appendChild(li);
+
+  const lnote = document.createElement('div');
+  lnote.className = 'leas-note';
+  lnote.textContent = 'Les mensualités M13–'+d+' sont issues de la configuration admin. Modifiez M1–12 pour proposer une période de lancement réduite ou offerte.';
+  pg.appendChild(lnote);
+
+  const leas = document.createElement('div'); leas.className='g2'; leas.id=id+'_leas'; pg.appendChild(leas);
+
+  // Rentab toggle
+  const rtog = document.createElement('div'); rtog.className='rtog'; rtog.id=id+'_rtog';
+  rtog.innerHTML = '<svg width="10" height="10" viewBox="0 0 10 10"><path d="M3 1.5l4 3.5-4 3.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg> Rentabilité du dossier';
+  rtog.addEventListener('click', () => { $( id+'_rentab').classList.toggle('show'); rtog.classList.toggle('open'); });
+  pg.appendChild(rtog);
+
+  const rg = document.createElement('div'); rg.className='rgrid'; rg.id=id+'_rentab'; pg.appendChild(rg);
+  const sp = document.createElement('div'); sp.style.height='2rem'; pg.appendChild(sp);
+}
+
+function setDur(id, d) { ST[id].dur = d; buildPage(id); renderDevice(id); }
+
+function togDev(id, key) {
+  ST[id][key] = !ST[id][key];
+  const tog = $('page-'+id).querySelector('.tog[data-key="'+key+'"]');
+  if (tog) tog.classList.toggle('on', ST[id][key]);
   renderDevice(id);
 }
 
-function togRentab(id){ el(id+'_rentab').classList.toggle('show'); el(id+'_rtog').classList.toggle('open'); }
-
-// compute
-function compute(id){
-  const c=CFG[id], s=ST[id], d=s.dur, rest=d===60?48:36;
-  const abo=gv(id+'_abo'), mat=gv(id+'_mat'), maint=gv(id+'_maint');
-  const tc=c.hasTC?gv(id+'_tc'):0;
-  const ted_p =gv(id+'_ted'),  prio_p=gv(id+'_prio');
-  const ted  = (c.hasTED  && s.ted)  ? ted_p  : 0;
-  const prio = (c.hasPrio && s.prio) ? prio_p : 0;
-  const conv = s.conv ? gv(id+'_conv') : 0;
-  const opts=ted+prio;
-  const achat=d===60?c.achat60:c.achat48, cac=d===60?c.cac60:c.cac48;
-  const LR=c.leasRate, CR=c.cashRate;
-  const lm1=gv(id+'_lm1'), ln1=gv(id+'_ln1');
-  const lm13=d===60?c.mat60_13:c.mat48_13, ln13=d===60?c.mnt60_13:c.mnt48_13;
-  const lmt=lm1*12+lm13*rest, lnt=ln1*12+ln13*rest;
-  const lfin=lmt+lnt, lfrais=lfin*LR, lcout=lfin+lfrais;
-  const abo_tot=abo*d, opts_tot=opts*d;
-  const l_tot=abo_tot+lcout+opts_tot+conv, lcash=lcout*CR;
-  const l_deb=abo+opts, l_ful=abo+lm13+ln13+opts;
+// ── COMPUTE ──────────────────────────────────────────────────
+function compute(id) {
+  const c = CFG[id], s = ST[id], d = s.dur, rest = d===60 ? 48 : 36;
+  const abo   = gv(id+'_abo');
+  const mat   = gv(id+'_mat');
+  const maint = gv(id+'_maint');
+  const tc    = c.hasTC  ? gv(id+'_tc')   : 0;
+  const tedP  = c.hasTED ? gv(id+'_ted')  : 0;
+  const prioP = c.hasPrio? gv(id+'_prio') : 0;
+  const ted   = s.ted  ? tedP  : 0;
+  const prio  = s.prio ? prioP : 0;
+  const conv  = s.conv ? gv(id+'_conv') : 0;
+  const opts  = ted + prio;
+  const achat = d===60 ? c.achat60 : c.achat48;
+  const cac   = d===60 ? c.cac60   : c.cac48;
+  const LR = c.leasRate, CR = c.cashRate;
+  const lm1  = gv(id+'_lm1'), ln1  = gv(id+'_ln1');
+  const lm13 = d===60 ? c.mat60_13 : c.mat48_13;
+  const ln13 = d===60 ? c.mnt60_13 : c.mnt48_13;
+  const lmt  = lm1*12 + lm13*rest;
+  const lnt  = ln1*12 + ln13*rest;
+  const lfin = lmt + lnt;
+  const lfrais = lfin * LR, lcout = lfin + lfrais;
+  const abo_tot = abo*d, opts_tot = opts*d;
+  const l_tot = abo_tot + lcout + opts_tot + conv;
+  const lcash = lcout * CR;
+  const l_deb = abo + opts, l_ful = abo + lm13 + ln13 + opts;
   // comptant
-  const cpt_mm=(mat+maint)*0.9;
-  const cpt_base=abo_tot+cpt_mm+conv;
-  const cpt_tot=cpt_base+opts_tot;
-  const x3=cpt_base/3, x4=cpt_base/4;
-  // mixte — fractionnement sur mat+maint+conv, abo prélevé séparément
-  const mix_b=mat+maint+conv, mix3=mix_b/3, mix4=mix_b/4;
+  const cpt_mm = (mat + maint) * 0.9;
+  const cpt_base = abo_tot + cpt_mm + conv;
+  const cpt_tot  = cpt_base + opts_tot;
+  const x3 = cpt_base/3, x4 = cpt_base/4;
+  // mixte
+  const mix_b = mat + maint + conv;
+  const mix3 = mix_b/3, mix4 = mix_b/4;
   // rentab
-  const ltv=c.hasTC?tc*7*d:0, ca=l_tot+ltv;
-  const costs=achat+cac+conv+lfin*LR;
-  const ebitda=(abo_tot+lmt+lnt+ltv)-costs;
-  const rentab=costs>0?ca/costs:0, mcash=achat>0?(lcash-achat)/achat:0;
-  const sR=d===60?c.sR60:c.sR48, sC=d===60?c.sC60:c.sC48;
-  return {abo,mat,maint,tc,ted,ted_p,prio,prio_p,conv,opts,d,rest,achat,cac,LR,CR,
+  const ltv   = c.hasTC ? tc*7*d : 0;
+  const ca    = l_tot + ltv;
+  const costs = achat + cac + conv + lfin*LR;
+  const ebitda = (abo_tot + lmt + lnt + ltv) - costs;
+  const rentab = costs > 0 ? ca/costs : 0;
+  const mcash  = achat > 0 ? (lcash - achat)/achat : 0;
+  const sR = d===60 ? c.sR60 : c.sR48;
+  const sC = d===60 ? c.sC60 : c.sC48;
+  return {abo,mat,maint,tc,tedP,prioP,ted,prio,conv,opts,d,achat,cac,LR,CR,
     lmt,lnt,lfin,lfrais,lcout,l_deb,l_ful,abo_tot,opts_tot,l_tot,lcash,lm1,ln1,lm13,ln13,
     cpt_mm,cpt_base,cpt_tot,x3,x4,mix_b,mix3,mix4,
     ltv,ca,costs,ebitda,rentab,mcash,sR,sC, okA:rentab>=sR, okL:mcash>=sC};
 }
 
-// render
-function renderDevice(id){
-  const c=CFG[id], v=compute(id);
+// ── RENDER ───────────────────────────────────────────────────
+function renderDevice(id) {
+  const c = CFG[id], v = compute(id);
 
-  // accord
-  let acls,ico,atit,tags;
-  if(v.okA&&v.okL){ acls='ok'; ico='✅'; atit='Accord achat direct / Accord leasing'; tags=['✓ Achat direct','✓ Leasing']; }
-  else if(v.okA)  { acls='warn'; ico='⚠️'; atit='Accord achat direct / Refus leasing'; tags=['✓ Achat direct','✗ Leasing']; }
-  else            { acls='ko'; ico='🚫'; atit='Refus achat direct / Refus leasing'; tags=['✗ Achat direct','✗ Leasing']; }
-  el(id+'_accord').innerHTML='<div class="accord '+acls+'"><span class="accord-icon">'+ico+'</span><div class="accord-body"><div class="accord-ttl">'+atit+'</div><div class="accord-tags">'+tags.map(t=>'<span class="atag">'+t+'</span>').join('')+'</div></div></div>';
+  // Accord
+  let acls, ico, atit, tags;
+  if      (v.okA && v.okL) { acls='ok';   ico='✅'; atit='Accord achat direct / Accord leasing';  tags=['✓ Achat direct','✓ Leasing']; }
+  else if (v.okA)           { acls='warn'; ico='⚠️';  atit='Accord achat direct / Refus leasing';   tags=['✓ Achat direct','✗ Leasing']; }
+  else                      { acls='ko';   ico='🚫'; atit='Refus achat direct / Refus leasing';    tags=['✗ Achat direct','✗ Leasing']; }
+  $(id+'_accord').innerHTML =
+    '<div class="accord '+acls+'"><span class="accord-ico">'+ico+'</span><div class="accord-body">'+
+    '<div class="accord-ttl">'+atit+'</div>'+
+    '<div class="accord-tags">'+tags.map(t=>'<span class="atag">'+t+'</span>').join('')+'</div></div></div>';
 
-  // opts lines helpers
-  const optsTotLine = v.opts>0 ? '<div class="cr"><span>Options ('+v.d+' mois)</span><b>'+f(v.opts*v.d)+'</b></div>' : '';
-  const optsMonthLine = v.opts>0 ? '<div class="cr"><span>Options / mois</span><b>'+fm(v.opts)+'</b></div>' : '';
-  const tedLine  = v.ted>0  ? '<div class="cr"><span>TED</span><b>'+fm(v.ted_p)+'</b></div>' : '';
-  const prioLine = v.prio>0 ? '<div class="cr"><span>Accès prioritaire</span><b>'+fm(v.prio_p)+'</b></div>' : '';
-  const convLine = v.conv>0 ? '<div class="cr"><span>Conversion</span><b>'+f(v.conv)+'</b></div>' : '';
+  // helpers
+  const convL  = v.conv>0  ? '<div class="cr"><span>Conversion</span><b>'+f(v.conv)+'</b></div>' : '';
+  const optsTL = v.opts>0  ? '<div class="cr"><span>Options ('+v.d+' mois)</span><b>'+f(v.opts*v.d)+'</b></div>' : '';
+  const optsML = v.opts>0  ? '<div class="cr"><span>Options / mois</span><b>'+fm(v.opts)+'</b></div>' : '';
+  const tedL   = v.ted>0   ? '<div class="cr"><span>TED</span><b>'+fm(v.tedP)+'</b></div>' : '';
+  const prioL  = v.prio>0  ? '<div class="cr"><span>Accès prioritaire</span><b>'+fm(v.prioP)+'</b></div>' : '';
 
   // MIXTE
-  el(id+'_mix').innerHTML=
-    '<div class="card star">'+
-      '<div class="badge">RECOMMANDÉ</div>'+
-      '<div class="ctitle">Mixte — Comptant</div>'+
-      '<div class="csub">Abonnement mensuel prélevé + règlement unique du matériel</div>'+
-      '<div class="cprice">'+fm(v.abo)+'<small> + '+f(v.mix_b)+'</small></div>'+
-      '<div class="crows">'+
-        '<div class="cr"><span>Abonnement Tessan</span><b>'+fm(v.abo)+'</b></div>'+
-        '<div class="cr"><span>Matériel HT</span><b>'+f(v.mat)+'</b></div>'+
-        '<div class="cr"><span>Maintenance</span><b>'+f(v.maint)+'</b></div>'+
-        convLine+optsMonthLine+
-      '</div>'+
-    '</div>'+
-    '<div class="card">'+
-      '<div class="ctitle">Mixte 3×</div>'+
-      '<div class="csub">Abonnement mensuel prélevé + matériel en 3 versements</div>'+
-      '<div class="cprice">'+fm(v.abo)+'<small> + '+f(v.mix3)+' × 3</small></div>'+
-      '<div class="crows">'+
-        '<div class="cr"><span>Abonnement mensuel</span><b>'+fm(v.abo)+'</b></div>'+
-        (v.opts>0?'<div class="cr"><span>Options incluses</span><b>'+fm(v.opts)+'</b></div>':'')+
-        '<div class="cr sep"><span>Versement commande</span><b>'+f(v.mix3)+'</b></div>'+
-        '<div class="cr"><span>Versement livraison</span><b>'+f(v.mix3)+'</b></div>'+
-        '<div class="cr"><span>M+1</span><b>'+f(v.mix3)+'</b></div>'+
-        '<div class="cr sep total"><span>Matériel+maint'+( v.conv>0 ?'+conv':'' )+'</span><b>'+f(v.mix_b)+'</b></div>'+
-      '</div>'+
-    '</div>'+
-    '<div class="card">'+
-      '<div class="ctitle">Mixte 4×</div>'+
-      '<div class="csub">Abonnement mensuel prélevé + matériel en 4 versements</div>'+
-      '<div class="cprice">'+fm(v.abo)+'<small> + '+f(v.mix4)+' × 4</small></div>'+
-      '<div class="crows">'+
-        '<div class="cr"><span>Abonnement mensuel</span><b>'+fm(v.abo)+'</b></div>'+
-        (v.opts>0?'<div class="cr"><span>Options incluses</span><b>'+fm(v.opts)+'</b></div>':'')+
-        '<div class="cr sep"><span>Versement commande</span><b>'+f(v.mix4)+'</b></div>'+
-        '<div class="cr"><span>Versement livraison</span><b>'+f(v.mix4)+'</b></div>'+
-        '<div class="cr"><span>M+1</span><b>'+f(v.mix4)+'</b></div>'+
-        '<div class="cr"><span>M+2</span><b>'+f(v.mix4)+'</b></div>'+
-        '<div class="cr sep total"><span>Matériel+maint'+( v.conv>0 ?'+conv':'' )+'</span><b>'+f(v.mix_b)+'</b></div>'+
-      '</div>'+
-    '</div>';
+  $(id+'_mix').innerHTML =
+    '<div class="card star"><div class="badge">RECOMMANDÉ</div><div class="ctitle">Mixte — Comptant</div>'+
+    '<div class="csub">Abonnement mensuel prélevé + règlement unique du matériel</div>'+
+    '<div class="cprice">'+fm(v.abo)+'<small> + '+f(v.mix_b)+'</small></div>'+
+    '<div class="crows"><div class="cr"><span>Abonnement Tessan</span><b>'+fm(v.abo)+'</b></div>'+
+    '<div class="cr"><span>Matériel HT</span><b>'+f(v.mat)+'</b></div>'+
+    '<div class="cr"><span>Maintenance</span><b>'+f(v.maint)+'</b></div>'+convL+optsML+'</div></div>'+
+
+    '<div class="card"><div class="ctitle">Mixte 3×</div>'+
+    '<div class="csub">Abonnement mensuel prélevé + matériel en 3 versements</div>'+
+    '<div class="cprice">'+fm(v.abo)+(v.opts>0?'<small> + opts</small>':'')+'<small> + '+f(v.mix3)+' × 3</small></div>'+
+    '<div class="crows"><div class="cr"><span>Abonnement mensuel</span><b>'+fm(v.abo)+'</b></div>'+
+    optsML+'<div class="cr sep"><span>Versement commande</span><b>'+f(v.mix3)+'</b></div>'+
+    '<div class="cr"><span>Versement livraison</span><b>'+f(v.mix3)+'</b></div>'+
+    '<div class="cr"><span>M+1</span><b>'+f(v.mix3)+'</b></div>'+
+    '<div class="cr sep tot"><span>Matériel+maint'+(v.conv>0?'+conv':'')+'</span><b>'+f(v.mix_b)+'</b></div></div></div>'+
+
+    '<div class="card"><div class="ctitle">Mixte 4×</div>'+
+    '<div class="csub">Abonnement mensuel prélevé + matériel en 4 versements</div>'+
+    '<div class="cprice">'+fm(v.abo)+(v.opts>0?'<small> + opts</small>':'')+'<small> + '+f(v.mix4)+' × 4</small></div>'+
+    '<div class="crows"><div class="cr"><span>Abonnement mensuel</span><b>'+fm(v.abo)+'</b></div>'+
+    optsML+'<div class="cr sep"><span>Versement commande</span><b>'+f(v.mix4)+'</b></div>'+
+    '<div class="cr"><span>Versement livraison</span><b>'+f(v.mix4)+'</b></div>'+
+    '<div class="cr"><span>M+1</span><b>'+f(v.mix4)+'</b></div>'+
+    '<div class="cr"><span>M+2</span><b>'+f(v.mix4)+'</b></div>'+
+    '<div class="cr sep tot"><span>Matériel+maint'+(v.conv>0?'+conv':'')+'</span><b>'+f(v.mix_b)+'</b></div></div></div>';
 
   // COMPTANT
-  el(id+'_cpt').innerHTML=
-    '<div class="card star">'+
-      '<div class="badge">RECOMMANDÉ</div>'+
-      '<div class="ctitle">Comptant</div>'+
-      '<div class="csub">Règlement unique — remise −10% sur matériel + maintenance</div>'+
-      '<div class="cprice">'+f(v.cpt_tot)+'</div>'+
-      '<div class="crows">'+
-        '<div class="cr"><span>Abonnement ('+v.d+' mois)</span><b>'+f(v.abo_tot)+'</b></div>'+
-        '<div class="cr"><span>Matériel + maintenance −10%</span><b>'+f(v.cpt_mm)+'</b></div>'+
-        convLine+optsTotLine+
-      '</div>'+
-    '</div>'+
-    '<div class="card">'+
-      '<div class="ctitle">3× sans frais</div>'+
-      '<div class="csub">3 versements égaux — abonnement + matériel inclus</div>'+
-      '<div class="cprice">'+f(v.x3)+'<small> × 3</small></div>'+
-      '<div class="crows">'+
-        '<div class="cr"><span>Abonnement ('+v.d+' mois)</span><b>'+f(v.abo_tot)+'</b></div>'+
-        '<div class="cr"><span>Matériel + maintenance −10%</span><b>'+f(v.cpt_mm)+'</b></div>'+
-        convLine+optsTotLine+
-        '<div class="cr sep"><span>Versement commande</span><b>'+f(v.x3)+'</b></div>'+
-        '<div class="cr"><span>Versement livraison</span><b>'+f(v.x3)+'</b></div>'+
-        '<div class="cr"><span>M+1</span><b>'+f(v.x3)+'</b></div>'+
-        '<div class="cr sep total"><span>Total</span><b>'+f(v.cpt_base)+'</b></div>'+
-      '</div>'+
-    '</div>'+
-    '<div class="card">'+
-      '<div class="ctitle">4× sans frais</div>'+
-      '<div class="csub">4 versements égaux — abonnement + matériel inclus</div>'+
-      '<div class="cprice">'+f(v.x4)+'<small> × 4</small></div>'+
-      '<div class="crows">'+
-        '<div class="cr"><span>Abonnement ('+v.d+' mois)</span><b>'+f(v.abo_tot)+'</b></div>'+
-        '<div class="cr"><span>Matériel + maintenance −10%</span><b>'+f(v.cpt_mm)+'</b></div>'+
-        convLine+optsTotLine+
-        '<div class="cr sep"><span>Versement commande</span><b>'+f(v.x4)+'</b></div>'+
-        '<div class="cr"><span>Versement livraison</span><b>'+f(v.x4)+'</b></div>'+
-        '<div class="cr"><span>M+1</span><b>'+f(v.x4)+'</b></div>'+
-        '<div class="cr"><span>M+2</span><b>'+f(v.x4)+'</b></div>'+
-        '<div class="cr sep total"><span>Total</span><b>'+f(v.cpt_base)+'</b></div>'+
-      '</div>'+
-    '</div>';
+  $(id+'_cpt').innerHTML =
+    '<div class="card star"><div class="badge">RECOMMANDÉ</div><div class="ctitle">Comptant</div>'+
+    '<div class="csub">Règlement unique — remise −10% sur matériel + maintenance</div>'+
+    '<div class="cprice">'+f(v.cpt_tot)+'</div>'+
+    '<div class="crows"><div class="cr"><span>Abonnement ('+v.d+' mois)</span><b>'+f(v.abo_tot)+'</b></div>'+
+    '<div class="cr"><span>Matériel + maintenance −10%</span><b>'+f(v.cpt_mm)+'</b></div>'+convL+optsTL+'</div></div>'+
+
+    '<div class="card"><div class="ctitle">3× sans frais</div>'+
+    '<div class="csub">3 versements égaux — abonnement + matériel inclus</div>'+
+    '<div class="cprice">'+f(v.x3)+'<small> × 3</small></div>'+
+    '<div class="crows"><div class="cr"><span>Abonnement ('+v.d+' mois)</span><b>'+f(v.abo_tot)+'</b></div>'+
+    '<div class="cr"><span>Matériel + maintenance −10%</span><b>'+f(v.cpt_mm)+'</b></div>'+convL+optsTL+
+    '<div class="cr sep"><span>Versement commande</span><b>'+f(v.x3)+'</b></div>'+
+    '<div class="cr"><span>Versement livraison</span><b>'+f(v.x3)+'</b></div>'+
+    '<div class="cr"><span>M+1</span><b>'+f(v.x3)+'</b></div>'+
+    '<div class="cr sep tot"><span>Total</span><b>'+f(v.cpt_base)+'</b></div></div></div>'+
+
+    '<div class="card"><div class="ctitle">4× sans frais</div>'+
+    '<div class="csub">4 versements égaux — abonnement + matériel inclus</div>'+
+    '<div class="cprice">'+f(v.x4)+'<small> × 4</small></div>'+
+    '<div class="crows"><div class="cr"><span>Abonnement ('+v.d+' mois)</span><b>'+f(v.abo_tot)+'</b></div>'+
+    '<div class="cr"><span>Matériel + maintenance −10%</span><b>'+f(v.cpt_mm)+'</b></div>'+convL+optsTL+
+    '<div class="cr sep"><span>Versement commande</span><b>'+f(v.x4)+'</b></div>'+
+    '<div class="cr"><span>Versement livraison</span><b>'+f(v.x4)+'</b></div>'+
+    '<div class="cr"><span>M+1</span><b>'+f(v.x4)+'</b></div>'+
+    '<div class="cr"><span>M+2</span><b>'+f(v.x4)+'</b></div>'+
+    '<div class="cr sep tot"><span>Total</span><b>'+f(v.cpt_base)+'</b></div></div></div>';
 
   // LEASING
-  el(id+'_leas').innerHTML=
-    '<div class="card">'+
-      '<div class="ctitle">Leasing '+v.d+' mois — mensualités</div>'+
-      '<div class="csub">Abonnement + matériel + maintenance inclus</div>'+
-      '<div class="cprice">'+fm(v.l_ful)+'<small> à partir de M13</small></div>'+
-      '<div class="crows">'+
-        '<div class="cr"><span>Mois 1–12 (mensualité)</span><b>'+fm(v.l_deb)+'</b></div>'+
-        '<div class="cr sep"><span>Abonnement Tessan</span><b>'+fm(v.abo)+'</b></div>'+
-        '<div class="cr"><span>Matériel M1–12</span><b>'+fm(v.lm1)+'</b></div>'+
-        '<div class="cr"><span>Matériel M13–'+v.d+'</span><b>'+fm(v.lm13)+'</b></div>'+
-        '<div class="cr"><span>Maintenance M1–12</span><b>'+fm(v.ln1)+'</b></div>'+
-        '<div class="cr"><span>Maintenance M13–'+v.d+'</span><b>'+fm(v.ln13)+'</b></div>'+
-        tedLine+prioLine+
-        '<div class="cr sep total"><span>Coût total '+v.d+' mois</span><b>'+f(v.l_tot)+'</b></div>'+
-      '</div>'+
-    '</div>'+
-    '<div class="card">'+
-      '<div class="ctitle">Leasing '+v.d+' mois — financement</div>'+
-      '<div class="csub">Décomposition du financement matériel</div>'+
-      '<div class="cprice">'+f(v.lfin)+'<small> financé</small></div>'+
-      '<div class="crows">'+
-        '<div class="cr"><span>Matériel total en leasing</span><b>'+f(v.lmt)+'</b></div>'+
-        '<div class="cr"><span>Maintenance totale en leasing</span><b>'+f(v.lnt)+'</b></div>'+
-        '<div class="cr sep"><span>Frais de leasing ('+Math.round(v.LR*100)+'%)</span><b>'+f(v.lfrais)+'</b></div>'+
-        '<div class="cr"><span>Total à financer</span><b>'+f(v.lcout)+'</b></div>'+
-        '<div class="cr sep total"><span>Cash immédiat Tessan ('+Math.round(v.CR*100)+'%)</span><b>'+f(v.lcash)+'</b></div>'+
-      '</div>'+
-    '</div>';
+  $(id+'_leas').innerHTML =
+    '<div class="card"><div class="ctitle">Leasing '+v.d+' mois — mensualités</div>'+
+    '<div class="csub">Abonnement + matériel + maintenance inclus</div>'+
+    '<div class="cprice">'+fm(v.l_ful)+'<small> à partir de M13</small></div>'+
+    '<div class="crows"><div class="cr"><span>Mois 1–12</span><b>'+fm(v.l_deb)+'</b></div>'+
+    '<div class="cr sep"><span>Abonnement Tessan</span><b>'+fm(v.abo)+'</b></div>'+
+    '<div class="cr"><span>Matériel M1–12</span><b>'+fm(v.lm1)+'</b></div>'+
+    '<div class="cr"><span>Matériel M13–'+v.d+'</span><b>'+fm(v.lm13)+'</b></div>'+
+    '<div class="cr"><span>Maintenance M1–12</span><b>'+fm(v.ln1)+'</b></div>'+
+    '<div class="cr"><span>Maintenance M13–'+v.d+'</span><b>'+fm(v.ln13)+'</b></div>'+
+    tedL+prioL+
+    '<div class="cr sep tot"><span>Coût total '+v.d+' mois</span><b>'+f(v.l_tot)+'</b></div></div></div>'+
 
-  // RENTAB
-  function rb(ok,val){ return '<span class="rbadge '+(ok?'ok':'ko')+'">'+(ok?'✓':'✗')+' '+val+'</span>'; }
-  el(id+'_rentab').innerHTML=
+    '<div class="card"><div class="ctitle">Leasing '+v.d+' mois — financement</div>'+
+    '<div class="csub">Décomposition du financement matériel</div>'+
+    '<div class="cprice">'+f(v.lfin)+'<small> financé</small></div>'+
+    '<div class="crows"><div class="cr"><span>Matériel total en leasing</span><b>'+f(v.lmt)+'</b></div>'+
+    '<div class="cr"><span>Maintenance totale en leasing</span><b>'+f(v.lnt)+'</b></div>'+
+    '<div class="cr sep"><span>Frais de leasing ('+Math.round(v.LR*100)+'%)</span><b>'+f(v.lfrais)+'</b></div>'+
+    '<div class="cr"><span>Total à financer</span><b>'+f(v.lcout)+'</b></div>'+
+    '<div class="cr sep tot"><span>Cash immédiat Tessan ('+Math.round(v.CR*100)+'%)</span><b>'+f(v.lcash)+'</b></div></div></div>';
+
+  // RENTABILITÉ
+  const rb = (ok,val) => '<span class="rbadge '+(ok?'ok':'ko')+'">'+(ok?'✓':'✗')+' '+val+'</span>';
+  $(id+'_rentab').innerHTML =
     '<div class="rc"><div class="rl">CA total</div><div class="rv">'+f(v.ca)+'</div></div>'+
     '<div class="rc"><div class="rl">Total coûts</div><div class="rv">'+f(v.costs)+'</div></div>'+
     '<div class="rc"><div class="rl">EBITDA</div><div class="rv">'+f(v.ebitda)+'</div></div>'+
@@ -679,8 +571,8 @@ function renderDevice(id){
     '<div class="rc"><div class="rl">Cash immédiat</div><div class="rv">'+f(v.lcash)+'</div></div>';
 }
 
-// init
-DEVS.forEach(id=>buildPage(id));
+// ── INIT ─────────────────────────────────────────────────────
+DEVS.forEach(id => buildPage(id));
 renderDevice('checkup');
 </script>
 </body>
