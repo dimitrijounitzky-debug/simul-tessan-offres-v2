@@ -450,21 +450,21 @@ function compute(id){
   // Mensualites M1-12 saisies par le sales (champs modulables)
   const lm1  = gv(id+'_lm1');
   const ln1  = gv(id+'_ln1');
-  // M13+ depuis config (non modifiable directement sauf via admin)
+  // M13+ depuis config admin
   const lm13 = d===60?c.mat60_13:c.mat48_13;
   const ln13 = d===60?c.mnt60_13:c.mnt48_13;
 
-  // Total materiel leasing: (M1-12 x 12) + (M13+ x rest)
+  // Total mat leasing = (lm1*12)+(lm13*rest)  — xlsx G21=(G19*12)+(G20*48)
   const lmat_tot = (lm1*12) + (lm13*rest);
-  // Total maintenance leasing: (M1-12 x 12) + (M13+ x rest)
+  // Total maint leasing = (ln1*12)+(ln13*rest)  — xlsx I21=(I19*12)+(I20*48)
   const lmnt_tot = (ln1*12) + (ln13*rest);
 
-  // Financable = lmat_tot + lmnt_tot + conv
+  // Financable = lmat_tot + lmnt_tot + conv  (xlsx G22=G21+I21)
   const l_fin = lmat_tot + lmnt_tot + conv;
-  // Cout total a financer = financable x 1.20
+  // Cout total a financer = financable x 1.20  (xlsx G24=G22*1.2)
   const l_total_fin = l_fin * (1 + LR);
   const l_frais = l_fin * LR;
-  // Cash immediat = cout_total x 0.60 (xlsx G37=G24*0.6)
+  // Cash immediat = cout_total x 0.60  (xlsx G37=G24*0.6)
   const l_cash = l_total_fin * CR;
 
   // Mensualite theorique
@@ -484,8 +484,9 @@ function compute(id){
   const ltv = c.hasTC ? tc * 7 * 60 : 0;
   // CA total = CA direct + LTV TC
   const ca_total = ca_direct + ltv;
-  // Couts Tessan = achat + CAC + conversion + cout leasing (20% du finance)
-  const cout_tessan = achat + cac + conv + (l_fin * LR);
+  // Couts Tessan = achat + CAC + conversion + (mat+maint) * frais leasing
+  // Formule: 3910 + 2300 + conv + (lmat_tot + lmnt_tot) * 0.20
+  const cout_tessan = achat + cac + conv + ((lmat_tot + lmnt_tot) * LR);
   // EBITDA (xlsx G35 = (F21+G21+I21+G32) - G31)
   // = (service_tot + mat_tot_leasing + maint_tot_leasing + LTV) - cout_tessan
   const ebitda = (l_service_tot + lmat_tot + lmnt_tot + ltv) - cout_tessan;
