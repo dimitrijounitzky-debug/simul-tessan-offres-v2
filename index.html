@@ -453,17 +453,17 @@ function compute(id){
   const lm13 = d===60?c.mat60_13:c.mat48_13;
   const ln13 = d===60?c.mnt60_13:c.mnt48_13;
 
-  // Total materiel et maintenance en leasing sur duree (affichage mensualites)
+  // G21/G59 = (mat_1*12)+(mat_13*rest) — total materiel leasing sur duree
   const lmat_tot = (lm1*12) + (lm13*rest);
+  // I21/I59 = (mnt_1*12)+(mnt_13*rest) — total maintenance leasing sur duree
   const lmnt_tot = (ln1*12) + (ln13*rest);
 
-  // MONTANT FINANCE = mat saisi + maintenance totale (sur duree) + conversion
-  // C'est le prix du materiel saisi par le sales qui pilote tout
-  const l_fin   = mat + maint_tot + conv;
-  // Montant total = finance x 1.20
+  // G22/G60 = mat_tot + mnt_tot + conv — financable (xlsx exact)
+  const l_fin   = lmat_tot + lmnt_tot + conv;
+  // G24/G62 = financable * 1.20 — cout total a financer
   const l_total_fin = l_fin * (1 + LR);
   const l_frais = l_fin * LR;
-  // Cash immediat = cout total a financer x 60% (xlsx G37 = G24*0.6 ou G24 = financable*1.2)
+  // G37/G75 = cout_total * 0.60 — cash immediat (xlsx G37=G24*0.6)
   const l_cash  = l_total_fin * CR;
 
   // Mensualite leasing calculee depuis le montant finance
@@ -479,7 +479,8 @@ function compute(id){
   // CA direct = tout ce que paie le client
   const ca_direct = l_client_total;
   // LTV TC (si applicable)
-  const ltv = c.hasTC ? tc * 7 * d : 0;
+  // LTV toujours sur 60 mois (formule xlsx G32=F18*7*60 et G70=F56*7*60)
+  const ltv = c.hasTC ? tc * 7 * 60 : 0;
   // CA total = CA direct + LTV TC
   const ca_total = ca_direct + ltv;
   // Couts Tessan = achat + CAC + conversion + cout leasing (20% du finance)
@@ -642,16 +643,16 @@ function renderDevice(id){
     '</div></div>'+
 
     '<div class="card"><div class="ctitle">Leasing '+v.d+' mois \u2014 financement</div>'+
-    '<div class="csub">Montant financ\u00e9 = mat\u00e9riel + maintenance + conversion</div>'+
+    '<div class="csub">Financ\u00e9 = mensualit\u00e9s mat+maint sur '+v.d+' mois + conversion</div>'+
     '<div class="cprice">'+ff(v.l_fin)+'<small> financ\u00e9</small></div>'+
     '<div class="crows">'+
-      '<div class="cr"><span>Mat\u00e9riel HT</span><b>'+ff(v.mat)+'</b></div>'+
-      '<div class="cr"><span>Maintenance ('+v.d+' mois)</span><b>'+ff(v.maint_tot)+'</b></div>'+
+      '<div class="cr"><span>Mat\u00e9riel total en leasing</span><b>'+ff(v.lmat_tot)+'</b></div>'+
+      '<div class="cr"><span>Maintenance totale en leasing</span><b>'+ff(v.lmnt_tot)+'</b></div>'+
       (v.conv>0?'<div class="cr"><span>Conversion</span><b>'+ff(v.conv)+'</b></div>':'')+
       '<div class="cr sep"><span>Co\u00fbt leasing (+'+Math.round(v.LR*100)+'%)</span><b>'+ff(v.l_frais)+'</b></div>'+
       '<div class="cr"><span>Montant total \u00e0 financer</span><b>'+ff(v.l_total_fin)+'</b></div>'+
       '<div class="cr"><span>Mensualit\u00e9 th\u00e9orique mat+maint</span><b>'+fm(v.l_mens_calc)+'</b></div>'+
-      '<div class="cr sep tot"><span>Cash imm\u00e9diat Tessan ('+Math.round(v.CR*100)+'% du financ\u00e9)</span><b>'+ff(v.l_cash)+'</b></div>'+
+      '<div class="cr sep tot"><span>Cash imm\u00e9diat Tessan ('+Math.round(v.CR*100)+'% du total)</span><b>'+ff(v.l_cash)+'</b></div>'+
     '</div></div>';
 
   // ── RENTAB ──
