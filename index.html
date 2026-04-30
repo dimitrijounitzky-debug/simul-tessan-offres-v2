@@ -5,347 +5,341 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tessan — Simulateur Commercial</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --ink:       #0F0F0E;
-  --ink2:      #52504A;
-  --ink3:      #9E9B93;
-  --paper:     #FAF9F6;
-  --card:      #FFFFFF;
-  --line:      #ECEAE3;
-  --line2:     #D8D5CC;
-  --blue:      #1A56DB;
-  --blue-soft: #EEF3FF;
-  --blue-mid:  #C7D7FB;
-  --green:     #0D6E3D;
-  --green-soft:#ECFDF5;
-  --green-mid: #A7F3D0;
-  --amber:     #92400E;
-  --amber-soft:#FFFBEB;
-  --amber-mid: #FDE68A;
-  --red:       #9B1C1C;
-  --red-soft:  #FEF2F2;
-  --red-mid:   #FCA5A5;
-  --r4: 4px; --r8: 8px; --r12: 12px; --r16: 16px; --r99: 999px;
+  --bg:         #FFFFFF;
+  --surface:    #F8F8F8;
+  --surface2:   #F2F2F2;
+  --border:     #E8E8E8;
+  --border2:    #D4D4D4;
+  --ink:        #111111;
+  --ink2:       #555555;
+  --ink3:       #999999;
+  --blue:       #2563EB;
+  --blue-lt:    #EEF4FF;
+  --blue-bd:    #BFDBFE;
+  --green:      #16A34A;
+  --green-lt:   #F0FDF4;
+  --green-bd:   #86EFAC;
+  --amber:      #D97706;
+  --amber-lt:   #FFFBEB;
+  --amber-bd:   #FCD34D;
+  --red:        #DC2626;
+  --red-lt:     #FEF2F2;
+  --red-bd:     #FCA5A5;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { font-size: 14px; }
-body { font-family: 'Outfit', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); color: var(--ink); min-height: 100vh; -webkit-font-smoothing: antialiased; }
 
-/* ─── NAV ─────────────────────────────────────────────── */
+/* ─── NAV ─────────────────────────────── */
 .nav {
   position: sticky; top: 0; z-index: 200;
-  background: rgba(255,255,255,.92); backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--line);
-  display: flex; align-items: stretch; padding: 0 1.5rem;
-  height: 52px;
+  background: rgba(255,255,255,.95); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: stretch;
+  padding: 0 2rem; height: 54px; gap: 0;
 }
 .nav-brand {
-  font-family: 'Instrument Serif', serif; font-size: 18px;
-  color: var(--ink); display: flex; align-items: center;
-  padding-right: 2rem; letter-spacing: -.01em; white-space: nowrap;
-  border-right: 1px solid var(--line); margin-right: 1rem;
+  display: flex; align-items: center; gap: 10px;
+  padding-right: 2rem; margin-right: .5rem;
+  border-right: 1px solid var(--border);
+  text-decoration: none;
 }
-.nav-brand span { color: var(--blue); }
-.tabs { display: flex; align-items: stretch; gap: 0; flex: 1; overflow-x: auto; scrollbar-width: none; }
+.nav-logo { height: 28px; width: auto; }
+.nav-logo-fallback {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 17px; font-weight: 800;
+  color: var(--blue); letter-spacing: -.03em;
+}
+.tabs { display: flex; align-items: stretch; overflow-x: auto; scrollbar-width: none; flex: 1; }
 .tabs::-webkit-scrollbar { display: none; }
 .tab {
-  display: flex; align-items: center; gap: 6px;
-  padding: 0 1rem; font-size: 13px; font-weight: 500;
+  display: flex; align-items: center; gap: 7px;
+  padding: 0 1.1rem; font-size: 13px; font-weight: 500;
   color: var(--ink3); cursor: pointer; white-space: nowrap;
-  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  border-bottom: 2.5px solid transparent; margin-bottom: -1px;
   transition: color .15s; user-select: none;
 }
 .tab:hover { color: var(--ink2); }
 .tab.active { color: var(--blue); border-bottom-color: var(--blue); font-weight: 600; }
-.tab-pip {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--line2); flex-shrink: 0;
-}
-.tab.active .tab-pip { background: var(--blue); }
-.tab-admin { margin-left: auto; font-size: 12px; gap: 5px; }
+.tab-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--border2); flex-shrink: 0; transition: background .15s; }
+.tab.active .tab-dot { background: var(--blue); }
+.tab-admin { margin-left: auto; font-size: 12px; color: var(--ink3); }
 
-/* ─── PIN ─────────────────────────────────────────────── */
+/* ─── PIN ─────────────────────────────── */
 .overlay {
   position: fixed; inset: 0; z-index: 500;
-  background: rgba(15,15,14,.55); backdrop-filter: blur(6px);
+  background: rgba(0,0,0,.4); backdrop-filter: blur(8px);
   display: flex; align-items: center; justify-content: center;
 }
-.pin-card {
-  background: var(--card); border-radius: var(--r16);
-  padding: 2rem; width: 300px; text-align: center;
-  box-shadow: 0 32px 80px rgba(0,0,0,.22), 0 0 0 1px var(--line);
+.pin-box {
+  background: #fff; border-radius: 20px; padding: 2rem;
+  width: 310px; text-align: center;
+  box-shadow: 0 24px 80px rgba(0,0,0,.18), 0 0 0 1px var(--border);
 }
-.pin-card h3 { font-family: 'Instrument Serif', serif; font-size: 20px; margin-bottom: 4px; }
-.pin-card p { font-size: 12px; color: var(--ink3); margin-bottom: 1.5rem; }
+.pin-box h3 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+.pin-box p { font-size: 13px; color: var(--ink3); margin-bottom: 1.5rem; }
 .pin-dots { display: flex; justify-content: center; gap: 10px; margin-bottom: 1.5rem; }
-.pin-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--line2); transition: all .15s; }
-.pin-dot.filled { background: var(--blue); border-color: var(--blue); transform: scale(1.1); }
-.pin-pad { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; }
-.pin-btn {
-  padding: 13px; border: 1px solid var(--line); border-radius: var(--r8);
-  background: var(--card); font-family: 'Outfit', sans-serif;
-  font-size: 17px; font-weight: 500; cursor: pointer;
-  transition: background .1s, transform .08s; color: var(--ink);
+.pin-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--border2); transition: all .15s; }
+.pin-dot.filled { background: var(--blue); border-color: var(--blue); }
+.pin-pad { display: grid; grid-template-columns: repeat(3,1fr); gap: 7px; }
+.pbn {
+  padding: 14px; border: 1px solid var(--border); border-radius: 10px;
+  background: #fff; font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 18px; font-weight: 600; cursor: pointer;
+  color: var(--ink); transition: background .1s;
 }
-.pin-btn:hover { background: var(--paper); }
-.pin-btn:active { transform: scale(.95); }
-.pin-btn.sm { font-size: 13px; color: var(--ink3); }
-.pin-err { font-size: 11px; color: var(--red); margin-top: 8px; min-height: 14px; }
+.pbn:hover { background: var(--surface); }
+.pbn:active { background: var(--surface2); }
+.pbn.sm { font-size: 13px; color: var(--ink3); font-weight: 500; }
+.pin-err { font-size: 12px; color: var(--red); margin-top: 10px; min-height: 16px; }
 
-/* ─── LAYOUT ──────────────────────────────────────────── */
-.page { display: none; padding: 1.75rem 1.5rem 3rem; max-width: 960px; margin: 0 auto; }
-.page.active { display: block; animation: fadein .2s ease; }
-@keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+/* ─── LAYOUT ──────────────────────────── */
+.page { display: none; padding: 2rem 2.5rem 4rem; max-width: 1100px; margin: 0 auto; }
+.page.active { display: block; animation: fadein .18s ease; }
+@keyframes fadein { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:none; } }
 
-/* ─── ADMIN ───────────────────────────────────────────── */
-.admin-topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
-.admin-topbar h2 { font-family: 'Instrument Serif', serif; font-size: 24px; }
-.btn-ghost {
-  font-size: 12px; color: var(--ink3); cursor: pointer;
-  padding: 6px 12px; border: 1px solid var(--line2);
-  border-radius: var(--r99); font-family: 'Outfit', sans-serif;
+/* ─── ADMIN ───────────────────────────── */
+.admin-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
+.admin-bar h2 { font-size: 22px; font-weight: 800; }
+.btn-sm {
+  padding: 7px 14px; border: 1px solid var(--border2); border-radius: 99px;
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px;
+  font-weight: 500; color: var(--ink3); cursor: pointer; background: #fff;
   transition: color .15s;
 }
-.btn-ghost:hover { color: var(--ink2); }
+.btn-sm:hover { color: var(--ink); }
 .asec { margin-bottom: 2rem; }
-.asec-title {
+.asec-ttl {
   font-size: 11px; font-weight: 700; text-transform: uppercase;
   letter-spacing: .08em; color: var(--ink3);
-  margin-bottom: .875rem; padding-bottom: 6px; border-bottom: 1px solid var(--line);
+  margin-bottom: .75rem; padding-bottom: 6px; border-bottom: 1px solid var(--border);
 }
-.atable { width: 100%; border-collapse: collapse; border-radius: var(--r12); overflow: hidden; border: 1px solid var(--line); }
+.atable { width: 100%; border-collapse: collapse; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
 .atable th {
-  background: var(--paper); padding: 10px 14px; font-size: 11px;
+  background: var(--surface); padding: 9px 14px; font-size: 11px;
   font-weight: 600; color: var(--ink3); text-align: center;
-  border-bottom: 1px solid var(--line); border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--border); border-right: 1px solid var(--border);
 }
-.atable th:first-child { text-align: left; width: 200px; }
+.atable th:first-child { text-align: left; min-width: 180px; }
 .atable th:last-child { border-right: none; }
-.atable td {
-  padding: 0; border-bottom: 1px solid var(--line);
-  border-right: 1px solid var(--line); background: var(--card);
-}
+.atable td { background: #fff; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); padding: 0; }
 .atable td:last-child { border-right: none; }
 .atable tr:last-child td { border-bottom: none; }
-.atable td.lbl { padding: 10px 14px; font-size: 12px; color: var(--ink2); background: var(--paper); }
-.ainput-wrap { display: flex; align-items: center; gap: 4px; padding: 8px 10px; }
-.ainput-wrap input {
-  flex: 1; min-width: 0; text-align: right; font-family: 'Outfit', sans-serif;
+.atable td.lbl { padding: 10px 14px; font-size: 12px; color: var(--ink2); background: var(--surface); }
+.ai-wrap { display: flex; align-items: center; gap: 4px; padding: 7px 10px; }
+.ai-wrap input {
+  flex: 1; min-width: 0; text-align: right; font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 13px; font-weight: 600; background: transparent;
-  border: none; border-bottom: 1.5px solid var(--line);
+  border: none; border-bottom: 1.5px solid var(--border);
   color: var(--ink); outline: none; padding: 2px 0;
 }
-.ainput-wrap input:focus { border-bottom-color: var(--blue); }
-.ainput-wrap .u { font-size: 10px; color: var(--ink3); white-space: nowrap; }
+.ai-wrap input:focus { border-bottom-color: var(--blue); }
+.ai-wrap .u { font-size: 10px; color: var(--ink3); white-space: nowrap; }
 .btn-save {
   padding: 10px 24px; background: var(--blue); color: #fff;
-  border: none; border-radius: var(--r8); font-family: 'Outfit', sans-serif;
-  font-size: 13px; font-weight: 600; cursor: pointer;
-  transition: background .15s;
+  border: none; border-radius: 10px; font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px; font-weight: 700; cursor: pointer; transition: background .15s;
 }
-.btn-save:hover { background: #1444b8; }
+.btn-save:hover { background: #1d4ed8; }
 .save-msg { font-size: 12px; color: var(--green); margin-left: 12px; opacity: 0; transition: opacity .3s; }
 
-/* ─── DEVICE HEADER ───────────────────────────────────── */
-.dv-head { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.5rem; }
-.dv-head h2 { font-family: 'Instrument Serif', serif; font-size: 26px; letter-spacing: -.02em; }
+/* ─── DEVICE HEADER ───────────────────── */
+.dv-head { display: flex; align-items: center; gap: 16px; margin-bottom: 1.5rem; }
+.dv-head h2 { font-size: 24px; font-weight: 800; letter-spacing: -.02em; }
 .dv-head p { font-size: 13px; color: var(--ink3); }
 
-/* ─── DUR SWITCH ──────────────────────────────────────── */
-.dur-sw { display: inline-flex; background: var(--line); border-radius: var(--r99); padding: 3px; gap: 2px; margin-bottom: 1.5rem; }
+/* ─── DUR SWITCH ──────────────────────── */
+.dur-sw {
+  display: inline-flex; background: var(--surface2);
+  border-radius: 99px; padding: 3px; gap: 2px; margin-bottom: 1.5rem;
+}
 .dur-sw button {
-  padding: 5px 18px; border-radius: var(--r99); border: none;
-  font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 500;
-  color: var(--ink3); background: transparent; cursor: pointer;
-  transition: all .15s;
+  padding: 5px 20px; border-radius: 99px; border: none;
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px;
+  font-weight: 600; color: var(--ink3); background: transparent;
+  cursor: pointer; transition: all .15s;
 }
-.dur-sw button.on { background: var(--card); color: var(--blue); font-weight: 600; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+.dur-sw button.on { background: #fff; color: var(--blue); box-shadow: 0 1px 4px rgba(0,0,0,.08); }
 
-/* ─── PARAMS CARD ─────────────────────────────────────── */
+/* ─── PARAMS CARD ─────────────────────── */
 .pcard {
-  background: var(--card); border: 1px solid var(--line);
-  border-radius: var(--r16); padding: 1.25rem 1.5rem 1.5rem;
-  margin-bottom: 1.75rem;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 1.5rem; margin-bottom: 2rem;
 }
-.pcard-label {
-  font-size: 10px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: .08em; color: var(--ink3); margin-bottom: 1rem;
+.pcard-ttl {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .08em; color: var(--ink3); margin-bottom: 1.25rem;
 }
-.pgrid { display: grid; gap: 10px; margin-bottom: 10px; }
-.pgrid-2 { grid-template-columns: 1fr 1fr; }
-.pgrid-4 { grid-template-columns: repeat(4,1fr); }
-.pgrid-3 { grid-template-columns: repeat(3,1fr); }
-.pfield {
-  background: var(--paper); border: 1px solid var(--line);
-  border-radius: var(--r8); padding: 10px 12px;
-  display: flex; flex-direction: column; gap: 5px;
+.pgrid { display: grid; gap: 10px; margin-bottom: 12px; }
+.pg2 { grid-template-columns: 1fr 1fr; }
+.pg3 { grid-template-columns: repeat(3, 1fr); }
+.pg4 { grid-template-columns: repeat(4, 1fr); }
+.pf {
+  background: #fff; border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 6px;
 }
-.pfield label { font-size: 10px; font-weight: 600; color: var(--ink3); text-transform: uppercase; letter-spacing: .04em; }
-.pfield-row { display: flex; align-items: baseline; gap: 5px; }
-.pfield-row input {
-  flex: 1; min-width: 0; font-family: 'Outfit', sans-serif;
-  font-size: 16px; font-weight: 700; background: transparent;
-  border: none; border-bottom: 1.5px solid var(--line2);
-  color: var(--ink); outline: none; padding: 1px 0 2px;
+.pf label {
+  font-size: 10px; font-weight: 700; color: var(--ink3);
+  text-transform: uppercase; letter-spacing: .05em;
 }
-.pfield-row input:focus { border-bottom-color: var(--blue); }
-.pfield-row .u { font-size: 11px; color: var(--ink3); white-space: nowrap; }
-.pfield .hint { font-size: 10px; color: var(--ink3); }
+.pf-row { display: flex; align-items: baseline; gap: 5px; }
+.pf-row input {
+  flex: 1; min-width: 0; font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 17px; font-weight: 700; background: transparent;
+  border: none; border-bottom: 1.5px solid var(--border2);
+  color: var(--ink); outline: none; padding: 1px 0 3px; width: 100%;
+}
+.pf-row input:focus { border-bottom-color: var(--blue); }
+.pf-row .u { font-size: 12px; color: var(--ink3); flex-shrink: 0; }
+.pf .hint { font-size: 10px; color: var(--ink3); }
 
 /* toggles */
-.toggles { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; margin-top: 4px; }
+.toggles { display: flex; gap: 7px; flex-wrap: wrap; align-items: center; margin-top: 2px; }
 .tog {
   display: inline-flex; align-items: center; gap: 6px;
-  padding: 5px 12px; border-radius: var(--r99);
-  border: 1.5px solid var(--line2); background: var(--card);
-  font-size: 12px; font-weight: 500; color: var(--ink3);
+  padding: 6px 14px; border-radius: 99px;
+  border: 1.5px solid var(--border2); background: #fff;
+  font-size: 12px; font-weight: 600; color: var(--ink3);
   cursor: pointer; user-select: none; transition: all .15s;
 }
-.tog .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--line2); flex-shrink: 0; transition: all .15s; }
-.tog.on { background: var(--blue-soft); border-color: var(--blue-mid); color: var(--blue); }
+.tog .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border2); flex-shrink: 0; transition: all .15s; }
+.tog.on { background: var(--blue-lt); border-color: var(--blue-bd); color: var(--blue); }
 .tog.on .dot { background: var(--blue); }
 .conv-in {
-  width: 60px; font-size: 12px; font-weight: 700;
-  border: none; border-bottom: 1px solid currentColor;
+  width: 64px; font-size: 12px; font-weight: 700;
+  border: none; border-bottom: 1.5px solid currentColor;
   background: transparent; outline: none; color: inherit;
-  padding: 0 0 1px; font-family: 'Outfit', sans-serif;
+  padding: 0 0 1px; font-family: 'Plus Jakarta Sans', sans-serif;
 }
-.tsep { width: 1px; height: 18px; background: var(--line); margin: 0 2px; flex-shrink: 0; }
+.tsep { width: 1px; height: 20px; background: var(--border); margin: 0 3px; flex-shrink: 0; }
 
 /* accord */
 .accord {
   display: flex; align-items: center; gap: 12px;
-  padding: 12px 16px; border-radius: var(--r8);
-  border: 1.5px solid; margin-top: 1rem;
+  padding: 12px 16px; border-radius: 10px;
+  border: 1.5px solid; margin-top: 1.25rem;
 }
-.accord.ok { background: var(--green-soft); border-color: var(--green-mid); }
-.accord.warn { background: var(--amber-soft); border-color: var(--amber-mid); }
-.accord.ko { background: var(--red-soft); border-color: var(--red-mid); }
-.accord-icon { font-size: 16px; flex-shrink: 0; }
+.accord.ok  { background: var(--green-lt); border-color: var(--green-bd); }
+.accord.warn{ background: var(--amber-lt); border-color: var(--amber-bd); }
+.accord.ko  { background: var(--red-lt);   border-color: var(--red-bd); }
+.accord-icon { font-size: 18px; flex-shrink: 0; }
 .accord-body { flex: 1; }
-.accord-title { font-size: 13px; font-weight: 700; }
-.accord.ok .accord-title { color: var(--green); }
-.accord.warn .accord-title { color: var(--amber); }
-.accord.ko .accord-title { color: var(--red); }
-.accord-tags { display: flex; gap: 5px; margin-top: 4px; flex-wrap: wrap; }
+.accord-ttl { font-size: 13px; font-weight: 700; }
+.accord.ok   .accord-ttl { color: var(--green); }
+.accord.warn .accord-ttl { color: var(--amber); }
+.accord.ko   .accord-ttl { color: var(--red); }
+.accord-tags { display: flex; gap: 5px; margin-top: 5px; flex-wrap: wrap; }
 .atag {
-  font-size: 10px; font-weight: 600; padding: 2px 8px;
-  border-radius: var(--r99); border: 1px solid;
+  font-size: 11px; font-weight: 600;
+  padding: 2px 10px; border-radius: 99px; border: 1px solid;
 }
-.accord.ok .atag { color: var(--green); background: var(--green-soft); border-color: var(--green-mid); }
-.accord.warn .atag { color: var(--amber); background: var(--amber-soft); border-color: var(--amber-mid); }
-.accord.ko .atag { color: var(--red); background: var(--red-soft); border-color: var(--red-mid); }
+.accord.ok   .atag { color: var(--green); background: var(--green-lt); border-color: var(--green-bd); }
+.accord.warn .atag { color: var(--amber); background: var(--amber-lt); border-color: var(--amber-bd); }
+.accord.ko   .atag { color: var(--red);   background: var(--red-lt);   border-color: var(--red-bd); }
 
-/* ─── SECTION LABELS ──────────────────────────────────── */
+/* ─── SECTION ─────────────────────────── */
 .sec {
-  font-size: 10px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: .08em; color: var(--ink3);
-  margin: 1.75rem 0 .875rem; padding-bottom: 6px;
-  border-bottom: 1px solid var(--line);
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .07em; color: var(--ink3);
+  margin: 2rem 0 1rem; padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
 }
 
-/* ─── CARDS ───────────────────────────────────────────── */
-.g2 { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; }
-.g3 { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; }
+/* ─── CARDS ───────────────────────────── */
+.g3 { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 14px; }
+.g2 { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px; }
 .card {
-  background: var(--card); border: 1.5px solid var(--line);
-  border-radius: var(--r16); padding: 18px;
-  transition: box-shadow .2s;
+  background: #fff; border: 1.5px solid var(--border);
+  border-radius: 16px; padding: 20px;
 }
-.card:hover { box-shadow: 0 4px 20px rgba(0,0,0,.07); }
 .card.star { border-color: var(--blue); border-width: 2px; }
 .badge {
-  display: inline-block; font-size: 10px; font-weight: 700;
-  letter-spacing: .04em; padding: 3px 10px;
+  display: inline-block; font-size: 10px; font-weight: 800;
+  letter-spacing: .05em; padding: 3px 10px;
   background: var(--blue); color: #fff;
-  border-radius: var(--r99); margin-bottom: 9px;
+  border-radius: 99px; margin-bottom: 10px;
 }
-.ctitle { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
-.csub { font-size: 11px; color: var(--ink3); margin-bottom: 10px; line-height: 1.4; }
-.cprice {
-  font-family: 'Instrument Serif', serif;
-  font-size: 26px; color: var(--ink); line-height: 1;
-  letter-spacing: -.02em;
-}
-.cprice small { font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 400; color: var(--ink3); }
-.crows { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line); }
-.cr { display: flex; justify-content: space-between; align-items: baseline; font-size: 11.5px; color: var(--ink3); padding: 3px 0; }
-.cr b { color: var(--ink2); font-weight: 600; font-size: 12px; }
-.cr.sep { margin-top: 7px; padding-top: 7px; border-top: 1px solid var(--line); }
-.cr.total { color: var(--ink); font-weight: 600; font-size: 12px; }
-.cr.total b { font-size: 13px; font-weight: 700; }
+.ctitle { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+.csub { font-size: 11.5px; color: var(--ink3); margin-bottom: 12px; line-height: 1.5; }
+.cprice { font-size: 28px; font-weight: 800; color: var(--ink); letter-spacing: -.02em; line-height: 1; }
+.cprice small { font-size: 12px; font-weight: 400; color: var(--ink3); }
+.crows { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
+.cr { display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; color: var(--ink3); padding: 3px 0; }
+.cr b { color: var(--ink2); font-weight: 600; }
+.cr.sep { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
+.cr.total { color: var(--ink); font-weight: 700; }
+.cr.total b { font-size: 13px; font-weight: 800; color: var(--ink); }
 
-/* ─── LEASING ─────────────────────────────────────────── */
+/* ─── LEASING ─────────────────────────── */
 .leas-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
-.leas-hint {
-  font-size: 11px; color: var(--ink3); background: var(--paper);
-  border: 1px solid var(--line); border-radius: var(--r8);
-  padding: 8px 12px; margin-bottom: 12px; line-height: 1.5;
+.leas-note {
+  font-size: 11.5px; color: var(--ink3); background: var(--surface);
+  border: 1px solid var(--border); border-radius: 10px;
+  padding: 10px 14px; margin-bottom: 14px; line-height: 1.6;
 }
 
-/* ─── RENTABILITÉ ─────────────────────────────────────── */
-.rentab-tog {
+/* ─── RENTABILITÉ ─────────────────────── */
+.rtog {
   display: inline-flex; align-items: center; gap: 6px;
   cursor: pointer; font-size: 12px; color: var(--ink3);
-  margin-top: 1.75rem; user-select: none; padding: 4px 0;
+  margin-top: 2rem; user-select: none; padding: 4px 0;
+  font-weight: 500;
 }
-.rentab-tog svg { transition: transform .2s; }
-.rentab-tog.open svg { transform: rotate(90deg); }
-.rentab-grid { display: none; margin-top: 10px; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 8px; }
-.rentab-grid.show { display: grid; }
+.rtog svg { transition: transform .2s; }
+.rtog.open svg { transform: rotate(90deg); }
+.rgrid { display: none; margin-top: 12px; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; }
+.rgrid.show { display: grid; }
 .rc {
-  background: var(--card); border: 1px solid var(--line);
-  border-radius: var(--r12); padding: 12px 14px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px;
 }
-.rl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--ink3); margin-bottom: 5px; }
-.rv { font-family: 'Instrument Serif', serif; font-size: 18px; color: var(--ink); }
-.rv-badge {
+.rl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--ink3); margin-bottom: 6px; }
+.rv { font-size: 20px; font-weight: 800; color: var(--ink); letter-spacing: -.01em; }
+.rv small { font-size: 11px; font-weight: 400; color: var(--ink3); display: block; margin-top: 2px; }
+.rbadge {
   display: inline-flex; align-items: center; gap: 4px;
-  font-family: 'Outfit', sans-serif; font-size: 12px;
-  font-weight: 600; padding: 3px 9px; border-radius: var(--r99);
-  border: 1px solid;
+  font-size: 12px; font-weight: 700; padding: 4px 10px;
+  border-radius: 99px; border: 1.5px solid;
 }
-.rv-badge.ok { color: var(--green); background: var(--green-soft); border-color: var(--green-mid); }
-.rv-badge.ko { color: var(--red); background: var(--red-soft); border-color: var(--red-mid); }
+.rbadge.ok  { color: var(--green); background: var(--green-lt); border-color: var(--green-bd); }
+.rbadge.ko  { color: var(--red);   background: var(--red-lt);   border-color: var(--red-bd); }
 </style>
 </head>
 <body>
 
 <nav class="nav">
-  <div class="nav-brand">Tessan<span>.</span></div>
+  <div class="nav-brand">
+    <img class="nav-logo" src="https://www.tessan.io/wp-content/uploads/2022/09/Logo-Tessan.png"
+      onerror="this.style.display='none';this.nextElementSibling.style.display='block'"
+      alt="Tessan">
+    <span class="nav-logo-fallback" style="display:none">tessan</span>
+  </div>
   <div class="tabs">
-    <div class="tab active" onclick="goTab('checkup',this)"><div class="tab-pip"></div>Borne Check-up</div>
-    <div class="tab" onclick="goTab('tc',this)"><div class="tab-pip"></div>Borne TC</div>
-    <div class="tab" onclick="goTab('slim',this)"><div class="tab-pip"></div>Cabine Slim / Uno</div>
-    <div class="tab" onclick="goTab('premium',this)"><div class="tab-pip"></div>Cabine Premium</div>
+    <div class="tab active" onclick="goTab('checkup',this)"><div class="tab-dot"></div>Borne Check-up</div>
+    <div class="tab" onclick="goTab('tc',this)"><div class="tab-dot"></div>Borne TC</div>
+    <div class="tab" onclick="goTab('slim',this)"><div class="tab-dot"></div>Cabine Slim / Uno</div>
+    <div class="tab" onclick="goTab('premium',this)"><div class="tab-dot"></div>Cabine Premium</div>
     <div class="tab tab-admin" onclick="openAdmin()">🔒 Admin</div>
   </div>
 </nav>
 
 <!-- PIN -->
 <div class="overlay" id="pin-ov" style="display:none">
-  <div class="pin-card">
+  <div class="pin-box">
     <h3>Espace Admin</h3>
-    <p>Entrez votre code PIN</p>
+    <p>Entrez votre code PIN pour continuer</p>
     <div class="pin-dots">
       <div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div>
       <div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div>
     </div>
     <div class="pin-pad">
-      <button class="pin-btn" onclick="pk(1)">1</button>
-      <button class="pin-btn" onclick="pk(2)">2</button>
-      <button class="pin-btn" onclick="pk(3)">3</button>
-      <button class="pin-btn" onclick="pk(4)">4</button>
-      <button class="pin-btn" onclick="pk(5)">5</button>
-      <button class="pin-btn" onclick="pk(6)">6</button>
-      <button class="pin-btn" onclick="pk(7)">7</button>
-      <button class="pin-btn" onclick="pk(8)">8</button>
-      <button class="pin-btn" onclick="pk(9)">9</button>
-      <button class="pin-btn sm" onclick="pclr()">⌫</button>
-      <button class="pin-btn" onclick="pk(0)">0</button>
-      <button class="pin-btn sm" onclick="pcan()">✕</button>
+      <button class="pbn" onclick="pk(1)">1</button><button class="pbn" onclick="pk(2)">2</button><button class="pbn" onclick="pk(3)">3</button>
+      <button class="pbn" onclick="pk(4)">4</button><button class="pbn" onclick="pk(5)">5</button><button class="pbn" onclick="pk(6)">6</button>
+      <button class="pbn" onclick="pk(7)">7</button><button class="pbn" onclick="pk(8)">8</button><button class="pbn" onclick="pk(9)">9</button>
+      <button class="pbn sm" onclick="pclr()">⌫</button><button class="pbn" onclick="pk(0)">0</button><button class="pbn sm" onclick="pcan()">✕</button>
     </div>
     <div class="pin-err" id="pin-err"></div>
   </div>
@@ -357,67 +351,35 @@ body { font-family: 'Outfit', sans-serif; background: var(--paper); color: var(-
 <div class="page" id="page-slim"></div>
 <div class="page" id="page-premium"></div>
 <div class="page" id="page-admin">
-  <div class="admin-topbar">
+  <div class="admin-bar">
     <h2>Configuration financière</h2>
-    <button class="btn-ghost" onclick="adminLogout()">🔒 Verrouiller</button>
+    <button class="btn-sm" onclick="adminLogout()">🔒 Verrouiller</button>
   </div>
   <div id="admin-body"></div>
-  <button class="btn-save" onclick="saveAdmin()">Enregistrer</button>
-  <span class="save-msg" id="save-msg">✓ Modifications enregistrées</span>
+  <div style="margin-top:1.5rem;display:flex;align-items:center">
+    <button class="btn-save" onclick="saveAdmin()">Enregistrer les modifications</button>
+    <span class="save-msg" id="save-msg">✓ Sauvegardé</span>
+  </div>
 </div>
 
 <script>
-// ═══ CONFIG ═══════════════════════════════════════════════
-const PIN = '1234'; // ← changer ici
-let adminOpen = false;
-let pinBuf = '';
+const PIN = '1234';
+let adminOpen = false, pinBuf = '';
 
 const DEVS = ['checkup','tc','slim','premium'];
-const DNAMES = ['Borne Check-up','Borne TC','Cabine Slim / Uno','Cabine Premium'];
+const DNAMES = ['Borne Check-up','Borne TC','Cabine Slim/Uno','Cabine Premium'];
 
 let CFG = {
-  checkup: {
-    hasTC:false, hasTED:false, hasPrio:false,
-    abo:59.99, achat60:1870, achat48:1870, cac60:2500, cac48:1866,
-    leasRate:0.2, cashRate:0.6,
-    mat60_1:34.99, mat60_13:34.99, mnt60_1:14.99, mnt60_13:14.99,
-    mat48_1:59.99, mat48_13:59.99, mnt48_1:14.99, mnt48_13:14.99,
-    tcDef:0, tedDef:0, prioDef:0,
-    sR60:3.15, sR48:3.15, sC60:0.20, sC48:0.20
-  },
-  tc: {
-    hasTC:true, hasTED:true, hasPrio:true,
-    abo:79.99, achat60:3910, achat48:3910, cac60:2300, cac48:2300,
-    leasRate:0.2, cashRate:0.6,
-    mat60_1:0, mat60_13:49.99, mnt60_1:0, mnt60_13:29.99,
-    mat48_1:0, mat48_13:99.99, mnt48_1:0, mnt48_13:29.99,
-    tcDef:30, tedDef:49.99, prioDef:49.99,
-    sR60:3.15, sR48:3.15, sC60:0.20, sC48:0.20
-  },
-  slim: {
-    hasTC:true, hasTED:true, hasPrio:true,
-    abo:79.99, achat60:8200, achat48:7800, cac60:2300, cac48:2300,
-    leasRate:0.2, cashRate:0.6,
-    mat60_1:0, mat60_13:119.99, mnt60_1:59.99, mnt60_13:59.99,
-    mat48_1:59.99, mat48_13:179.99, mnt48_1:39.99, mnt48_13:59.99,
-    tcDef:30, tedDef:49.99, prioDef:49.99,
-    sR60:3.15, sR48:3.15, sC60:0.20, sC48:0.20
-  },
-  premium: {
-    hasTC:true, hasTED:true, hasPrio:true,
-    abo:79.99, achat60:19470, achat48:19470, cac60:2300, cac48:2300,
-    leasRate:0.2, cashRate:0.6,
-    mat60_1:199.99, mat60_13:299.99, mnt60_1:99.99, mnt60_13:99.99,
-    mat48_1:299.99, mat48_13:449.99, mnt48_1:99.99, mnt48_13:99.99,
-    tcDef:50, tedDef:49.99, prioDef:49.99,
-    sR60:3.15, sR48:3.15, sC60:0.20, sC48:0.20
-  }
+  checkup:{ hasTC:false,hasTED:false,hasPrio:false, abo:59.99, achat60:1870,achat48:1870,cac60:2500,cac48:1866,leasRate:0.2,cashRate:0.6, mat60_1:34.99,mat60_13:34.99,mnt60_1:14.99,mnt60_13:14.99, mat48_1:59.99,mat48_13:59.99,mnt48_1:14.99,mnt48_13:14.99, tcDef:0,tedDef:0,prioDef:0, sR60:3.15,sR48:3.15,sC60:0.20,sC48:0.20 },
+  tc:     { hasTC:true,hasTED:true,hasPrio:true, abo:79.99, achat60:3910,achat48:3910,cac60:2300,cac48:2300,leasRate:0.2,cashRate:0.6, mat60_1:0,mat60_13:49.99,mnt60_1:0,mnt60_13:29.99, mat48_1:0,mat48_13:99.99,mnt48_1:0,mnt48_13:29.99, tcDef:30,tedDef:49.99,prioDef:49.99, sR60:3.15,sR48:3.15,sC60:0.20,sC48:0.20 },
+  slim:   { hasTC:true,hasTED:true,hasPrio:true, abo:79.99, achat60:8200,achat48:7800,cac60:2300,cac48:2300,leasRate:0.2,cashRate:0.6, mat60_1:0,mat60_13:119.99,mnt60_1:59.99,mnt60_13:59.99, mat48_1:59.99,mat48_13:179.99,mnt48_1:39.99,mnt48_13:59.99, tcDef:30,tedDef:49.99,prioDef:49.99, sR60:3.15,sR48:3.15,sC60:0.20,sC48:0.20 },
+  premium:{ hasTC:true,hasTED:true,hasPrio:true, abo:79.99, achat60:19470,achat48:19470,cac60:2300,cac48:2300,leasRate:0.2,cashRate:0.6, mat60_1:199.99,mat60_13:299.99,mnt60_1:99.99,mnt60_13:99.99, mat48_1:299.99,mat48_13:449.99,mnt48_1:99.99,mnt48_13:99.99, tcDef:50,tedDef:49.99,prioDef:49.99, sR60:3.15,sR48:3.15,sC60:0.20,sC48:0.20 }
 };
 
 let ST = {};
 DEVS.forEach(id => { ST[id] = { dur:60, ted:false, prio:false, conv:false }; });
 
-// ═══ UTILS ═══════════════════════════════════════════════
+// utils
 function n(v){ return isNaN(v)||!isFinite(v)?0:+v; }
 function gv(id){ const e=document.getElementById(id); return e?n(parseFloat(e.value)):0; }
 function f(v){ return n(v).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'; }
@@ -425,149 +387,125 @@ function fm(v){ return f(v)+'/mois'; }
 function fp(v){ return (n(v)*100).toFixed(1)+'%'; }
 function el(id){ return document.getElementById(id); }
 
-// ═══ NAVIGATION ══════════════════════════════════════════
+// nav
 function goTab(name, tabEl) {
-  if (name==='admin' && !adminOpen) { openAdmin(); return; }
+  if(name==='admin'&&!adminOpen){ openAdmin(); return; }
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   if(tabEl) tabEl.classList.add('active');
   el('page-'+name).classList.add('active');
-  if(name==='admin') renderAdmin();
-  else renderDevice(name);
+  if(name==='admin') renderAdmin(); else renderDevice(name);
 }
 
-// ═══ PIN ══════════════════════════════════════════════════
+// pin
 function openAdmin(){
-  if(adminOpen){ goTab('admin', document.querySelector('.tab-admin')); return; }
+  if(adminOpen){ goTab('admin',document.querySelector('.tab-admin')); return; }
   pinBuf=''; el('pin-ov').style.display='flex'; updDots(); el('pin-err').textContent='';
 }
 function updDots(){ for(let i=0;i<4;i++) el('pd'+i).classList.toggle('filled',i<pinBuf.length); }
 function pk(d){
   if(pinBuf.length>=4) return;
-  pinBuf+=d; updDots();
+  pinBuf+=String(d); updDots();
   if(pinBuf.length===4) setTimeout(()=>{
     if(pinBuf===PIN){ adminOpen=true; el('pin-ov').style.display='none'; goTab('admin',document.querySelector('.tab-admin')); }
-    else{ el('pin-err').textContent='Code incorrect — réessayez'; pinBuf=''; updDots(); }
+    else{ el('pin-err').textContent='Code incorrect, réessayez'; pinBuf=''; updDots(); }
   },120);
 }
 function pclr(){ pinBuf=pinBuf.slice(0,-1); updDots(); el('pin-err').textContent=''; }
 function pcan(){ pinBuf=''; el('pin-ov').style.display='none'; }
 function adminLogout(){ adminOpen=false; goTab('checkup',document.querySelectorAll('.tab')[0]); }
 
-// ═══ ADMIN RENDER ═════════════════════════════════════════
-function ai(devId, key, unit, step='1'){
-  return `<div class="ainput-wrap"><input id="a_${devId}_${key}" type="number" value="${CFG[devId][key]}" step="${step}"><span class="u">${unit}</span></div>`;
-}
-function arow(label, key, unit, step='1'){
-  let html = `<tr><td class="lbl">${label}</td>`;
-  DEVS.forEach(d => html += `<td>${ai(d,key,unit,step)}</td>`);
-  return html + '</tr>';
-}
-function atable(rows){
-  let h = `<table class="atable"><thead><tr><th></th>${DNAMES.map(n=>`<th>${n}</th>`).join('')}</tr></thead><tbody>`;
-  rows.forEach(([l,k,u,s='1']) => h += arow(l,k,u,s));
-  return h + '</tbody></table>';
-}
+// admin render
+function ai(devId,key,unit,step){ return '<div class="ai-wrap"><input id="a_'+devId+'_'+key+'" type="number" value="'+CFG[devId][key]+'" step="'+step+'"><span class="u">'+unit+'</span></div>'; }
+function arow(lbl,key,unit,step){ return '<tr><td class="lbl">'+lbl+'</td>'+DEVS.map(d=>('<td>'+ai(d,key,unit,step)+'</td>')).join('')+'</tr>'; }
+function atable(rows){ return '<table class="atable"><thead><tr><th></th>'+DNAMES.map(n=>'<th>'+n+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>arow(r[0],r[1],r[2],r[3]||'1')).join('')+'</tbody></table>'; }
 
 function renderAdmin(){
-  el('admin-body').innerHTML = `
-    <div class="asec"><div class="asec-title">Prix d'achat & CAC</div>
-    ${atable([['Achat 60 mois','achat60','€'],['Achat 48 mois','achat48','€'],['CAC 60 mois','cac60','€'],['CAC 48 mois','cac48','€'],['Frais leasing','leasRate','%','0.01'],['Cash immédiat (%)','cashRate','%','0.01']])}</div>
-
-    <div class="asec"><div class="asec-title">Mensualités leasing par défaut</div>
-    ${atable([['Mat. 60m — M1-12','mat60_1','€/mois','0.01'],['Mat. 60m — M13+','mat60_13','€/mois','0.01'],['Maint. 60m — M1-12','mnt60_1','€/mois','0.01'],['Maint. 60m — M13+','mnt60_13','€/mois','0.01'],['Mat. 48m — M1-12','mat48_1','€/mois','0.01'],['Mat. 48m — M13+','mat48_13','€/mois','0.01'],['Maint. 48m — M1-12','mnt48_1','€/mois','0.01'],['Maint. 48m — M13+','mnt48_13','€/mois','0.01']])}</div>
-
-    <div class="asec"><div class="asec-title">TC / mois — valeurs par défaut</div>
-    ${atable([['TC par défaut','tcDef','cons.']])}</div>
-
-    <div class="asec"><div class="asec-title">Seuils d'accord par dispositif</div>
-    ${atable([['Rentabilité min 60m (×)','sR60','×','0.01'],['Rentabilité min 48m (×)','sR48','×','0.01'],['Marge cash min 60m','sC60','%','0.01'],['Marge cash min 48m','sC48','%','0.01']])}</div>`;
+  el('admin-body').innerHTML=
+    '<div class="asec"><div class="asec-ttl">Prix d'achat & CAC</div>'+atable([['Achat 60 mois','achat60','€'],['Achat 48 mois','achat48','€'],['CAC 60 mois','cac60','€'],['CAC 48 mois','cac48','€'],['Frais leasing','leasRate','%','0.01'],['Cash immédiat (%)','cashRate','%','0.01']])+'</div>'+
+    '<div class="asec"><div class="asec-ttl">Mensualités leasing par défaut</div>'+atable([['Mat. 60m — M1-12','mat60_1','€/mois','0.01'],['Mat. 60m — M13+','mat60_13','€/mois','0.01'],['Maint. 60m — M1-12','mnt60_1','€/mois','0.01'],['Maint. 60m — M13+','mnt60_13','€/mois','0.01'],['Mat. 48m — M1-12','mat48_1','€/mois','0.01'],['Mat. 48m — M13+','mat48_13','€/mois','0.01'],['Maint. 48m — M1-12','mnt48_1','€/mois','0.01'],['Maint. 48m — M13+','mnt48_13','€/mois','0.01']])+'</div>'+
+    '<div class="asec"><div class="asec-ttl">TC / mois — valeurs par défaut</div>'+atable([['TC par défaut','tcDef','cons.']])+'</div>'+
+    '<div class="asec"><div class="asec-ttl">Seuils d'accord par dispositif</div>'+atable([['Rentabilité min 60m (×)','sR60','×','0.01'],['Rentabilité min 48m (×)','sR48','×','0.01'],['Marge cash min 60m','sC60','%','0.01'],['Marge cash min 48m','sC48','%','0.01']])+'</div>';
 }
-
 function saveAdmin(){
-  const keys = ['achat60','achat48','cac60','cac48','leasRate','cashRate',
-    'mat60_1','mat60_13','mnt60_1','mnt60_13','mat48_1','mat48_13','mnt48_1','mnt48_13',
-    'tcDef','sR60','sR48','sC60','sC48'];
-  DEVS.forEach(d => keys.forEach(k => {
-    const e = el('a_'+d+'_'+k); if(e) CFG[d][k] = n(parseFloat(e.value));
-  }));
-  const m = el('save-msg'); m.style.opacity='1'; setTimeout(()=>m.style.opacity='0',2500);
+  const keys=['achat60','achat48','cac60','cac48','leasRate','cashRate','mat60_1','mat60_13','mnt60_1','mnt60_13','mat48_1','mat48_13','mnt48_1','mnt48_13','tcDef','sR60','sR48','sC60','sC48'];
+  DEVS.forEach(d=>keys.forEach(k=>{ const e=el('a_'+d+'_'+k); if(e) CFG[d][k]=n(parseFloat(e.value)); }));
+  const m=el('save-msg'); m.style.opacity='1'; setTimeout(()=>m.style.opacity='0',2500);
 }
 
-// ═══ DEVICE PAGE BUILD ════════════════════════════════════
+// build device page html
 function buildPage(id){
-  const c = CFG[id], s = ST[id];
-  const d = s.dur, mat1 = d===60?c.mat60_1:c.mat48_1, mnt1 = d===60?c.mnt60_1:c.mnt48_1;
-  const matD = d===60?c.mat60_13:c.mat48_13, mntD = d===60?c.mnt60_13:c.mnt48_13;
-  const achat = d===60?c.achat60:c.achat48;
+  const c=CFG[id], s=ST[id], d=s.dur;
+  const mat1=d===60?c.mat60_1:c.mat48_1, mnt1=d===60?c.mnt60_1:c.mnt48_1;
+  const mntD=d===60?c.mnt60_13:c.mnt48_13, matDef=d===60?c.achat60:c.achat48;
 
-  el('page-'+id).innerHTML = `
-    <div class="dv-head"><h2>${c.name}</h2><p>Configurez le dossier et partagez l'écran avec le prospect</p></div>
-
-    <div class="dur-sw">
-      <button class="${d===60?'on':''}" onclick="setDur('${id}',60)">60 mois</button>
-      <button class="${d===48?'on':''}" onclick="setDur('${id}',48)">48 mois</button>
-    </div>
-
-    <div class="pcard">
-      <div class="pcard-label">Paramètres du dossier</div>
-      <div class="pgrid pgrid-2">
-        <div class="pfield"><label>Abonnement Tessan</label><div class="pfield-row"><input type="number" id="${id}_abo" value="${c.abo}" step="0.01" oninput="renderDevice('${id}')"><span class="u">€/mois</span></div></div>
-        ${c.hasTC?`<div class="pfield"><label>TC / mois</label><div class="pfield-row"><input type="number" id="${id}_tc" value="${c.tcDef}" step="1" oninput="renderDevice('${id}')"><span class="u">cons.</span></div></div>`:'<div></div>'}
-      </div>
-      <div class="pgrid pgrid-4">
-        <div class="pfield"><label>Matériel HT</label><div class="pfield-row"><input type="number" id="${id}_mat" value="${achat}" step="1" oninput="renderDevice('${id}')"><span class="u">€</span></div><div class="hint">Tarif : ${achat.toLocaleString('fr-FR')} €</div></div>
-        <div class="pfield"><label>Maintenance</label><div class="pfield-row"><input type="number" id="${id}_maint" value="${mntD}" step="0.01" oninput="renderDevice('${id}')"><span class="u">€/mois</span></div><div class="hint">Tarif : ${mntD} €</div></div>
-        ${c.hasTED?`<div class="pfield"><label>TED</label><div class="pfield-row"><input type="number" id="${id}_ted" value="${c.tedDef}" step="0.01" oninput="renderDevice('${id}')"><span class="u">€/mois</span></div><div class="hint">Tarif : ${c.tedDef} €</div></div>`:'<div></div>'}
-        ${c.hasPrio?`<div class="pfield"><label>Accès prioritaire</label><div class="pfield-row"><input type="number" id="${id}_prio" value="${c.prioDef}" step="0.01" oninput="renderDevice('${id}')"><span class="u">€/mois</span></div><div class="hint">Tarif : ${c.prioDef} €</div></div>`:'<div></div>'}
-      </div>
-      <div class="toggles">
-        ${c.hasTED?`<div class="tog ${s.ted?'on':''}" id="${id}_ttd" onclick="togDev('${id}','ted')"><span class="dot"></span>TED</div>`:''}
-        ${c.hasPrio?`<div class="tog ${s.prio?'on':''}" id="${id}_tpr" onclick="togDev('${id}','prio')"><span class="dot"></span>Accès prioritaire</div>`:''}
-        <div class="tog ${s.conv?'on':''}" id="${id}_tcv" onclick="togDev('${id}','conv')"><span class="dot"></span>Conversion&nbsp;—&nbsp;<input class="conv-in" type="number" id="${id}_conv" value="0" step="100" onclick="event.stopPropagation()" oninput="renderDevice('${id}')">&nbsp;€</div>
-      </div>
-      <div id="${id}_accord"></div>
-    </div>
-
-    <div class="sec">Mixte — abonnement mensuel + matériel fractionné</div>
-    <div class="g3" id="${id}_mix"></div>
-
-    <div class="sec">Paiement comptant</div>
-    <div class="g3" id="${id}_cpt"></div>
-
-    <div class="sec">Leasing — mensualités modulables</div>
-    <div class="leas-inputs">
-      <div class="pfield"><label>Matériel M1–12 (promo)</label><div class="pfield-row"><input type="number" id="${id}_lm1" value="${mat1}" step="0.01" oninput="renderDevice('${id}')"><span class="u">€/mois</span></div></div>
-      <div class="pfield"><label>Maintenance M1–12 (promo)</label><div class="pfield-row"><input type="number" id="${id}_ln1" value="${mnt1}" step="0.01" oninput="renderDevice('${id}')"><span class="u">€/mois</span></div></div>
-    </div>
-    <div class="leas-hint">Les mensualités M13–${d} sont issues de la configuration admin. Modifiez M1–12 pour offrir une période de lancement.</div>
-    <div class="g2" id="${id}_leas"></div>
-
-    <div class="rentab-tog" id="${id}_rtog" onclick="togRentab('${id}')">
-      <svg width="10" height="10" viewBox="0 0 10 10"><path d="M3 1.5l4 3.5-4 3.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      Rentabilité du dossier
-    </div>
-    <div class="rentab-grid" id="${id}_rentab"></div>
-    <div style="height:2rem"></div>`;
+  el('page-'+id).innerHTML=
+    '<div class="dv-head"><h2>'+c.name+'</h2><p>Configurez le dossier et partagez l'écran avec le prospect</p></div>'+
+    '<div class="dur-sw">'+
+      '<button class="'+(d===60?'on':'')+'" onclick="setDur(''+id+'',60)">60 mois</button>'+
+      '<button class="'+(d===48?'on':'')+'" onclick="setDur(''+id+'',48)">48 mois</button>'+
+    '</div>'+
+    '<div class="pcard">'+
+      '<div class="pcard-ttl">Paramètres du dossier</div>'+
+      '<div class="pgrid pg2">'+
+        '<div class="pf"><label>Abonnement Tessan</label><div class="pf-row"><input type="number" id="'+id+'_abo" value="'+c.abo+'" step="0.01" oninput="renderDevice(''+id+'')"><span class="u">€/mois</span></div></div>'+
+        (c.hasTC?'<div class="pf"><label>TC / mois</label><div class="pf-row"><input type="number" id="'+id+'_tc" value="'+c.tcDef+'" step="1" oninput="renderDevice(''+id+'')"><span class="u">cons.</span></div></div>':'<div></div>')+
+      '</div>'+
+      '<div class="pgrid pg4">'+
+        '<div class="pf"><label>Matériel HT</label><div class="pf-row"><input type="number" id="'+id+'_mat" value="'+matDef+'" step="1" oninput="renderDevice(''+id+'')"><span class="u">€</span></div><div class="hint">Tarif : '+matDef.toLocaleString('fr-FR')+' €</div></div>'+
+        '<div class="pf"><label>Maintenance</label><div class="pf-row"><input type="number" id="'+id+'_maint" value="'+mntD+'" step="0.01" oninput="renderDevice(''+id+'')"><span class="u">€/mois</span></div><div class="hint">Tarif : '+mntD+' €</div></div>'+
+        (c.hasTED?'<div class="pf"><label>TED</label><div class="pf-row"><input type="number" id="'+id+'_ted" value="'+c.tedDef+'" step="0.01" oninput="renderDevice(''+id+'')"><span class="u">€/mois</span></div><div class="hint">Tarif : '+c.tedDef+' €</div></div>':'<div></div>')+
+        (c.hasPrio?'<div class="pf"><label>Accès prioritaire</label><div class="pf-row"><input type="number" id="'+id+'_prio" value="'+c.prioDef+'" step="0.01" oninput="renderDevice(''+id+'')"><span class="u">€/mois</span></div><div class="hint">Tarif : '+c.prioDef+' €</div></div>':'<div></div>')+
+      '</div>'+
+      '<div class="toggles">'+
+        (c.hasTED?'<div class="tog '+(s.ted?'on':'')+'" id="'+id+'_ttd" onclick="togDev(''+id+'','ted')"><span class="dot"></span>TED</div>':'')+
+        (c.hasPrio?'<div class="tog '+(s.prio?'on':'')+'" id="'+id+'_tpr" onclick="togDev(''+id+'','prio')"><span class="dot"></span>Accès prioritaire</div>':'')+
+        '<div class="tog '+(s.conv?'on':'')+'" id="'+id+'_tcv" onclick="togDev(''+id+'','conv')"><span class="dot"></span>Conversion&nbsp;&mdash;&nbsp;<input class="conv-in" type="number" id="'+id+'_conv" value="0" step="100" onclick="event.stopPropagation()" oninput="renderDevice(''+id+'')">&nbsp;€</div>'+
+      '</div>'+
+      '<div id="'+id+'_accord"></div>'+
+    '</div>'+
+    '<div class="sec">Mixte — abonnement mensuel + matériel fractionné</div>'+
+    '<div class="g3" id="'+id+'_mix"></div>'+
+    '<div class="sec">Paiement comptant</div>'+
+    '<div class="g3" id="'+id+'_cpt"></div>'+
+    '<div class="sec">Leasing — mensualités modulables</div>'+
+    '<div class="leas-inputs">'+
+      '<div class="pf"><label>Matériel M1–12 (promo)</label><div class="pf-row"><input type="number" id="'+id+'_lm1" value="'+mat1+'" step="0.01" oninput="renderDevice(''+id+'')"><span class="u">€/mois</span></div></div>'+
+      '<div class="pf"><label>Maintenance M1–12 (promo)</label><div class="pf-row"><input type="number" id="'+id+'_ln1" value="'+mnt1+'" step="0.01" oninput="renderDevice(''+id+'')"><span class="u">€/mois</span></div></div>'+
+    '</div>'+
+    '<div class="leas-note">Les mensualités M13–'+d+' sont issues de la configuration admin. Modifiez M1–12 pour proposer une période de lancement offerte ou réduite.</div>'+
+    '<div class="g2" id="'+id+'_leas"></div>'+
+    '<div class="rtog" id="'+id+'_rtog" onclick="togRentab(''+id+'')">'+
+      '<svg width="10" height="10" viewBox="0 0 10 10"><path d="M3 1.5l4 3.5-4 3.5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'+
+      ' Rentabilité du dossier'+
+    '</div>'+
+    '<div class="rgrid" id="'+id+'_rentab"></div>'+
+    '<div style="height:2rem"></div>';
 }
 
 function setDur(id,d){ ST[id].dur=d; buildPage(id); renderDevice(id); }
-function togDev(id,k){ ST[id][k]=!ST[id][k]; el(id+'_t'+k[0]+k[1]).classList.toggle('on',ST[id][k]); renderDevice(id); }
+
+function togDev(id,key){
+  ST[id][key]=!ST[id][key];
+  const suffix = key==='ted'?'ttd': key==='prio'?'tpr': key==='conv'?'tcv': key;
+  const togEl = el(id+'_'+suffix);
+  if(togEl) togEl.classList.toggle('on', ST[id][key]);
+  renderDevice(id);
+}
+
 function togRentab(id){ el(id+'_rentab').classList.toggle('show'); el(id+'_rtog').classList.toggle('open'); }
 
-// ═══ COMPUTE ══════════════════════════════════════════════
+// compute
 function compute(id){
   const c=CFG[id], s=ST[id], d=s.dur, rest=d===60?48:36;
-  const abo   = gv(id+'_abo');
-  const mat   = gv(id+'_mat');
-  const maint = gv(id+'_maint');
-  const tc    = c.hasTC?gv(id+'_tc'):0;
-  const ted   = (c.hasTED&&s.ted)?gv(id+'_ted'):0;
-  const prio  = (c.hasPrio&&s.prio)?gv(id+'_prio'):0;
-  const conv  = s.conv?gv(id+'_conv'):0;
-  const opts  = ted+prio;
-  const achat = d===60?c.achat60:c.achat48;
-  const cac   = d===60?c.cac60:c.cac48;
+  const abo=gv(id+'_abo'), mat=gv(id+'_mat'), maint=gv(id+'_maint');
+  const tc=c.hasTC?gv(id+'_tc'):0;
+  const ted_p =gv(id+'_ted'),  prio_p=gv(id+'_prio');
+  const ted  = (c.hasTED  && s.ted)  ? ted_p  : 0;
+  const prio = (c.hasPrio && s.prio) ? prio_p : 0;
+  const conv = s.conv ? gv(id+'_conv') : 0;
+  const opts=ted+prio;
+  const achat=d===60?c.achat60:c.achat48, cac=d===60?c.cac60:c.cac48;
   const LR=c.leasRate, CR=c.cashRate;
   const lm1=gv(id+'_lm1'), ln1=gv(id+'_ln1');
   const lm13=d===60?c.mat60_13:c.mat48_13, ln13=d===60?c.mnt60_13:c.mnt48_13;
@@ -576,172 +514,173 @@ function compute(id){
   const abo_tot=abo*d, opts_tot=opts*d;
   const l_tot=abo_tot+lcout+opts_tot+conv, lcash=lcout*CR;
   const l_deb=abo+opts, l_ful=abo+lm13+ln13+opts;
+  // comptant
   const cpt_mm=(mat+maint)*0.9;
-  const cpt_base=abo_tot+cpt_mm+conv, cpt_tot=cpt_base+opts_tot;
+  const cpt_base=abo_tot+cpt_mm+conv;
+  const cpt_tot=cpt_base+opts_tot;
   const x3=cpt_base/3, x4=cpt_base/4;
+  // mixte — fractionnement sur mat+maint+conv, abo prélevé séparément
   const mix_b=mat+maint+conv, mix3=mix_b/3, mix4=mix_b/4;
+  // rentab
   const ltv=c.hasTC?tc*7*d:0, ca=l_tot+ltv;
   const costs=achat+cac+conv+lfin*LR;
   const ebitda=(abo_tot+lmt+lnt+ltv)-costs;
-  const rentab=costs>0?ca/costs:0;
-  const mcash=achat>0?(lcash-achat)/achat:0;
+  const rentab=costs>0?ca/costs:0, mcash=achat>0?(lcash-achat)/achat:0;
   const sR=d===60?c.sR60:c.sR48, sC=d===60?c.sC60:c.sC48;
-  return {abo,mat,maint,tc,ted,prio,conv,opts,d,rest,achat,cac,LR,CR,
-    lmt,lnt,lfin,lfrais,lcout,l_deb,l_ful,abo_tot,opts_tot,l_tot,lcash,
-    lm1,ln1,lm13,ln13,cpt_mm,cpt_base,cpt_tot,x3,x4,mix_b,mix3,mix4,
-    ltv,ca,costs,ebitda,rentab,mcash,sR,sC,
-    okA:rentab>=sR, okL:mcash>=sC};
+  return {abo,mat,maint,tc,ted,ted_p,prio,prio_p,conv,opts,d,rest,achat,cac,LR,CR,
+    lmt,lnt,lfin,lfrais,lcout,l_deb,l_ful,abo_tot,opts_tot,l_tot,lcash,lm1,ln1,lm13,ln13,
+    cpt_mm,cpt_base,cpt_tot,x3,x4,mix_b,mix3,mix4,
+    ltv,ca,costs,ebitda,rentab,mcash,sR,sC, okA:rentab>=sR, okL:mcash>=sC};
 }
 
-// ═══ RENDER DEVICE ════════════════════════════════════════
+// render
 function renderDevice(id){
   const c=CFG[id], v=compute(id);
 
-  // Accord
-  let acls,aicon,atit,tags;
-  if(v.okA&&v.okL){ acls='ok'; aicon='✅'; atit='Accord achat direct / Accord leasing'; tags=['✓ Achat direct','✓ Leasing']; }
-  else if(v.okA){   acls='warn'; aicon='⚠️'; atit='Accord achat direct / Refus leasing'; tags=['✓ Achat direct','✗ Leasing']; }
-  else{             acls='ko'; aicon='🚫'; atit='Refus achat direct / Refus leasing'; tags=['✗ Achat direct','✗ Leasing']; }
-  el(id+'_accord').innerHTML=`<div class="accord ${acls}">
-    <span class="accord-icon">${aicon}</span>
-    <div class="accord-body">
-      <div class="accord-title">${atit}</div>
-      <div class="accord-tags">${tags.map(t=>`<span class="atag">${t}</span>`).join('')}</div>
-    </div></div>`;
+  // accord
+  let acls,ico,atit,tags;
+  if(v.okA&&v.okL){ acls='ok'; ico='✅'; atit='Accord achat direct / Accord leasing'; tags=['✓ Achat direct','✓ Leasing']; }
+  else if(v.okA)  { acls='warn'; ico='⚠️'; atit='Accord achat direct / Refus leasing'; tags=['✓ Achat direct','✗ Leasing']; }
+  else            { acls='ko'; ico='🚫'; atit='Refus achat direct / Refus leasing'; tags=['✗ Achat direct','✗ Leasing']; }
+  el(id+'_accord').innerHTML='<div class="accord '+acls+'"><span class="accord-icon">'+ico+'</span><div class="accord-body"><div class="accord-ttl">'+atit+'</div><div class="accord-tags">'+tags.map(t=>'<span class="atag">'+t+'</span>').join('')+'</div></div></div>';
+
+  // opts lines helpers
+  const optsTotLine = v.opts>0 ? '<div class="cr"><span>Options ('+v.d+' mois)</span><b>'+f(v.opts*v.d)+'</b></div>' : '';
+  const optsMonthLine = v.opts>0 ? '<div class="cr"><span>Options / mois</span><b>'+fm(v.opts)+'</b></div>' : '';
+  const tedLine  = v.ted>0  ? '<div class="cr"><span>TED</span><b>'+fm(v.ted_p)+'</b></div>' : '';
+  const prioLine = v.prio>0 ? '<div class="cr"><span>Accès prioritaire</span><b>'+fm(v.prio_p)+'</b></div>' : '';
+  const convLine = v.conv>0 ? '<div class="cr"><span>Conversion</span><b>'+f(v.conv)+'</b></div>' : '';
 
   // MIXTE
-  el(id+'_mix').innerHTML=`
-    <div class="card star">
-      <div class="badge">RECOMMANDÉ</div>
-      <div class="ctitle">Mixte — Comptant</div>
-      <div class="csub">Abonnement mensuel prélevé + règlement unique du matériel</div>
-      <div class="cprice">${fm(v.abo)}<small> + ${f(v.mix_b)}</small></div>
-      <div class="crows">
-        <div class="cr"><span>Abonnement Tessan</span><b>${fm(v.abo)}</b></div>
-        <div class="cr"><span>Matériel HT</span><b>${f(v.mat)}</b></div>
-        <div class="cr"><span>Maintenance</span><b>${f(v.maint)}</b></div>
-        ${v.conv?`<div class="cr"><span>Conversion</span><b>${f(v.conv)}</b></div>`:''}
-        ${v.ted?`<div class="cr"><span>TED</span><b>${fm(v.ted)}</b></div>`:''}
-        ${v.prio?`<div class="cr"><span>Accès prioritaire</span><b>${fm(v.prio)}</b></div>`:''}
-      </div>
-    </div>
-    <div class="card">
-      <div class="ctitle">Mixte 3×</div>
-      <div class="csub">Abonnement mensuel + matériel en 3 versements</div>
-      <div class="cprice">${fm(v.abo)}<small> + ${f(v.mix3)} × 3</small></div>
-      <div class="crows">
-        <div class="cr"><span>Abonnement mensuel</span><b>${fm(v.abo)}</b></div>
-        <div class="cr sep"><span>Versement commande</span><b>${f(v.mix3)}</b></div>
-        <div class="cr"><span>Versement livraison</span><b>${f(v.mix3)}</b></div>
-        <div class="cr"><span>M+1</span><b>${f(v.mix3)}</b></div>
-        <div class="cr sep total"><span>Matériel + maintenance${v.conv?' + conversion':''}</span><b>${f(v.mix_b)}</b></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="ctitle">Mixte 4×</div>
-      <div class="csub">Abonnement mensuel + matériel en 4 versements</div>
-      <div class="cprice">${fm(v.abo)}<small> + ${f(v.mix4)} × 4</small></div>
-      <div class="crows">
-        <div class="cr"><span>Abonnement mensuel</span><b>${fm(v.abo)}</b></div>
-        <div class="cr sep"><span>Versement commande</span><b>${f(v.mix4)}</b></div>
-        <div class="cr"><span>Versement livraison</span><b>${f(v.mix4)}</b></div>
-        <div class="cr"><span>M+1</span><b>${f(v.mix4)}</b></div>
-        <div class="cr"><span>M+2</span><b>${f(v.mix4)}</b></div>
-        <div class="cr sep total"><span>Matériel + maintenance${v.conv?' + conversion':''}</span><b>${f(v.mix_b)}</b></div>
-      </div>
-    </div>`;
+  el(id+'_mix').innerHTML=
+    '<div class="card star">'+
+      '<div class="badge">RECOMMANDÉ</div>'+
+      '<div class="ctitle">Mixte — Comptant</div>'+
+      '<div class="csub">Abonnement mensuel prélevé + règlement unique du matériel</div>'+
+      '<div class="cprice">'+fm(v.abo)+'<small> + '+f(v.mix_b)+'</small></div>'+
+      '<div class="crows">'+
+        '<div class="cr"><span>Abonnement Tessan</span><b>'+fm(v.abo)+'</b></div>'+
+        '<div class="cr"><span>Matériel HT</span><b>'+f(v.mat)+'</b></div>'+
+        '<div class="cr"><span>Maintenance</span><b>'+f(v.maint)+'</b></div>'+
+        convLine+optsMonthLine+
+      '</div>'+
+    '</div>'+
+    '<div class="card">'+
+      '<div class="ctitle">Mixte 3×</div>'+
+      '<div class="csub">Abonnement mensuel prélevé + matériel en 3 versements</div>'+
+      '<div class="cprice">'+fm(v.abo)+'<small> + '+f(v.mix3)+' × 3</small></div>'+
+      '<div class="crows">'+
+        '<div class="cr"><span>Abonnement mensuel</span><b>'+fm(v.abo)+'</b></div>'+
+        (v.opts>0?'<div class="cr"><span>Options incluses</span><b>'+fm(v.opts)+'</b></div>':'')+
+        '<div class="cr sep"><span>Versement commande</span><b>'+f(v.mix3)+'</b></div>'+
+        '<div class="cr"><span>Versement livraison</span><b>'+f(v.mix3)+'</b></div>'+
+        '<div class="cr"><span>M+1</span><b>'+f(v.mix3)+'</b></div>'+
+        '<div class="cr sep total"><span>Matériel+maint'+( v.conv>0 ?'+conv':'' )+'</span><b>'+f(v.mix_b)+'</b></div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="card">'+
+      '<div class="ctitle">Mixte 4×</div>'+
+      '<div class="csub">Abonnement mensuel prélevé + matériel en 4 versements</div>'+
+      '<div class="cprice">'+fm(v.abo)+'<small> + '+f(v.mix4)+' × 4</small></div>'+
+      '<div class="crows">'+
+        '<div class="cr"><span>Abonnement mensuel</span><b>'+fm(v.abo)+'</b></div>'+
+        (v.opts>0?'<div class="cr"><span>Options incluses</span><b>'+fm(v.opts)+'</b></div>':'')+
+        '<div class="cr sep"><span>Versement commande</span><b>'+f(v.mix4)+'</b></div>'+
+        '<div class="cr"><span>Versement livraison</span><b>'+f(v.mix4)+'</b></div>'+
+        '<div class="cr"><span>M+1</span><b>'+f(v.mix4)+'</b></div>'+
+        '<div class="cr"><span>M+2</span><b>'+f(v.mix4)+'</b></div>'+
+        '<div class="cr sep total"><span>Matériel+maint'+( v.conv>0 ?'+conv':'' )+'</span><b>'+f(v.mix_b)+'</b></div>'+
+      '</div>'+
+    '</div>';
 
   // COMPTANT
-  el(id+'_cpt').innerHTML=`
-    <div class="card star">
-      <div class="badge">RECOMMANDÉ</div>
-      <div class="ctitle">Comptant</div>
-      <div class="csub">Règlement unique — remise −10% sur matériel + maintenance</div>
-      <div class="cprice">${f(v.cpt_tot)}</div>
-      <div class="crows">
-        <div class="cr"><span>Abonnement (${v.d} mois)</span><b>${f(v.abo_tot)}</b></div>
-        <div class="cr"><span>Matériel + maintenance −10%</span><b>${f(v.cpt_mm)}</b></div>
-        ${v.conv?`<div class="cr"><span>Conversion</span><b>${f(v.conv)}</b></div>`:''}
-        ${v.ted?`<div class="cr"><span>TED (${v.d} mois)</span><b>${f(v.ted*v.d)}</b></div>`:''}
-        ${v.prio?`<div class="cr"><span>Accès prioritaire (${v.d} mois)</span><b>${f(v.prio*v.d)}</b></div>`:''}
-      </div>
-    </div>
-    <div class="card">
-      <div class="ctitle">3× sans frais</div>
-      <div class="csub">3 versements égaux — abonnement + matériel inclus</div>
-      <div class="cprice">${f(v.x3)}<small> × 3</small></div>
-      <div class="crows">
-        <div class="cr"><span>Abonnement (${v.d} mois)</span><b>${f(v.abo_tot)}</b></div>
-        <div class="cr"><span>Matériel + maintenance −10%</span><b>${f(v.cpt_mm)}</b></div>
-        ${v.conv?`<div class="cr"><span>Conversion</span><b>${f(v.conv)}</b></div>`:''}
-        <div class="cr sep"><span>Commande</span><b>${f(v.x3)}</b></div>
-        <div class="cr"><span>Livraison</span><b>${f(v.x3)}</b></div>
-        <div class="cr"><span>M+1</span><b>${f(v.x3)}</b></div>
-        <div class="cr sep total"><span>Total</span><b>${f(v.cpt_base)}</b></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="ctitle">4× sans frais</div>
-      <div class="csub">4 versements égaux — abonnement + matériel inclus</div>
-      <div class="cprice">${f(v.x4)}<small> × 4</small></div>
-      <div class="crows">
-        <div class="cr"><span>Abonnement (${v.d} mois)</span><b>${f(v.abo_tot)}</b></div>
-        <div class="cr"><span>Matériel + maintenance −10%</span><b>${f(v.cpt_mm)}</b></div>
-        ${v.conv?`<div class="cr"><span>Conversion</span><b>${f(v.conv)}</b></div>`:''}
-        <div class="cr sep"><span>Commande</span><b>${f(v.x4)}</b></div>
-        <div class="cr"><span>Livraison</span><b>${f(v.x4)}</b></div>
-        <div class="cr"><span>M+1</span><b>${f(v.x4)}</b></div>
-        <div class="cr"><span>M+2</span><b>${f(v.x4)}</b></div>
-        <div class="cr sep total"><span>Total</span><b>${f(v.cpt_base)}</b></div>
-      </div>
-    </div>`;
+  el(id+'_cpt').innerHTML=
+    '<div class="card star">'+
+      '<div class="badge">RECOMMANDÉ</div>'+
+      '<div class="ctitle">Comptant</div>'+
+      '<div class="csub">Règlement unique — remise −10% sur matériel + maintenance</div>'+
+      '<div class="cprice">'+f(v.cpt_tot)+'</div>'+
+      '<div class="crows">'+
+        '<div class="cr"><span>Abonnement ('+v.d+' mois)</span><b>'+f(v.abo_tot)+'</b></div>'+
+        '<div class="cr"><span>Matériel + maintenance −10%</span><b>'+f(v.cpt_mm)+'</b></div>'+
+        convLine+optsTotLine+
+      '</div>'+
+    '</div>'+
+    '<div class="card">'+
+      '<div class="ctitle">3× sans frais</div>'+
+      '<div class="csub">3 versements égaux — abonnement + matériel inclus</div>'+
+      '<div class="cprice">'+f(v.x3)+'<small> × 3</small></div>'+
+      '<div class="crows">'+
+        '<div class="cr"><span>Abonnement ('+v.d+' mois)</span><b>'+f(v.abo_tot)+'</b></div>'+
+        '<div class="cr"><span>Matériel + maintenance −10%</span><b>'+f(v.cpt_mm)+'</b></div>'+
+        convLine+optsTotLine+
+        '<div class="cr sep"><span>Versement commande</span><b>'+f(v.x3)+'</b></div>'+
+        '<div class="cr"><span>Versement livraison</span><b>'+f(v.x3)+'</b></div>'+
+        '<div class="cr"><span>M+1</span><b>'+f(v.x3)+'</b></div>'+
+        '<div class="cr sep total"><span>Total</span><b>'+f(v.cpt_base)+'</b></div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="card">'+
+      '<div class="ctitle">4× sans frais</div>'+
+      '<div class="csub">4 versements égaux — abonnement + matériel inclus</div>'+
+      '<div class="cprice">'+f(v.x4)+'<small> × 4</small></div>'+
+      '<div class="crows">'+
+        '<div class="cr"><span>Abonnement ('+v.d+' mois)</span><b>'+f(v.abo_tot)+'</b></div>'+
+        '<div class="cr"><span>Matériel + maintenance −10%</span><b>'+f(v.cpt_mm)+'</b></div>'+
+        convLine+optsTotLine+
+        '<div class="cr sep"><span>Versement commande</span><b>'+f(v.x4)+'</b></div>'+
+        '<div class="cr"><span>Versement livraison</span><b>'+f(v.x4)+'</b></div>'+
+        '<div class="cr"><span>M+1</span><b>'+f(v.x4)+'</b></div>'+
+        '<div class="cr"><span>M+2</span><b>'+f(v.x4)+'</b></div>'+
+        '<div class="cr sep total"><span>Total</span><b>'+f(v.cpt_base)+'</b></div>'+
+      '</div>'+
+    '</div>';
 
   // LEASING
-  el(id+'_leas').innerHTML=`
-    <div class="card">
-      <div class="ctitle">Leasing ${v.d} mois — mensualités</div>
-      <div class="csub">Abonnement + matériel + maintenance inclus</div>
-      <div class="cprice">${fm(v.l_ful)}<small> à partir de M13</small></div>
-      <div class="crows">
-        <div class="cr"><span>Mois 1–12</span><b>${fm(v.l_deb)}</b></div>
-        <div class="cr sep"><span>Abonnement Tessan</span><b>${fm(v.abo)}</b></div>
-        <div class="cr"><span>Matériel M1–12</span><b>${fm(v.lm1)}</b></div>
-        <div class="cr"><span>Matériel M13–${v.d}</span><b>${fm(v.lm13)}</b></div>
-        <div class="cr"><span>Maintenance M1–12</span><b>${fm(v.ln1)}</b></div>
-        <div class="cr"><span>Maintenance M13–${v.d}</span><b>${fm(v.ln13)}</b></div>
-        ${v.ted?`<div class="cr"><span>TED</span><b>${fm(v.ted)}</b></div>`:''}
-        ${v.prio?`<div class="cr"><span>Accès prioritaire</span><b>${fm(v.prio)}</b></div>`:''}
-        <div class="cr sep total"><span>Coût total ${v.d} mois</span><b>${f(v.l_tot)}</b></div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="ctitle">Leasing ${v.d} mois — financement</div>
-      <div class="csub">Décomposition du financement matériel</div>
-      <div class="cprice">${f(v.lfin)}<small> financé</small></div>
-      <div class="crows">
-        <div class="cr"><span>Matériel total en leasing</span><b>${f(v.lmt)}</b></div>
-        <div class="cr"><span>Maintenance totale en leasing</span><b>${f(v.lnt)}</b></div>
-        <div class="cr sep"><span>Frais de leasing (${(v.LR*100).toFixed(0)}%)</span><b>${f(v.lfrais)}</b></div>
-        <div class="cr"><span>Total à financer</span><b>${f(v.lcout)}</b></div>
-        <div class="cr sep total"><span>Cash immédiat Tessan (${(v.CR*100).toFixed(0)}%)</span><b>${f(v.lcash)}</b></div>
-      </div>
-    </div>`;
+  el(id+'_leas').innerHTML=
+    '<div class="card">'+
+      '<div class="ctitle">Leasing '+v.d+' mois — mensualités</div>'+
+      '<div class="csub">Abonnement + matériel + maintenance inclus</div>'+
+      '<div class="cprice">'+fm(v.l_ful)+'<small> à partir de M13</small></div>'+
+      '<div class="crows">'+
+        '<div class="cr"><span>Mois 1–12 (mensualité)</span><b>'+fm(v.l_deb)+'</b></div>'+
+        '<div class="cr sep"><span>Abonnement Tessan</span><b>'+fm(v.abo)+'</b></div>'+
+        '<div class="cr"><span>Matériel M1–12</span><b>'+fm(v.lm1)+'</b></div>'+
+        '<div class="cr"><span>Matériel M13–'+v.d+'</span><b>'+fm(v.lm13)+'</b></div>'+
+        '<div class="cr"><span>Maintenance M1–12</span><b>'+fm(v.ln1)+'</b></div>'+
+        '<div class="cr"><span>Maintenance M13–'+v.d+'</span><b>'+fm(v.ln13)+'</b></div>'+
+        tedLine+prioLine+
+        '<div class="cr sep total"><span>Coût total '+v.d+' mois</span><b>'+f(v.l_tot)+'</b></div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="card">'+
+      '<div class="ctitle">Leasing '+v.d+' mois — financement</div>'+
+      '<div class="csub">Décomposition du financement matériel</div>'+
+      '<div class="cprice">'+f(v.lfin)+'<small> financé</small></div>'+
+      '<div class="crows">'+
+        '<div class="cr"><span>Matériel total en leasing</span><b>'+f(v.lmt)+'</b></div>'+
+        '<div class="cr"><span>Maintenance totale en leasing</span><b>'+f(v.lnt)+'</b></div>'+
+        '<div class="cr sep"><span>Frais de leasing ('+Math.round(v.LR*100)+'%)</span><b>'+f(v.lfrais)+'</b></div>'+
+        '<div class="cr"><span>Total à financer</span><b>'+f(v.lcout)+'</b></div>'+
+        '<div class="cr sep total"><span>Cash immédiat Tessan ('+Math.round(v.CR*100)+'%)</span><b>'+f(v.lcash)+'</b></div>'+
+      '</div>'+
+    '</div>';
 
-  // RENTABILITÉ
-  function badge(ok,val){ return `<span class="rv-badge ${ok?'ok':'ko'}">${ok?'✓':'✗'} ${val}</span>`; }
-  el(id+'_rentab').innerHTML=`
-    <div class="rc"><div class="rl">CA total</div><div class="rv">${f(v.ca)}</div></div>
-    <div class="rc"><div class="rl">Total coûts</div><div class="rv">${f(v.costs)}</div></div>
-    <div class="rc"><div class="rl">EBITDA</div><div class="rv">${f(v.ebitda)}</div></div>
-    ${c.hasTC?`<div class="rc"><div class="rl">LTV TC</div><div class="rv">${f(v.ltv)}<br><small style="font-family:Outfit,sans-serif;font-size:11px;color:var(--ink3)">${v.tc} cons. × 7 € × ${v.d}</small></div></div>`:''}
-    <div class="rc"><div class="rl">Marge brute</div><div class="rv">${f(v.ca-v.achat)}</div></div>
-    <div class="rc"><div class="rl">Rentabilité (seuil ${v.sR.toFixed(2)}×)</div><div class="rv">${badge(v.okA,v.rentab.toFixed(2)+'×')}</div></div>
-    <div class="rc"><div class="rl">Marge sur cash (seuil ${fp(v.sC)})</div><div class="rv">${badge(v.okL,fp(v.mcash))}</div></div>
-    <div class="rc"><div class="rl">Cash immédiat</div><div class="rv">${f(v.lcash)}</div></div>`;
+  // RENTAB
+  function rb(ok,val){ return '<span class="rbadge '+(ok?'ok':'ko')+'">'+(ok?'✓':'✗')+' '+val+'</span>'; }
+  el(id+'_rentab').innerHTML=
+    '<div class="rc"><div class="rl">CA total</div><div class="rv">'+f(v.ca)+'</div></div>'+
+    '<div class="rc"><div class="rl">Total coûts</div><div class="rv">'+f(v.costs)+'</div></div>'+
+    '<div class="rc"><div class="rl">EBITDA</div><div class="rv">'+f(v.ebitda)+'</div></div>'+
+    (c.hasTC?'<div class="rc"><div class="rl">LTV TC</div><div class="rv">'+f(v.ltv)+'<small>'+v.tc+' × 7€ × '+v.d+'m</small></div></div>':'')+
+    '<div class="rc"><div class="rl">Marge brute</div><div class="rv">'+f(v.ca-v.achat)+'</div></div>'+
+    '<div class="rc"><div class="rl">Rentabilité (seuil '+v.sR.toFixed(2)+'×)</div><div class="rv">'+rb(v.okA,v.rentab.toFixed(2)+'×')+'</div></div>'+
+    '<div class="rc"><div class="rl">Marge sur cash (seuil '+fp(v.sC)+')</div><div class="rv">'+rb(v.okL,fp(v.mcash))+'</div></div>'+
+    '<div class="rc"><div class="rl">Cash immédiat</div><div class="rv">'+f(v.lcash)+'</div></div>';
 }
 
-// ═══ INIT ══════════════════════════════════════════════════
-DEVS.forEach(id => buildPage(id));
+// init
+DEVS.forEach(id=>buildPage(id));
 renderDevice('checkup');
 </script>
 </body>
