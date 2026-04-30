@@ -309,6 +309,8 @@ function saveAdmin(){
     'mat60_1','mat60_13','mnt60_1','mnt60_13','mat48_1','mat48_13','mnt48_1','mnt48_13',
     'tcDef','seuilDossier','seuilCash','seuilRentab'];
   DEVS.forEach(d=>keys.forEach(k=>{ const e=$('a_'+d+'_'+k); if(e) CFG[d][k]=n(parseFloat(e.value)); }));
+  // Re-render tous les onglets dispositifs avec les nouveaux seuils
+  DEVS.forEach(id => renderDevice(id));
   const m=$('save-msg'); m.style.opacity='1'; setTimeout(()=>m.style.opacity='0',2500);
 }
 
