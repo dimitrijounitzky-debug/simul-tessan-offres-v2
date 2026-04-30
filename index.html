@@ -185,7 +185,21 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   <div id="admin-body"></div>
   <div style="margin-top:1.5rem;display:flex;align-items:center">
     <button class="btn-save" id="btn-save">Enregistrer les modifications</button>
-    <span class="save-msg" id="save-msg">✓ Sauvegardé</span>
+    <span class="save-msg" id="save-msg">&#x2713; Sauvegard&#xe9;</span>
+  </div>
+  <div id="export-block" style="display:none;margin-top:1.5rem;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:1.25rem">
+    <div style="font-size:13px;font-weight:700;margin-bottom:8px">&#x1f4cb; D&#xe9;ployer pour toute l'&#xe9;quipe</div>
+    <div style="font-size:12px;color:var(--ink3);margin-bottom:10px;line-height:1.7">
+      1. Clique sur <strong>Copier le code</strong><br>
+      2. Va sur GitHub &rarr; ton repo &rarr; <code style="background:var(--sf2);padding:1px 5px;border-radius:4px">index.html</code> &rarr; ic&#xf4;ne &#x270f;&#xfe0f;<br>
+      3. Trouve le bloc <code style="background:var(--sf2);padding:1px 5px;border-radius:4px">const CFG = {</code>, s&#xe9;lectionne-le jusqu'au <code style="background:var(--sf2);padding:1px 5px;border-radius:4px">};</code> et colle<br>
+      4. Clique <strong>Commit changes</strong> &rarr; mis &#xe0; jour pour tous en 30 secondes
+    </div>
+    <textarea id="export-txt" style="width:100%;height:180px;font-family:monospace;font-size:11px;border:1px solid var(--bd);border-radius:8px;padding:10px;resize:vertical;background:#fff;color:#111" readonly></textarea>
+    <div style="margin-top:10px;display:flex;align-items:center;gap:12px">
+      <button onclick="exportConfig()" style="padding:8px 18px;background:var(--ink);color:#fff;border:none;border-radius:8px;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer">Copier le code</button>
+      <span id="copy-msg" style="font-size:12px;color:var(--green);opacity:0;transition:opacity .3s">&#x2713; Copi&#xe9; dans le presse-papier !</span>
+    </div>
   </div>
 </div>
 
@@ -309,9 +323,52 @@ function saveAdmin(){
     'mat60_1','mat60_13','mnt60_1','mnt60_13','mat48_1','mat48_13','mnt48_1','mnt48_13',
     'tcDef','seuilDossier','seuilCash','seuilRentab'];
   DEVS.forEach(d=>keys.forEach(k=>{ const e=$('a_'+d+'_'+k); if(e) CFG[d][k]=n(parseFloat(e.value)); }));
-  // Re-render tous les onglets dispositifs avec les nouveaux seuils
+  // Sauvegarde locale (session courante)
+  try { localStorage.setItem('tessan_cfg', JSON.stringify(CFG)); } catch(e){}
+  // Re-render
   DEVS.forEach(id => renderDevice(id));
   const m=$('save-msg'); m.style.opacity='1'; setTimeout(()=>m.style.opacity='0',2500);
+  // Affiche le bouton d'export
+  $('export-block').style.display='block';
+}
+
+function exportConfig(){
+  // Genere le bloc CFG complet a coller dans index.html sur GitHub
+  const keys=['achat60','achat48','cac60','cac48','leasRate','cashRate',
+    'mat60_1','mat60_13','mnt60_1','mnt60_13','mat48_1','mat48_13','mnt48_1','mnt48_13',
+    'tcDef','seuilDossier','seuilCash','seuilRentab'];
+  let out = 'const CFG = {\n';
+  DEVS.forEach((id,i)=>{
+    const c=CFG[id];
+    out += '  '+id+':{\n';
+    out += '    name:'+JSON.stringify(c.name)+', hasTC:'+c.hasTC+', hasTED:'+c.hasTED+', hasPrio:'+c.hasPrio+',\n';
+    out += '    abo:'+c.abo+', achat60:'+c.achat60+', cac60:'+c.cac60+', achat48:'+c.achat48+', cac48:'+c.cac48+',\n';
+    out += '    leasRate:'+c.leasRate+', cashRate:'+c.cashRate+',\n';
+    out += '    mat60_1:'+c.mat60_1+', mat60_13:'+c.mat60_13+', mnt60_1:'+c.mnt60_1+', mnt60_13:'+c.mnt60_13+',\n';
+    out += '    mat48_1:'+c.mat48_1+', mat48_13:'+c.mat48_13+', mnt48_1:'+c.mnt48_1+', mnt48_13:'+c.mnt48_13+',\n';
+    out += '    tcDef:'+c.tcDef+', tedDef:'+c.tedDef+', prioDef:'+c.prioDef+',\n';
+    out += '    seuilDossier:'+c.seuilDossier+', seuilCash:'+c.seuilCash+', seuilRentab:'+c.seuilRentab+'\n';
+    out += '  }'+(i<DEVS.length-1?',':'')+'\n';
+  });
+  out += '};';
+  const ta=$('export-txt');
+  ta.value=out;
+  ta.select();
+  try{ document.execCommand('copy'); $('copy-msg').style.opacity='1'; setTimeout(()=>$('copy-msg').style.opacity='0',2000); }catch(e){}
+}
+
+function loadSavedConfig(){
+  try {
+    const saved = localStorage.getItem('tessan_cfg');
+    if (!saved) return;
+    const parsed = JSON.parse(saved);
+    const keys=['achat60','achat48','cac60','cac48','leasRate','cashRate',
+      'mat60_1','mat60_13','mnt60_1','mnt60_13','mat48_1','mat48_13','mnt48_1','mnt48_13',
+      'tcDef','seuilDossier','seuilCash','seuilRentab'];
+    DEVS.forEach(d=>{
+      if(parsed[d]) keys.forEach(k=>{ if(parsed[d][k]!==undefined) CFG[d][k]=parsed[d][k]; });
+    });
+  } catch(e){}
 }
 
 // ── BUILD PAGE ────────────────────────────────────────────────────────────
@@ -674,6 +731,7 @@ function renderDevice(id){
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────
+loadSavedConfig();
 DEVS.forEach(id=>buildPage(id));
 renderDevice('checkup');
 
