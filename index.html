@@ -446,32 +446,33 @@ function compute(id){
   // mensualite totale mixte = abo + ted + prio (prelevement mensuel)
   const mix_mens = abo + ted + prio;
 
-  // ── LEASING (PDF p.3) ───────────────────────────────────────────────────
+  // ── LEASING ──────────────────────────────────────────────────────────────
   // Mensualites M1-12 saisies par le sales (champs modulables)
   const lm1  = gv(id+'_lm1');
   const ln1  = gv(id+'_ln1');
+  // M13+ depuis config (non modifiable directement sauf via admin)
   const lm13 = d===60?c.mat60_13:c.mat48_13;
   const ln13 = d===60?c.mnt60_13:c.mnt48_13;
 
-  // G21/G59 = (mat_1*12)+(mat_13*rest) — total materiel leasing sur duree
+  // Total materiel leasing: (M1-12 x 12) + (M13+ x rest)
   const lmat_tot = (lm1*12) + (lm13*rest);
-  // I21/I59 = (mnt_1*12)+(mnt_13*rest) — total maintenance leasing sur duree
+  // Total maintenance leasing: (M1-12 x 12) + (M13+ x rest)
   const lmnt_tot = (ln1*12) + (ln13*rest);
 
-  // G22/G60 = mat_tot + mnt_tot + conv — financable (xlsx exact)
-  const l_fin   = lmat_tot + lmnt_tot + conv;
-  // G24/G62 = financable * 1.20 — cout total a financer
+  // Financable = lmat_tot + lmnt_tot + conv
+  const l_fin = lmat_tot + lmnt_tot + conv;
+  // Cout total a financer = financable x 1.20
   const l_total_fin = l_fin * (1 + LR);
   const l_frais = l_fin * LR;
-  // G37/G75 = cout_total * 0.60 — cash immediat (xlsx G37=G24*0.6)
-  const l_cash  = l_total_fin * CR;
+  // Cash immediat = cout_total x 0.60 (xlsx G37=G24*0.6)
+  const l_cash = l_total_fin * CR;
 
-  // Mensualite leasing calculee depuis le montant finance
-  const l_mens_calc = l_total_fin / d;  // mensualite theorique mat+maint
-  // Mensualites affichees (depuis champs modulables sales pour M1-12, M13+)
+  // Mensualite theorique
+  const l_mens_calc = l_total_fin / d;
+  // Mensualites affichees
   const l_mens_deb = abo + lm1 + ln1 + ted + prio;
   const l_mens_ful = abo + lm13 + ln13 + ted + prio;
-  // Cout total client sur duree
+  // Totaux
   const l_service_tot = abo * d;
   const l_client_total = l_service_tot + l_total_fin + (ted+prio)*d;
 
@@ -485,8 +486,9 @@ function compute(id){
   const ca_total = ca_direct + ltv;
   // Couts Tessan = achat + CAC + conversion + cout leasing (20% du finance)
   const cout_tessan = achat + cac + conv + (l_fin * LR);
-  // EBITDA = revenus totaux - couts Tessan
-  const ebitda = ca_total - cout_tessan;
+  // EBITDA (xlsx G35 = (F21+G21+I21+G32) - G31)
+  // = (service_tot + mat_tot_leasing + maint_tot_leasing + LTV) - cout_tessan
+  const ebitda = (l_service_tot + lmat_tot + lmnt_tot + ltv) - cout_tessan;
   // Rentabilite = CA total / cout Tessan
   const rentab = cout_tessan > 0 ? ca_total / cout_tessan : 0;
   // Marge sur cash = (cash - cout materiel) / cout materiel
